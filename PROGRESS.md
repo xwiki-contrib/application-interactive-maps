@@ -1,3 +1,4 @@
+# Marks the progress of the Map Application
 ## Day 1
 - [x] JavaScript jsx code for a simple map with marker and popup
 - [x] Code for creating a new map
