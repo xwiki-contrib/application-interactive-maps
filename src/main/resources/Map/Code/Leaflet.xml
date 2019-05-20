@@ -1,21 +1,41 @@
-<?xml version='1.1' encoding='UTF-8'?>
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ * See the NOTICE file distributed with this work for additional
+ * information regarding copyright ownership.
+ *
+ * This is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation; either version 2.1 of
+ * the License, or (at your option) any later version.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this software; if not, write to the Free
+ * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+-->
+
 <xwikidoc version="1.3" reference="Map.Code.Leaflet" locale="">
   <web>Map.Code</web>
   <name>Leaflet</name>
   <language/>
-  <defaultLanguage>en</defaultLanguage>
+  <defaultLanguage/>
   <translation>0</translation>
-  <creator>XWiki.Admin</creator>
+  <creator>xwiki:XWiki.Admin</creator>
   <creationDate>1558169692000</creationDate>
   <parent>Map.Map Editor.WebHome</parent>
-  <author>XWiki.Admin</author>
-  <contentAuthor>XWiki.Admin</contentAuthor>
+  <author>xwiki:XWiki.Admin</author>
+  <contentAuthor>xwiki:XWiki.Admin</contentAuthor>
   <date>1558306765000</date>
   <contentUpdateDate>1558169692000</contentUpdateDate>
-  <version>7.8</version>
+  <version>1.1</version>
   <title>Leaflet</title>
   <comment/>
-  <minorEdit>true</minorEdit>
+  <minorEdit>false</minorEdit>
   <syntaxId>xwiki/2.1</syntaxId>
   <hidden>false</hidden>
   <content/>
@@ -102,108 +122,108 @@
       <cache>long</cache>
     </property>
     <property>
-      <code>requirejs.config({&#xd;
-  paths: {&#xd;
-    'leaflet': ['$services.webjars.url("leaflet", "leaflet.js")'],&#xd;
-    'leafletSearch': ['https://cdn.jsdelivr.net/npm/leaflet-search@2.9.8/dist/leaflet-search.src.min']&#xd;
-  },&#xd;
-  shim: {&#xd;
-    'leaflet-search.src.min': ['leaflet']&#xd;
-  }&#xd;
-});&#xd;
-require(['jquery', 'leaflet', 'leafletSearch'], function($, leaflet, ls){&#xd;
-  'use strict';&#xd;
-  XWiki.simpleMap = Class.create({&#xd;
-    initialize: function(element, options, data){&#xd;
-      var that = this;&#xd;
-      //Check if the location type is an address or coordinates&#xd;
-      var locType = 'address';&#xd;
-      if(data.location){&#xd;
-        var checkLoc = data.location.split(',');&#xd;
-        //Location type is coordinates if there are two values and each is a number&#xd;
-        if(checkLoc.length == 2 &amp;&amp; !isNaN(checkLoc[0].trim()) &amp;&amp; !isNaN(checkLoc[1].trim())){&#xd;
-          locType = 'latLng';&#xd;
-        }&#xd;
-      }&#xd;
-      if(locType == 'latLng'){&#xd;
-        //Make an array for of the two coordinates&#xd;
-        var latLng = data.location.split(',').map((val) => {&#xd;
-          return val.trim()&#xd;
-        });&#xd;
-        //Set the location to the array&#xd;
-        data.location = latLng;&#xd;
-        //Create the map with the information&#xd;
-        that.createMap(options.mapId, options.tiles, options.zoom, data);&#xd;
-      } else {&#xd;
-        //If the location type is address, get the location coordinates from openstreetmap api&#xd;
-        var queryURL = 'https://nominatim.openstreetmap.org/search';&#xd;
-        var q = data.location;&#xd;
-        //Make the request&#xd;
-        $.getJSON(queryURL, {'q':q, 'format':'json'}).then(function(locFromAddress) {&#xd;
-          if (locFromAddress != undefined &amp;&amp; locFromAddress.length > 0) {&#xd;
-            var latLng = [locFromAddress[0].lat, locFromAddress[0].lon];&#xd;
-            //Set the location to the coordinates gotten from openstreetmap api&#xd;
-            data.location = latLng;&#xd;
-            that.createMap(options.mapId, options.tiles, options.zoom, data);&#xd;
-          } else {&#xd;
-            //Display an error if the address does not map to a location&#xd;
-            $(element).html('&lt;b>Map cannot be displayed&lt;/b>&lt;br/>Error while geocoding the address "' + q +'" with OpenStreetMap Nominatim');&#xd;
-            new XWiki.widgets.Notification('Error while geocoding the address "' + q +'" with OpenStreetMap Nominatim', 'error');&#xd;
-          }&#xd;
-        });&#xd;
-      }&#xd;
-    },&#xd;
-    createMap: function(mapId, tiles, zoom, data){&#xd;
-      //Create the map&#xd;
-      var map = L.map(mapId).setView(data.location, zoom);&#xd;
-      //Add a tiles layer to the map (the background)&#xd;
-      L.tileLayer(tiles, {&#xd;
-        attribution: '&amp;copy; &lt;a href="https://www.openstreetmap.org/">OpenStreetMap&lt;/a>',&#xd;
-        maxZoom: 18,&#xd;
-        id: 'mapbox.streets'&#xd;
-      }).addTo(map);&#xd;
-      //Set options for the icon of marker&#xd;
-      var icon = L.icon({&#xd;
-        iconUrl: "$services.webjars.url('leaflet', 'images/marker-icon.png')",&#xd;
-        iconRetinaUrl: "$services.webjars.url('leaflet', 'images/marker-icon-2x.png')",&#xd;
-        shadowUrl: "$services.webjars.url('leaflet', 'images/marker-shadow.png')",&#xd;
-        iconSize: [25,41],&#xd;
-        iconAnchor: [12,41],&#xd;
-        popupAnchor: [1,-34],&#xd;
-        tooltipAnchor: [16,-28],&#xd;
-        shadowSize: [41,41]&#xd;
-      });&#xd;
-      //Create a marker at the specified location and add it to map&#xd;
-      var marker = L.marker(data.location, {icon: icon}).addTo(map);&#xd;
-      //If popup information is set, bind it to the marker&#xd;
-      if(data.popup){&#xd;
-        marker.bindPopup(data.popup);&#xd;
-      }&#xd;
-      addNavigation(map);&#xd;
-      addSearch(map);&#xd;
-    }&#xd;
-  });&#xd;
-&#xd;
-  function init(){&#xd;
-    $$('.map-container').each(function(element){&#xd;
-      //Get options from the element&#xd;
-      var options = {};&#xd;
-      options.mapId = element.id;&#xd;
-      var zoom = element.dataset.zoom;&#xd;
-      options.zoom = zoom !== undefined ? zoom : 14;&#xd;
-      options.tiles = element.dataset.tiles !== undefined ? element.dataset.tiles : 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';&#xd;
-      //Get the data to be displayed on the map&#xd;
-      var data = {};&#xd;
-      data.location = element.dataset.location;&#xd;
-      data.popup = element.dataset.popup;&#xd;
-      //Create the map with the data collected&#xd;
-      new XWiki.simpleMap(element, options, data);&#xd;
-    })&#xd;
-  };&#xd;
-&#xd;
-  //Run the init() function when dom is loaded&#xd;
-  (XWiki &amp;&amp; XWiki.domIsLoaded &amp;&amp; init()) || document.observe('xwiki:dom:loaded', init);&#xd;
-&#xd;
+      <code>requirejs.config({
+  paths: {
+    'leaflet': ['$services.webjars.url("leaflet", "leaflet.js")'],
+    'leafletSearch': ['https://cdn.jsdelivr.net/npm/leaflet-search@2.9.8/dist/leaflet-search.src.min']
+  },
+  shim: {
+    'leaflet-search.src.min': ['leaflet']
+  }
+});
+require(['jquery', 'leaflet', 'leafletSearch'], function($, leaflet, ls){
+  'use strict';
+  XWiki.simpleMap = Class.create({
+    initialize: function(element, options, data){
+      var that = this;
+      //Check if the location type is an address or coordinates
+      var locType = 'address';
+      if(data.location){
+        var checkLoc = data.location.split(',');
+        //Location type is coordinates if there are two values and each is a number
+        if(checkLoc.length == 2 &amp;&amp; !isNaN(checkLoc[0].trim()) &amp;&amp; !isNaN(checkLoc[1].trim())){
+          locType = 'latLng';
+        }
+      }
+      if(locType == 'latLng'){
+        //Make an array for of the two coordinates
+        var latLng = data.location.split(',').map((val) =&gt; {
+          return val.trim()
+        });
+        //Set the location to the array
+        data.location = latLng;
+        //Create the map with the information
+        that.createMap(options.mapId, options.tiles, options.zoom, data);
+      } else {
+        //If the location type is address, get the location coordinates from openstreetmap api
+        var queryURL = 'https://nominatim.openstreetmap.org/search';
+        var q = data.location;
+        //Make the request
+        $.getJSON(queryURL, {'q':q, 'format':'json'}).then(function(locFromAddress) {
+          if (locFromAddress != undefined &amp;&amp; locFromAddress.length &gt; 0) {
+            var latLng = [locFromAddress[0].lat, locFromAddress[0].lon];
+            //Set the location to the coordinates gotten from openstreetmap api
+            data.location = latLng;
+            that.createMap(options.mapId, options.tiles, options.zoom, data);
+          } else {
+            //Display an error if the address does not map to a location
+            $(element).html('&lt;b&gt;Map cannot be displayed&lt;/b&gt;&lt;br/&gt;Error while geocoding the address "' + q +'" with OpenStreetMap Nominatim');
+            new XWiki.widgets.Notification('Error while geocoding the address "' + q +'" with OpenStreetMap Nominatim', 'error');
+          }
+        });
+      }
+    },
+    createMap: function(mapId, tiles, zoom, data){
+      //Create the map
+      var map = L.map(mapId).setView(data.location, zoom);
+      //Add a tiles layer to the map (the background)
+      L.tileLayer(tiles, {
+        attribution: '&amp;copy; &lt;a href="https://www.openstreetmap.org/"&gt;OpenStreetMap&lt;/a&gt;',
+        maxZoom: 18,
+        id: 'mapbox.streets'
+      }).addTo(map);
+      //Set options for the icon of marker
+      var icon = L.icon({
+        iconUrl: "$services.webjars.url('leaflet', 'images/marker-icon.png')",
+        iconRetinaUrl: "$services.webjars.url('leaflet', 'images/marker-icon-2x.png')",
+        shadowUrl: "$services.webjars.url('leaflet', 'images/marker-shadow.png')",
+        iconSize: [25,41],
+        iconAnchor: [12,41],
+        popupAnchor: [1,-34],
+        tooltipAnchor: [16,-28],
+        shadowSize: [41,41]
+      });
+      //Create a marker at the specified location and add it to map
+      var marker = L.marker(data.location, {icon: icon}).addTo(map);
+      //If popup information is set, bind it to the marker
+      if(data.popup){
+        marker.bindPopup(data.popup);
+      }
+      addNavigation(map);
+      addSearch(map);
+    }
+  });
+
+  function init(){
+    $$('.map-container').each(function(element){
+      //Get options from the element
+      var options = {};
+      options.mapId = element.id;
+      var zoom = element.dataset.zoom;
+      options.zoom = zoom !== undefined ? zoom : 14;
+      options.tiles = element.dataset.tiles !== undefined ? element.dataset.tiles : 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+      //Get the data to be displayed on the map
+      var data = {};
+      data.location = element.dataset.location;
+      data.popup = element.dataset.popup;
+      //Create the map with the data collected
+      new XWiki.simpleMap(element, options, data);
+    })
+  };
+
+  //Run the init() function when dom is loaded
+  (XWiki &amp;&amp; XWiki.domIsLoaded &amp;&amp; init()) || document.observe('xwiki:dom:loaded', init);
+
   });</code>
     </property>
     <property>
@@ -299,66 +319,66 @@ require(['jquery', 'leaflet', 'leafletSearch'], function($, leaflet, ls){&#xd;
       <cache>long</cache>
     </property>
     <property>
-      <code>//COMMON FUNCTIONS&#xd;
-&#xd;
-//Remove the old marker and add a new one&#xd;
-function addMarker(oldMarker, map, e){&#xd;
-  if(oldMarker){&#xd;
-    oldMarker.remove();&#xd;
-  }&#xd;
-  return L.marker(e.latlng).addTo(map);&#xd;
-}&#xd;
-&#xd;
-//Works only if the connection is secure (https etc.)&#xd;
-function locateUser(map){&#xd;
-  var locMarker = L.circleMarker();&#xd;
-  map.locate({setView: true, maxZoom: 16, watch: false});&#xd;
-  map.on('locationfound', function(e){&#xd;
-    locMarker.remove();&#xd;
-    locMarker = L.circleMarker(e.latlng, {&#xd;
-      color: '#146ea7',&#xd;
-      fillColor: '#146ea7',&#xd;
-      fillOpacity: 0.4,&#xd;
-      radius: 10&#xd;
-    }).bindPopup('Current location').addTo(map);&#xd;
-  })&#xd;
-}&#xd;
-&#xd;
-//Function for adding navigation control&#xd;
-function addNavigation(map){&#xd;
-  L.Control.navigation = L.Control.extend({&#xd;
-    onAdd: function(map){&#xd;
-      var container = L.DomUtil.create('div', 'leaflet-control-loc');&#xd;
-      var locateIcon = L.DomUtil.create('div', 'fa fa-map-marker');&#xd;
-      locateIcon.setAttribute('title', 'Current location');&#xd;
-      locateIcon.setAttribute('aria-label', 'Current location');&#xd;
-      container.appendChild(locateIcon);&#xd;
-      L.DomEvent.on(container, 'click', L.DomEvent.stopPropagation)&#xd;
-        .on(container, 'click', L.DomEvent.stop)&#xd;
-        .on(container, 'click', this._locateUser, this);&#xd;
-      return container;&#xd;
-    },&#xd;
-    _locateUser: function(e){&#xd;
-      e.preventDefault();&#xd;
-      locateUser(this._map);&#xd;
-    }&#xd;
-  });&#xd;
-  (new L.Control.navigation({position: 'topright'})).addTo(map);&#xd;
-}&#xd;
-&#xd;
-//Function for adding search control&#xd;
-function addSearch(map){&#xd;
-  map.addControl(new L.Control.Search({&#xd;
-    url: 'http://nominatim.openstreetmap.org/search?format=json&amp;q={s}',&#xd;
-    jsonpParam: 'json_callback',&#xd;
-    propertyName: 'display_name',&#xd;
-    propertyLoc: ['lat', 'lon'],&#xd;
-    marker: false,&#xd;
-    autoCollapse: true,&#xd;
-    autoType: false,&#xd;
-    minLength: 2,&#xd;
-    position: 'topright'&#xd;
-  }));&#xd;
+      <code>//COMMON FUNCTIONS
+
+//Remove the old marker and add a new one
+function addMarker(oldMarker, map, e){
+  if(oldMarker){
+    oldMarker.remove();
+  }
+  return L.marker(e.latlng).addTo(map);
+}
+
+//Works only if the connection is secure (https etc.)
+function locateUser(map){
+  var locMarker = L.circleMarker();
+  map.locate({setView: true, maxZoom: 16, watch: false});
+  map.on('locationfound', function(e){
+    locMarker.remove();
+    locMarker = L.circleMarker(e.latlng, {
+      color: '#146ea7',
+      fillColor: '#146ea7',
+      fillOpacity: 0.4,
+      radius: 10
+    }).bindPopup('Current location').addTo(map);
+  })
+}
+
+//Function for adding navigation control
+function addNavigation(map){
+  L.Control.navigation = L.Control.extend({
+    onAdd: function(map){
+      var container = L.DomUtil.create('div', 'leaflet-control-loc');
+      var locateIcon = L.DomUtil.create('div', 'fa fa-map-marker');
+      locateIcon.setAttribute('title', 'Current location');
+      locateIcon.setAttribute('aria-label', 'Current location');
+      container.appendChild(locateIcon);
+      L.DomEvent.on(container, 'click', L.DomEvent.stopPropagation)
+        .on(container, 'click', L.DomEvent.stop)
+        .on(container, 'click', this._locateUser, this);
+      return container;
+    },
+    _locateUser: function(e){
+      e.preventDefault();
+      locateUser(this._map);
+    }
+  });
+  (new L.Control.navigation({position: 'topright'})).addTo(map);
+}
+
+//Function for adding search control
+function addSearch(map){
+  map.addControl(new L.Control.Search({
+    url: 'http://nominatim.openstreetmap.org/search?format=json&amp;q={s}',
+    jsonpParam: 'json_callback',
+    propertyName: 'display_name',
+    propertyLoc: ['lat', 'lon'],
+    marker: false,
+    autoCollapse: true,
+    autoType: false,
+    minLength: 2,
+    position: 'topright'
+  }));
 }</code>
     </property>
     <property>
@@ -470,81 +490,81 @@ function addSearch(map){&#xd;
       <cache>long</cache>
     </property>
     <property>
-      <code>@import "$services.webjars.url('leaflet', 'leaflet.css')";&#xd;
-@import "https://cdn.jsdelivr.net/npm/leaflet-search@2.9.8/src/leaflet-search.css";&#xd;
-.map-container, .simplemap-preview{&#xd;
-  border: 4px solid white;&#xd;
-  border-radius: 5px;&#xd;
-  box-shadow: 0px 0px 3px silver;&#xd;
-}&#xd;
-.leaflet-container .leaflet-control-search, .leaflet-container .leaflet-control-search:hover, .leaflet-container .leaflet-control-search:active{&#xd;
-  background: none;&#xd;
-  border: none;&#xd;
-}&#xd;
-.leaflet-container .leaflet-control-loc, .leaflet-container .leaflet-control-search .search-button{&#xd;
-  background: white;&#xd;
-  width: 40px;&#xd;
-  height: 40px;&#xd;
-  text-align: center;&#xd;
-  cursor: pointer;&#xd;
-  border-radius: 50%;&#xd;
-  overflow: hidden;&#xd;
-  border: 1px solid silver;&#xd;
-  transition: background-color 0.3s;&#xd;
-}&#xd;
-.leaflet-container .leaflet-control-search .search-button{&#xd;
-  font-family: FontAwesome;&#xd;
-  position: relative;&#xd;
-}&#xd;
-.leaflet-control-loc>.fa, .leaflet-container .leaflet-control-search .search-button:before{&#xd;
-  position: absolute;&#xd;
-  left: 50%;&#xd;
-  top: 50%;&#xd;
-  transform: translate(-50%, -50%);&#xd;
-  color: black;&#xd;
-  font-size: 20px;&#xd;
-}&#xd;
-.leaflet-container .leaflet-control-search .search-button:before{&#xd;
-  content: '\f002';&#xd;
-  font-size: 17px;&#xd;
-  margin-top: -2px;&#xd;
-}&#xd;
-.leaflet-container .leaflet-control-loc:hover, .leaflet-container .leaflet-control-search .search-button:hover{&#xd;
-  background: #f4f4f4;&#xd;
-  transition: background 0.3s;&#xd;
-  text-decoration: none;&#xd;
-}&#xd;
-.leaflet-container .leaflet-control-search input.search-input{&#xd;
-  border: 1px solid silver;&#xd;
-  border-radius: 15px;&#xd;
-  color: dimgray;&#xd;
-  height: 40px;&#xd;
-  padding: 5px 10px;&#xd;
-  margin: 0;&#xd;
-}&#xd;
-.leaflet-control-search .search-cancel{&#xd;
-  margin: 10px 0;&#xd;
-  right: 42px;&#xd;
-}&#xd;
-.leaflet-control-search.search-load input.search-input{&#xd;
-  background: white;&#xd;
-}&#xd;
-.leaflet-control-search .search-tooltip{&#xd;
-  border: none;&#xd;
-  border-radius: 10px;&#xd;
-  background: white;&#xd;
-  color: black;&#xd;
-  padding: 5px;&#xd;
-  left: 0;&#xd;
-  right: 0;&#xd;
-  float: right;&#xd;
-  overflow: auto;&#xd;
-}&#xd;
-.leaflet-control-search .search-tooltip .search-tip{&#xd;
-  border: none;&#xd;
-  border-radius: 0;&#xd;
-  background: white;&#xd;
-  color: black;&#xd;
+      <code>@import "$services.webjars.url('leaflet', 'leaflet.css')";
+@import "https://cdn.jsdelivr.net/npm/leaflet-search@2.9.8/src/leaflet-search.css";
+.map-container, .simplemap-preview{
+  border: 4px solid white;
+  border-radius: 5px;
+  box-shadow: 0px 0px 3px silver;
+}
+.leaflet-container .leaflet-control-search, .leaflet-container .leaflet-control-search:hover, .leaflet-container .leaflet-control-search:active{
+  background: none;
+  border: none;
+}
+.leaflet-container .leaflet-control-loc, .leaflet-container .leaflet-control-search .search-button{
+  background: white;
+  width: 40px;
+  height: 40px;
+  text-align: center;
+  cursor: pointer;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 1px solid silver;
+  transition: background-color 0.3s;
+}
+.leaflet-container .leaflet-control-search .search-button{
+  font-family: FontAwesome;
+  position: relative;
+}
+.leaflet-control-loc&gt;.fa, .leaflet-container .leaflet-control-search .search-button:before{
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  color: black;
+  font-size: 20px;
+}
+.leaflet-container .leaflet-control-search .search-button:before{
+  content: '\f002';
+  font-size: 17px;
+  margin-top: -2px;
+}
+.leaflet-container .leaflet-control-loc:hover, .leaflet-container .leaflet-control-search .search-button:hover{
+  background: #f4f4f4;
+  transition: background 0.3s;
+  text-decoration: none;
+}
+.leaflet-container .leaflet-control-search input.search-input{
+  border: 1px solid silver;
+  border-radius: 15px;
+  color: dimgray;
+  height: 40px;
+  padding: 5px 10px;
+  margin: 0;
+}
+.leaflet-control-search .search-cancel{
+  margin: 10px 0;
+  right: 42px;
+}
+.leaflet-control-search.search-load input.search-input{
+  background: white;
+}
+.leaflet-control-search .search-tooltip{
+  border: none;
+  border-radius: 10px;
+  background: white;
+  color: black;
+  padding: 5px;
+  left: 0;
+  right: 0;
+  float: right;
+  overflow: auto;
+}
+.leaflet-control-search .search-tooltip .search-tip{
+  border: none;
+  border-radius: 0;
+  background: white;
+  color: black;
 }</code>
     </property>
     <property>
