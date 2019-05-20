@@ -14,3 +14,6 @@ Create interactive maps easily, share locations and associate structured data wi
 * Continuous Integration Status: N/A
 
 [comment]: <> (Some things to be updated)
+
+## This application is under development
+The progress is documented in [PROGRESS.md](https://github.com/xwiki-contrib/application-map/edit/master/PROGRESS.md)
