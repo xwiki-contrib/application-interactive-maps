@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
 <!--
  * See the NOTICE file distributed with this work for additional
  * information regarding copyright ownership.
@@ -19,33 +20,33 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
 -->
 
-<xwikidoc version="1.3" reference="Map.Code.Translations.WebHome" locale="">
-  <web>Map.Code.Translations</web>
-  <name>WebHome</name>
+<xwikidoc version="1.3" reference="Map.Code.Translations" locale="">
+  <web>Map.Code</web>
+  <name>Translations</name>
   <language/>
-  <defaultLanguage/>
+  <defaultLanguage>en</defaultLanguage>
   <translation>0</translation>
   <creator>xwiki:XWiki.Admin</creator>
-  <creationDate>1558306914000</creationDate>
-  <parent>Map.Code.Leaflet</parent>
+  <creationDate>1558344072000</creationDate>
+  <parent>WebHome</parent>
   <author>xwiki:XWiki.Admin</author>
   <contentAuthor>xwiki:XWiki.Admin</contentAuthor>
-  <date>1558307112000</date>
-  <contentUpdateDate>1558307112000</contentUpdateDate>
+  <date>1558344072000</date>
+  <contentUpdateDate>1558344072000</contentUpdateDate>
   <version>1.1</version>
   <title>Translations</title>
   <comment/>
   <minorEdit>false</minorEdit>
-  <syntaxId>xwiki/2.1</syntaxId>
-  <hidden>false</hidden>
+  <syntaxId>plain/1.0</syntaxId>
+  <hidden>true</hidden>
   <content>mapapp.markerLocation=Marker Position
 mapapp.popupData=Popup Information
 mapapp.mapName=Map Name</content>
   <object>
-    <name>Map.Code.Translations.WebHome</name>
+    <name>Map.Code.Translations</name>
     <number>0</number>
     <className>XWiki.TranslationDocumentClass</className>
-    <guid>013b40a8-4a38-48cd-939e-bab32aca5159</guid>
+    <guid>1b5ffa63-62d3-4451-908b-ed2f9223c348</guid>
     <class>
       <name>XWiki.TranslationDocumentClass</name>
       <customClass/>
