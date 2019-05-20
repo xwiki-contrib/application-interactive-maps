@@ -14,3 +14,7 @@
 ## Day 3 (20 May 2019)
 - [x] Transfer github repository to xwiki-contrib
 - [x] Style improved for creation form of SimpleMapSheet
+- [ ] Change textarea of popupData to ckeditor in Map Editor
+-- ToDo: Ask community
+- [x] Add support for custom marker icon
+- [x] Style improved for creation form of SimpleMapSheet
