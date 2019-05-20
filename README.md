@@ -12,4 +12,5 @@ Create interactive maps easily, share locations and associate structured data wi
 * Translations: N/A 
 * Sonar Dashboard: N/A 
 * Continuous Integration Status: N/A
+
 [comment]: <> (Some things to be updated)
