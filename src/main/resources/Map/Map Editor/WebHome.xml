@@ -1,44 +1,277 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!--
- * See the NOTICE file distributed with this work for additional
- * information regarding copyright ownership.
- *
- * This is free software; you can redistribute it and/or modify it
- * under the terms of the GNU Lesser General Public License as
- * published by the Free Software Foundation; either version 2.1 of
- * the License, or (at your option) any later version.
- *
- * This software is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this software; if not, write to the Free
- * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
- * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
--->
-
+<?xml version='1.1' encoding='UTF-8'?>
 <xwikidoc version="1.3" reference="Map.Map Editor.WebHome" locale="">
   <web>Map.Map Editor</web>
   <name>WebHome</name>
   <language/>
-  <defaultLanguage/>
+  <defaultLanguage>en</defaultLanguage>
   <translation>0</translation>
-  <creator>xwiki:XWiki.Admin</creator>
+  <creator>XWiki.Admin</creator>
   <creationDate>1558169625000</creationDate>
   <parent>Map.WebHome</parent>
-  <author>xwiki:XWiki.Admin</author>
-  <contentAuthor>xwiki:XWiki.Admin</contentAuthor>
-  <date>1558169637000</date>
-  <contentUpdateDate>1558169637000</contentUpdateDate>
-  <version>1.1</version>
+  <author>XWiki.Admin</author>
+  <contentAuthor>XWiki.Admin</contentAuthor>
+  <date>1558307085000</date>
+  <contentUpdateDate>1558307085000</contentUpdateDate>
+  <version>10.1</version>
   <title>Map Editor</title>
   <comment/>
   <minorEdit>false</minorEdit>
   <syntaxId>xwiki/2.1</syntaxId>
   <hidden>false</hidden>
-  <content>{{velocity}}
-== Map with Marker and Popup ==
+  <content>{{velocity}}&#xd;
+#set ($discard = $xwiki.ssx.use('Map.Code.Leaflet'))&#xd;
+#set ($discard = $xwiki.jsx.use('Map.Code.Leaflet'))&#xd;
+&#xd;
+## Handling creation of the map&#xd;
+#if ("$!request.mapName" != '')&#xd;
+  #set ($mapDocLocation = "Map.Maps.${request.mapName}")&#xd;
+  #set ($newMap = $xwiki.getDocument($mapDocLocation))&#xd;
+  $newMap.setTitle(${request.mapName})&#xd;
+  $newMap.setParent('Map.Maps')&#xd;
+  $newMap.setContent('{{include document="Map.Code.SimpleMap.SimpleMapTemplate"/}}')&#xd;
+  #set ($newMapObj = $newMap.newObject('Map.Code.SimpleMap.SimpleMapClass'))&#xd;
+  $newMapObj.set('markerLocation', $request.markerLocation)&#xd;
+  $newMapObj.set('popupData', $request.popupData)&#xd;
+  $newMap.save()&#xd;
+  $response.sendRedirect($xwiki.getURL($mapDocLocation))&#xd;
+#end&#xd;
+&#xd;
+== Map with Marker and Popup ==&#xd;
+#set ($simpleMapClass = $xwiki.getClass('Map.Code.SimpleMap.SimpleMapClass'))&#xd;
+&#xd;
+{{html wiki='true'}}&#xd;
+(% class="row" %)(((&#xd;
+  (% class="col-sm-6" %)(((&#xd;
+  ## Preview of the map&#xd;
+  &lt;p>Click to place a marker&lt;/p>&#xd;
+  (% class="simplemap-preview" id="map-${util.generateRandomString(5)}" style="width: 100%; height: 300px;" data-defaultloc="48.8566,2.3522" %)((()))&#xd;
+  )))&#xd;
+  (% class="col-sm-6" %)(((&#xd;
+  ## Form for creating the map&#xd;
+  &lt;form class="xform" action="" method="post">&#xd;
+    ## Hidden input for marker position&#xd;
+    #set ($markerPosPropName = $simpleMapClass.getProperties()[0].getName())&#xd;
+    &lt;input type="hidden" id="${markerPosPropName}" name="${markerPosPropName}" value="48.8566,2.3522" required />&#xd;
+    &lt;dl>&#xd;
+      &lt;dt>&#xd;
+        &lt;label for="mapName">$services.localization.render('mapapp.mapName')&lt;/label>&#xd;
+      &lt;/dt>&#xd;
+      &lt;dd>&#xd;
+        &lt;input type="text" name="mapName" value="" required />&#xd;
+      &lt;/dd>&#xd;
+      ## Get values of popupData property&#xd;
+      #set ($popupDataPropName = $simpleMapClass.getProperties()[1].getName())&#xd;
+      &lt;dt>&#xd;
+        &lt;label for="${popupDataPropName}">$simpleMapClass.getProperties()[1].getPrettyName()&lt;/label>&#xd;
+        &lt;span class="xHint">$simpleMapClass.getProperties()[1].getHint()&lt;/span>&#xd;
+      &lt;/dt>&#xd;
+      &lt;dd>&#xd;
+        &lt;textarea id="${popupDataPropName}" name="${popupDataPropName}">&lt;/textarea>&#xd;
+      &lt;/dd>&#xd;
+    &lt;/dl>&#xd;
+    &lt;p>&lt;input type="submit" class="btn btn-primary" value="Create Map" />&lt;/p>&#xd;
+  &lt;/form>&#xd;
+  )))&#xd;
+)))&#xd;
+{{/html}}&#xd;
 {{/velocity}}</content>
+  <object>
+    <name>Map.Map Editor.WebHome</name>
+    <number>0</number>
+    <className>XWiki.JavaScriptExtension</className>
+    <guid>3be392a7-aee2-4e48-9249-5cfd558df441</guid>
+    <class>
+      <name>XWiki.JavaScriptExtension</name>
+      <customClass/>
+      <customMapping/>
+      <defaultViewSheet/>
+      <defaultEditSheet/>
+      <defaultWeb/>
+      <nameField/>
+      <validationScript/>
+      <cache>
+        <cache>0</cache>
+        <defaultValue>long</defaultValue>
+        <disabled>0</disabled>
+        <displayType>select</displayType>
+        <multiSelect>0</multiSelect>
+        <name>cache</name>
+        <number>5</number>
+        <prettyName>Caching policy</prettyName>
+        <relationalStorage>0</relationalStorage>
+        <separator> </separator>
+        <separators>|, </separators>
+        <size>1</size>
+        <unmodifiable>0</unmodifiable>
+        <values>long|short|default|forbid</values>
+        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
+      </cache>
+      <code>
+        <contenttype>PureText</contenttype>
+        <disabled>0</disabled>
+        <editor>PureText</editor>
+        <name>code</name>
+        <number>2</number>
+        <prettyName>Code</prettyName>
+        <rows>20</rows>
+        <size>50</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
+      </code>
+      <name>
+        <disabled>0</disabled>
+        <name>name</name>
+        <number>1</number>
+        <prettyName>Name</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </name>
+      <parse>
+        <disabled>0</disabled>
+        <displayFormType>select</displayFormType>
+        <displayType>yesno</displayType>
+        <name>parse</name>
+        <number>4</number>
+        <prettyName>Parse content</prettyName>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.BooleanClass</classType>
+      </parse>
+      <use>
+        <cache>0</cache>
+        <disabled>0</disabled>
+        <displayType>select</displayType>
+        <multiSelect>0</multiSelect>
+        <name>use</name>
+        <number>3</number>
+        <prettyName>Use this extension</prettyName>
+        <relationalStorage>0</relationalStorage>
+        <separator> </separator>
+        <separators>|, </separators>
+        <size>1</size>
+        <unmodifiable>0</unmodifiable>
+        <values>currentPage|onDemand|always</values>
+        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
+      </use>
+    </class>
+    <property>
+      <cache>long</cache>
+    </property>
+    <property>
+      <code>require(['jquery', 'leaflet', 'leafletSearch'], function($, leaflet, ls){&#xd;
+  'use strict';&#xd;
+&#xd;
+  //Add a new marker and remove the old one&#xd;
+  function addMarker(oldMarker, map, e){&#xd;
+    if(oldMarker){&#xd;
+      oldMarker.remove();&#xd;
+    }&#xd;
+    return L.marker(e.latlng).addTo(map);&#xd;
+  }&#xd;
+&#xd;
+  //Works only if the connection is secure (https etc.)&#xd;
+  function locateUser(map){&#xd;
+    var locMarker = L.circleMarker();&#xd;
+    map.locate({setView: true, maxZoom: 16, watch: false});&#xd;
+    map.on('locationfound', function(e){&#xd;
+      locMarker.remove();&#xd;
+      locMarker = L.circleMarker(e.latlng, {&#xd;
+        color: '#146ea7',&#xd;
+        fillColor: '#146ea7',&#xd;
+        fillOpacity: 0.4,&#xd;
+        radius: 10&#xd;
+      }).bindPopup('Current location').addTo(map);&#xd;
+    })&#xd;
+  }&#xd;
+&#xd;
+  //Function for adding navigation control&#xd;
+  function addNavigation(map){&#xd;
+      L.Control.navigation = L.Control.extend({&#xd;
+        onAdd: function(map){&#xd;
+          var container = L.DomUtil.create('div', 'leaflet-control-loc');&#xd;
+          var locateIcon = L.DomUtil.create('div', 'fa fa-map-marker');&#xd;
+          locateIcon.setAttribute('title', 'Current location');&#xd;
+          locateIcon.setAttribute('aria-label', 'Current location');&#xd;
+          container.appendChild(locateIcon);&#xd;
+          L.DomEvent.on(container, 'click', L.DomEvent.stopPropagation)&#xd;
+          .on(container, 'click', L.DomEvent.stop)&#xd;
+          .on(container, 'click', this._locateUser, this);&#xd;
+          return container;&#xd;
+        },&#xd;
+        _locateUser: function(e){&#xd;
+          e.preventDefault();&#xd;
+          locateUser(this._map);&#xd;
+        }&#xd;
+      });&#xd;
+&#xd;
+      (new L.Control.navigation({position: 'topright'})).addTo(map);&#xd;
+  }&#xd;
+&#xd;
+  //Function for adding search control&#xd;
+  function addSearch(map){&#xd;
+    map.addControl(new L.Control.Search({&#xd;
+      url: 'http://nominatim.openstreetmap.org/search?format=json&amp;q={s}',&#xd;
+      jsonpParam: 'json_callback',&#xd;
+      propertyName: 'display_name',&#xd;
+      propertyLoc: ['lat', 'lon'],&#xd;
+      marker: false,&#xd;
+      autoCollapse: true,&#xd;
+      autoType: false,&#xd;
+      minLength: 2,&#xd;
+      position: 'topright'&#xd;
+    }));&#xd;
+  }&#xd;
+&#xd;
+  function init(){&#xd;
+    $$('.simplemap-preview').each(function(element){&#xd;
+      var options = {};&#xd;
+      options.mapId = element.id;&#xd;
+      var zoom = element.dataset.zoom;&#xd;
+      options.zoom = zoom !== undefined ? zoom : 14;&#xd;
+      options.tiles = element.dataset.tiles !== undefined ? element.dataset.tiles : 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';&#xd;
+      var map = L.map(options.mapId).setView(element.dataset.defaultloc.split(','), options.zoom);&#xd;
+      L.tileLayer(options.tiles, {&#xd;
+        attribution: '&amp;copy; &lt;a href="https://www.openstreetmap.org/">OpenStreetMap&lt;/a>',&#xd;
+        maxZoom: 18,&#xd;
+        id: 'mapbox.streets'&#xd;
+      }).addTo(map);&#xd;
+&#xd;
+      //Get hidden marker position field&#xd;
+      #set ($markerPosPropName = $xwiki.getClass('Map.Code.SimpleMap.SimpleMapClass').getProperties()[0].getName())&#xd;
+      var markerPosInputId = '${markerPosPropName}';&#xd;
+      //Add a default marker to the map&#xd;
+      var marker = L.marker($('#'+markerPosInputId).val().split(',')).addTo(map);&#xd;
+      //Handling the click on map to include marker and popup&#xd;
+      map.on('click', function(e){&#xd;
+        //Get value of popup&#xd;
+        #set ($popupDataPropName = $xwiki.getClass('Map.Code.SimpleMap.SimpleMapClass').getProperties()[1].getName())&#xd;
+        var popupInputId = '${popupDataPropName}';&#xd;
+        var popupInfo = $('#'+popupInputId).val();&#xd;
+        $('#'+markerPosInputId).val(e.latlng.lat+','+e.latlng.lng);&#xd;
+        marker = addMarker(marker, map, e);&#xd;
+        if(popupInfo){&#xd;
+          marker.bindPopup(popupInfo);&#xd;
+        }&#xd;
+      });&#xd;
+      //Adding the navigation control&#xd;
+      addNavigation(map);&#xd;
+      //Adding the search control&#xd;
+      addSearch(map);&#xd;
+    })&#xd;
+  }&#xd;
+&#xd;
+  //Run the init() function when dom is loaded&#xd;
+  (XWiki &amp;&amp; XWiki.domIsLoaded &amp;&amp; init()) || document.observe('xwiki:dom:loaded', init);&#xd;
+});</code>
+    </property>
+    <property>
+      <name>leaflet-preview-js</name>
+    </property>
+    <property>
+      <parse>1</parse>
+    </property>
+    <property>
+      <use>currentPage</use>
+    </property>
+  </object>
 </xwikidoc>
