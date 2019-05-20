@@ -13,8 +13,8 @@
 - [x] Synchronized and updated styling for the added controls
 ## Day 3 (20 May 2019)
 - [x] Transfer github repository to xwiki-contrib
-- [x] Style improved for creation form of SimpleMapSheet
-- [ ] Change textarea of popupData to ckeditor in Map Editor
--- ToDo: Ask community
+- [x] Create project design page on design.xwiki.org
+- [x] Add description and milestones on XWiki GSoC project page
+- [x] Standard and improved style for creation form of SimpleMapSheet
+- [ ] Change textarea of popupData to ckeditor in Map Editor - ToDo: Ask community
 - [x] Add support for custom marker icon
-- [x] Style improved for creation form of SimpleMapSheet
