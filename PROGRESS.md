@@ -18,3 +18,7 @@
 - [x] Standard and improved style for creation form of SimpleMapSheet
 - [ ] Change textarea of popupData to ckeditor in Map Editor - ToDo: Ask community
 - [x] Add support for custom marker icon
+## Day 4 (21 May 2019)
+- [x] Create Map.Maps.WebHome for displaying all created maps
+- [x] Minor changes in velocity code for Map Editor
+- [x] Create a leaflet-commons module for common leaflet functions
