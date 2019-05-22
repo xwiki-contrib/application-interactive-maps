@@ -20,21 +20,21 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
 -->
 
-<xwikidoc version="1.3" reference="Map.Code.SimpleMap.SimpleMapClass" locale="">
-  <web>Map.Code.SimpleMap</web>
-  <name>SimpleMapClass</name>
+<xwikidoc version="1.3" reference="Map.Code.PathMap.PathMapClass" locale="">
+  <web>Map.Code.PathMap</web>
+  <name>PathMapClass</name>
   <language/>
   <defaultLanguage/>
   <translation>0</translation>
   <creator>xwiki:XWiki.Admin</creator>
-  <creationDate>1558225030000</creationDate>
+  <creationDate>1558452147000</creationDate>
   <parent>XWiki.XWikiClasses</parent>
   <author>xwiki:XWiki.Admin</author>
   <contentAuthor>xwiki:XWiki.Admin</contentAuthor>
-  <date>1558452169000</date>
-  <contentUpdateDate>1558452169000</contentUpdateDate>
+  <date>1558462866000</date>
+  <contentUpdateDate>1558452147000</contentUpdateDate>
   <version>1.1</version>
-  <title>SimpleMapClass</title>
+  <title>PathMapClass</title>
   <comment/>
   <minorEdit>false</minorEdit>
   <syntaxId>xwiki/2.1</syntaxId>
@@ -47,7 +47,7 @@
 #set ($defaultParent = 'Map.WebHome')
 {{/velocity}}</content>
   <class>
-    <name>Map.Code.SimpleMap.SimpleMapClass</name>
+    <name>Map.Code.PathMap.PathMapClass</name>
     <customClass/>
     <customMapping/>
     <defaultViewSheet/>
@@ -55,43 +55,40 @@
     <defaultWeb/>
     <nameField/>
     <validationScript/>
-    <markerLocation>
+    <destination>
       <customDisplay/>
       <disabled>0</disabled>
-      <hint>Name or coordinates of the location</hint>
-      <name>markerLocation</name>
-      <number>1</number>
-      <picker>1</picker>
-      <prettyName>Marker Position</prettyName>
+      <hint>Location of the destination</hint>
+      <name>destination</name>
+      <number>2</number>
+      <picker>0</picker>
+      <prettyName>Destination</prettyName>
       <size>30</size>
       <unmodifiable>0</unmodifiable>
       <validationMessage/>
       <validationRegExp/>
       <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
-    </markerLocation>
-    <popupData>
-      <contenttype/>
+    </destination>
+    <source>
       <customDisplay/>
       <disabled>0</disabled>
-      <editor/>
-      <hint>Data to be displayed inside the popup binded to the marker</hint>
-      <name>popupData</name>
-      <number>2</number>
-      <picker>1</picker>
-      <prettyName>Popup Information</prettyName>
-      <rows>5</rows>
-      <size>40</size>
+      <hint>Location of the source</hint>
+      <name>source</name>
+      <number>1</number>
+      <picker>0</picker>
+      <prettyName>Source Point</prettyName>
+      <size>30</size>
       <unmodifiable>0</unmodifiable>
       <validationMessage/>
       <validationRegExp/>
-      <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
-    </popupData>
+      <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+    </source>
   </class>
   <object>
-    <name>Map.Code.SimpleMap.SimpleMapClass</name>
+    <name>Map.Code.PathMap.PathMapClass</name>
     <number>0</number>
     <className>XWiki.ClassSheetBinding</className>
-    <guid>703a6ecd-3a49-4238-bcd3-4db28d33a57f</guid>
+    <guid>fcfee29a-0efb-4522-b122-297cff5e4556</guid>
     <class>
       <name>XWiki.ClassSheetBinding</name>
       <customClass/>
@@ -128,14 +125,14 @@
       </sheet>
     </class>
     <property>
-      <sheet>SimpleMapSheet</sheet>
+      <sheet>PathMapSheet</sheet>
     </property>
   </object>
   <object>
-    <name>Map.Code.SimpleMap.SimpleMapClass</name>
+    <name>Map.Code.PathMap.PathMapClass</name>
     <number>0</number>
     <className>XWiki.DocumentSheetBinding</className>
-    <guid>bd2e1a3c-8ab1-4312-b898-2087e44ee46f</guid>
+    <guid>6d421fbc-5043-4bf0-870d-e943cbccd87b</guid>
     <class>
       <name>XWiki.DocumentSheetBinding</name>
       <customClass/>

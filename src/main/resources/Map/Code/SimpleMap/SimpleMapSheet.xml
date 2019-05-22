@@ -31,10 +31,10 @@
   <parent>Map.Code.SimpleMap.SimpleMapClass</parent>
   <author>xwiki:XWiki.Admin</author>
   <contentAuthor>xwiki:XWiki.Admin</contentAuthor>
-  <date>1558387783000</date>
-  <contentUpdateDate>1558387783000</contentUpdateDate>
+  <date>1558524088000</date>
+  <contentUpdateDate>1558524088000</contentUpdateDate>
   <version>1.1</version>
-  <title>#if($doc.documentReference.name == 'SimpleMapSheet')SimpleMap Sheet#{else}$services.display.title($doc, {'displayerHint': 'default', 'outputSyntaxId': 'plain/1.0'})#end</title>
+  <title>#if($doc.documentReference.name == 'SimpleMapSheet')SimpleMapSheet#{else}$services.display.title($doc, {'displayerHint': 'default', 'outputSyntaxId': 'plain/1.0'})#end</title>
   <comment/>
   <minorEdit>false</minorEdit>
   <syntaxId>xwiki/2.1</syntaxId>
@@ -84,7 +84,7 @@
     #set ($markerURL = '')
   #end
 
-  (% class="map-container" id="map-${mapId}" style="width: 100%; height: 400px;" data-location="${markerLoc}" data-popup='${popupData}' data-markericon="${markerURL}" %)((()))
+  (% class="map-container map-container-simplemap" id="map-${mapId}" style="width: 100%; height: 400px;" data-location="${markerLoc}" data-popup='${popupData}' data-markericon="${markerURL}" %)((()))
 
 #end
 

@@ -20,44 +20,33 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
 -->
 
-<xwikidoc version="1.3" reference="Map.Code.Translations" locale="">
-  <web>Map.Code</web>
-  <name>Translations</name>
+<xwikidoc version="1.3" reference="Map.Code.PathMap.PathMapTemplate" locale="">
+  <web>Map.Code.PathMap</web>
+  <name>PathMapTemplate</name>
   <language/>
-  <defaultLanguage>en</defaultLanguage>
+  <defaultLanguage/>
   <translation>0</translation>
   <creator>xwiki:XWiki.Admin</creator>
-  <creationDate>1558344072000</creationDate>
-  <parent>WebHome</parent>
+  <creationDate>1558462871000</creationDate>
+  <parent>Map.Code.PathMap.PathMapClass</parent>
   <author>xwiki:XWiki.Admin</author>
   <contentAuthor>xwiki:XWiki.Admin</contentAuthor>
-  <date>1558472145000</date>
-  <contentUpdateDate>1558472145000</contentUpdateDate>
+  <date>1558524334000</date>
+  <contentUpdateDate>1558524334000</contentUpdateDate>
   <version>1.1</version>
-  <title>Translations</title>
+  <title/>
   <comment/>
   <minorEdit>false</minorEdit>
-  <syntaxId>plain/1.0</syntaxId>
+  <syntaxId>xwiki/2.1</syntaxId>
   <hidden>true</hidden>
-  <content>mapapp.markerLocation=Marker Position
-mapapp.popupData=Popup Information
-mapapp.mapName=Map Name
-simpleMap.livetable.doc.title=Map Name
-simpleMap.livetable.markerLocation=Marker Position
-simpleMap.livetable.doc.creationDate=Date Created
-simpleMap.livetable._actions=Actions
-pathMap.livetable.doc.title=Map Name
-pathMap.livetable.source=Source
-pathMap.livetable.destination=Destination
-pathMap.livetable.doc.creationDate=Date Created
-pathMap.livetable._actions=Actions</content>
+  <content/>
   <object>
-    <name>Map.Code.Translations</name>
+    <name>Map.Code.PathMap.PathMapTemplate</name>
     <number>0</number>
-    <className>XWiki.TranslationDocumentClass</className>
-    <guid>1b5ffa63-62d3-4451-908b-ed2f9223c348</guid>
+    <className>Map.Code.PathMap.PathMapClass</className>
+    <guid>a26f76d3-7b53-4733-846a-fd7b4860bd97</guid>
     <class>
-      <name>XWiki.TranslationDocumentClass</name>
+      <name>Map.Code.PathMap.PathMapClass</name>
       <customClass/>
       <customMapping/>
       <defaultViewSheet/>
@@ -65,25 +54,40 @@ pathMap.livetable._actions=Actions</content>
       <defaultWeb/>
       <nameField/>
       <validationScript/>
-      <scope>
-        <cache>0</cache>
+      <destination>
+        <customDisplay/>
         <disabled>0</disabled>
-        <displayType>select</displayType>
-        <multiSelect>0</multiSelect>
-        <name>scope</name>
-        <number>1</number>
-        <prettyName>Scope</prettyName>
-        <relationalStorage>0</relationalStorage>
-        <separator> </separator>
-        <separators>|, </separators>
-        <size>1</size>
+        <hint>Location of the destination</hint>
+        <name>destination</name>
+        <number>2</number>
+        <picker>0</picker>
+        <prettyName>Destination</prettyName>
+        <size>30</size>
         <unmodifiable>0</unmodifiable>
-        <values>GLOBAL|WIKI|USER|ON_DEMAND</values>
-        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
-      </scope>
+        <validationMessage/>
+        <validationRegExp/>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </destination>
+      <source>
+        <customDisplay/>
+        <disabled>0</disabled>
+        <hint>Location of the source</hint>
+        <name>source</name>
+        <number>1</number>
+        <picker>0</picker>
+        <prettyName>Source Point</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <validationMessage/>
+        <validationRegExp/>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </source>
     </class>
     <property>
-      <scope>WIKI</scope>
+      <destination/>
+    </property>
+    <property>
+      <source/>
     </property>
   </object>
 </xwikidoc>

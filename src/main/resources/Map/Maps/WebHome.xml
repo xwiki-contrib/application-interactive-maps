@@ -28,11 +28,11 @@
   <translation>0</translation>
   <creator>xwiki:XWiki.Admin</creator>
   <creationDate>1558443813000</creationDate>
-  <parent>Map.WebHome</parent>
+  <parent>Map</parent>
   <author>xwiki:XWiki.Admin</author>
   <contentAuthor>xwiki:XWiki.Admin</contentAuthor>
-  <date>1558444234000</date>
-  <contentUpdateDate>1558444234000</contentUpdateDate>
+  <date>1558472177000</date>
+  <contentUpdateDate>1558472177000</contentUpdateDate>
   <version>1.1</version>
   <title>Maps</title>
   <comment/>
@@ -54,5 +54,22 @@
    "rowCount": 10
 })
 #livetable("simpleMapTable" $columns $columnsProperties $options)
+{{/velocity}}
+== Path Maps ==
+{{velocity}}
+#set($columns = ["doc.title", "source", "destination", "doc.creationDate", "_actions"])
+#set($columnsProperties = {
+    "doc.title" : { "type" : "text", "link" : "view", "html" : "true", "sortable":true },
+    "source" : { "type" : "text" },
+    "destination" : { "type" : "text" },
+    "_actions" : {"actions": ["edit","delete"]}
+})
+#set($options = {
+   "className":"Map.Code.PathMap.PathMapClass",
+   "translationPrefix" : "pathMap.livetable.",
+   "tagCloud" : true,
+   "rowCount": 10
+})
+#livetable("pathMapTable" $columns $columnsProperties $options)
 {{/velocity}}</content>
 </xwikidoc>
