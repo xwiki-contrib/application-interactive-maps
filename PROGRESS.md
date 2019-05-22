@@ -31,3 +31,6 @@
 - [x] Use decoded polyline geometries from OSRM to generate paths
 - [x] Create reverseGeocode to convert latlng to place name using nominatim
 - [x] Use reverseGeocode as popup for PathMap source and destination
+- [x] Code for creating Path Maps with Map Editor
+- [x] jsx for the Path Maps Map Editor
+- [x] Combine multiple Map Editors on a single page
