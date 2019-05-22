@@ -28,15 +28,15 @@
     <version>8.4-6</version>
   </parent>
   <groupId>org.xwiki.contrib</groupId>
-  <artifactId>application-map</artifactId>
-  <version>1.0-SNAPSHOT</version>
-  <name>Map Application</name>
+  <artifactId>application-interactive-maps</artifactId>
+  <version>1.0.2-SNAPSHOT</version>
+  <name>Interactive Maps Application</name>
   <packaging>xar</packaging>
   <description>Create interactive maps easily, share locations and associate structured data with areas</description>
   <scm>
-    <connection>scm:git:git://github.com/xwiki-contrib/(your extension id).git</connection>
-    <developerConnection>scm:git:git@github.com:xwiki-contrib/(your extension id).git</developerConnection>
-    <url>https://github.com/xwiki-contrib/(your extension id)</url>
+    <connection>scm:git:git://github.com/xwiki-contrib/application-interactive-maps.git</connection>
+    <developerConnection>scm:git:git@github.com:xwiki-contrib/application-interactive-maps.git</developerConnection>
+    <url>https://github.com/xwiki-contrib/application-interactive-maps</url>
   </scm>
   <developers>
     <developer>
@@ -44,19 +44,23 @@
       <name>Fawad Ali</name>
     </developer>
   </developers>
+  <issueManagement>
+    <system>jira</system>
+    <url>http://jira.xwiki.org/jira/browse/INTMAP</url>
+  </issueManagement>
   <properties>
     <!-- Don't check for API backward-compatibility here since there's no Java code. -->
     <xwiki.revapi.skip>true</xwiki.revapi.skip>
 
     <!-- The Extension name. If not defined, the <name> property is used -->
-    <xwiki.extension.name>Map Application</xwiki.extension.name>
+    <xwiki.extension.name>Interactive Maps Application</xwiki.extension.name>
 
     <!-- The extension's category -->
     <xwiki.extension.category>application</xwiki.extension.category>
 
     <!-- Issue management -->
     <xwiki.release.jira.skip>false</xwiki.release.jira.skip>
-    <xwiki.issueManagement.jira.id>(your jira project id)</xwiki.issueManagement.jira.id>
+    <xwiki.issueManagement.jira.id>INTMAP</xwiki.issueManagement.jira.id>
   </properties>
   <dependencies>
     <dependency>
