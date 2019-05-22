@@ -447,9 +447,7 @@ define('leaflet-commons', ['jquery'], function($){
         var queryURL = 'https://nominatim.openstreetmap.org/search';
         var q = location;
         //Make the request
-gin: 0;&amp;#xd;
-}&amp;#xd;
-.leaflet-contrq, 'format':'json'}).then(function(locFromAddress) {
+        $.getJSON(queryURL, {'q':q, 'format':'json'}).then(function(locFromAddress) {
           if (locFromAddress != undefined &amp;&amp; locFromAddress.length &gt; 0) {
             var latLng = [locFromAddress[0].lat, locFromAddress[0].lon];
             //Set the location to the coordinates gotten from openstreetmap api
@@ -466,7 +464,7 @@ gin: 0;&amp;#xd;
     reverseGeocode: function(location, callback){
       var queryURL = 'https://nominatim.openstreetmap.org/reverse';
       //Make the request
-      $.getJSON(queryURL, {'lat':location.lat, 'lon': location.lng, 'format':'json'}).then(function(locationInfo) {
+      $.getJSON(queryURL, {'lat':location.lat, 'lon':location.lng, 'format':'json'}).then(function(locationInfo) {
         if (locationInfo != undefined) {
           //Set the place name gotten from openstreetmap api
           var placeName = locationInfo.display_name;
