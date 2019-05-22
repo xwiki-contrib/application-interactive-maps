@@ -22,3 +22,12 @@
 - [x] Create Map.Maps.WebHome for displaying all created maps
 - [x] Minor changes in velocity code for Map Editor
 - [x] Create a leaflet-commons module for common leaflet functions
+- [x] Change leaflet-map javascript code to support general functions
+- [x] Create class for and set up PathMap
+- [x] Analyze OSRM to get path between two points
+- [x] Get and display path between two points as steps (not smooth)
+## Day 5 (22 May 2019)
+- [x] Get polyline decode from @mapbox/polyline
+- [x] Use decoded polyline geometries from OSRM to generate paths
+- [x] Create reverseGeocode to convert latlng to place name using nominatim
+- [x] Use reverseGeocode as popup for PathMap source and destination
