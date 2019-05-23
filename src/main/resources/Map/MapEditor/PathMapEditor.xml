@@ -236,10 +236,14 @@
       });
       var routesFeatureGroup = L.featureGroup();
       $('#remove-pathpoints').on('click', function(){
-        sourceMarker.remove();
-        sourceMarker = undefined;
-        destinationMarker.remove();
-        destinationMarker = undefined;
+        if(sourceMarker){
+          sourceMarker.remove();
+          sourceMarker = undefined;
+        }
+        if(destinationMarker){
+          destinationMarker.remove();
+          destinationMarker = undefined;
+        }
         if(routesFeatureGroup){
           routesFeatureGroup.clearLayers();
         }
