@@ -27,12 +27,12 @@
   <defaultLanguage/>
   <translation>0</translation>
   <creator>xwiki:XWiki.Admin</creator>
-  <creationDate>1558462863000</creationDate>
+  <creationDate>1558529062000</creationDate>
   <parent>Map.Code.PathMap.PathMapClass</parent>
   <author>xwiki:XWiki.Admin</author>
   <contentAuthor>xwiki:XWiki.Admin</contentAuthor>
-  <date>1558524382000</date>
-  <contentUpdateDate>1558524382000</contentUpdateDate>
+  <date>1558529504000</date>
+  <contentUpdateDate>1558529504000</contentUpdateDate>
   <version>1.1</version>
   <title>#if($doc.documentReference.name == 'PathMapSheet')PathMapSheet#{else}$services.display.title($doc, {'displayerHint': 'default', 'outputSyntaxId': 'plain/1.0'})#end</title>
   <comment/>
@@ -44,14 +44,26 @@
 ## At first you should keep the default presentation and just save the document.
 
 #if ($xcontext.action == 'edit')
-  #set($class = $doc.getObject('Map.Code.PathMap.PathMapClass').xWikiClass)
-  #foreach($prop in $class.properties)
-    ; $doc.displayPrettyName($prop.name)
-    : $doc.display($prop.name)
-  #end
+{{html wiki="true"}}
+(% class="xform" %)(((
+  &lt;dl&gt;
+    #set ($class = $doc.getObject('Map.Code.PathMap.PathMapClass').xWikiClass)
+    #foreach ($prop in $class.properties)
+      &lt;dt&gt;
+        &lt;label&gt;$prop.prettyName&lt;/label&gt;
+        &lt;span class="xHint"&gt;$prop.hint&lt;/span&gt;
+      &lt;/dt&gt;
+      &lt;dd&gt;
+        $doc.display($prop.name)
+      &lt;/dd&gt;
+    #end
+  &lt;/dl&gt;
+)))
+{{/html}}
 #elseif($doc.documentReference.name == 'PathMapSheet' || $doc.documentReference.name == 'PathMapTemplate')
   ## Do nothing
 #else
+  ## Get css and js for the map
   #set ($discard = $xwiki.ssx.use('Map.Code.Leaflet'))
   #set ($discard = $xwiki.jsx.use('Map.Code.Leaflet'))
   ## Create the map

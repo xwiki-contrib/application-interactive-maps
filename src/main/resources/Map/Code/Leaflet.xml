@@ -27,12 +27,12 @@
   <defaultLanguage/>
   <translation>0</translation>
   <creator>xwiki:XWiki.Admin</creator>
-  <creationDate>1558169692000</creationDate>
+  <creationDate>1558529061000</creationDate>
   <parent>xwiki:Map.MapEditor.WebHome</parent>
   <author>xwiki:XWiki.Admin</author>
   <contentAuthor>xwiki:XWiki.Admin</contentAuthor>
-  <date>1558524150000</date>
-  <contentUpdateDate>1558169692000</contentUpdateDate>
+  <date>1558555098000</date>
+  <contentUpdateDate>1558529061000</contentUpdateDate>
   <version>1.1</version>
   <title>Leaflet</title>
   <comment/>
@@ -126,7 +126,7 @@
       <code>requirejs.config({
   paths: {
     'leaflet': ['$services.webjars.url("leaflet", "leaflet.js")'],
-    'leafletSearch': ['https://cdn.jsdelivr.net/npm/leaflet-search@2.9.8/dist/leaflet-search.src.min']
+    'leafletSearch': ['https://cdn.jsdelivr.net/npm/leaflet-search@2.9.8/dist/leaflet-search.src.min'] //To be used as a webjar
   },
   shim: {
     'leaflet-search.src.min': ['leaflet']
@@ -135,37 +135,8 @@
 require(['jquery', 'leaflet', 'leafletSearch', 'leaflet-commons'], function($, leaflet, ls, leafletCommons){
   'use strict';
 
-  function setCommonMapOptions(element){
-    //Get options from the element (can be extended easily)
-    var options = {};
-    options.mapId = element.id;
-    var zoom = element.dataset.zoom;
-    options.zoom = zoom !== undefined ? zoom : 14;
-    options.tiles = element.dataset.tiles !== undefined ? element.dataset.tiles : 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
-    return options;
-  }
-
-  function createEmptyMap(options, data){
-    //Create the map
-    var mapId = options.mapId,
-        zoom = options.zoom,
-        tiles = options.tiles,
-        map = L.map(mapId).setView(data.location, zoom);
-    //Add a tiles layer to the map (the background)
-    L.tileLayer(tiles, {
-      attribution: '&amp;copy; &lt;a href="https://www.openstreetmap.org/"&gt;OpenStreetMap&lt;/a&gt; | &lt;a href="https://www.xwiki.org"&gt;XWiki&lt;/a&gt;',
-      maxZoom: 18,
-      id: 'mapbox.streets'
-    }).addTo(map);
-    //Adding the navigation control
-    leafletCommons.addNavigation(map);
-    //Adding the search control
-    leafletCommons.addSearch(map);
-    return map;
-  }
-
   function createSimpleMap(options, data){
-    var map = createEmptyMap(options, data);
+    var map = leafletCommons.createEmptyMap(options, data);
     //Set options for the icon of marker
     var markerIcon;
     if(data.icon){
@@ -192,38 +163,27 @@ require(['jquery', 'leaflet', 'leafletSearch', 'leaflet-commons'], function($, l
   }
 
   function createPathMap(options, data){
-    var map = createEmptyMap(options, data);
+    var map = leafletCommons.createEmptyMap(options, data);
     //Get the name of the place to set as popupn for source and destination
     var source = L.latLng(data.source);
     leafletCommons.reverseGeocode(source, function(sourceName){
-      var sourceMarker = L.marker(source).bindPopup(sourceName);
+      var sourceMarker = L.marker(source);
+      if(sourceName){
+        sourceMarker.bindPopup(sourceName);
+      }
       sourceMarker.addTo(map);
     });
     var destination = L.latLng(data.destination);
     leafletCommons.reverseGeocode(destination, function(destinationName){
-      var destinationMarker = L.marker(destination).bindPopup(destinationName);
+      var destinationMarker = L.marker(destination);
+      if(destinationName){
+        destinationMarker.bindPopup(destinationName);
+      }
       destinationMarker.addTo(map);
     });
     //Get the path as polyline from osm open source routing machine (osrm)
-    var sourceDestForOSRM = data.source.reverse().join() + ';' + data.destination.reverse().join();
-    var queryURL = 'http://router.project-osrm.org/route/v1/car/'+sourceDestForOSRM;
-    $.getJSON(queryURL, {'alternatives':'true', 'steps':'true', 'geometries':'polyline6', 'overview':'simplified'}).then(function(osrmObject) {
-      var routeColors = ['#7026c1', '#2662c1', '#c12626', '#c18f26', '#26c147', 'green'];
-      var routes = osrmObject.routes;
-      //Going reverse so that the recommended route (at Array(0)) is highest in layers
-      for(var i=routes.length-1; i&gt;=0; i--){
-        var latlngs = [];
-        var steps = osrmObject.routes[i].legs[0].steps;
-        var polylineFeatureGroup = L.featureGroup();
-        var polyline;
-        for(var j=0; j&lt;steps.length; j++){
-          //Polyline is decoded from the osrm response using mapbox/polyline decode method
-          polyline = L.polyline(leafletCommons.decodePolyline(steps[j].geometry, 6), {color: routeColors[i], weight: 7, stroke: 'white', lineCap: 'round'});
-          polylineFeatureGroup.addLayer(polyline);
-        }
-        polylineFeatureGroup.addTo(map);
-        polylineFeatureGroup.bindPopup("Route " + (i+1));
-      }
+    leafletCommons.generatePath(data, function(polylineFeatureGroup){
+      polylineFeatureGroup.addTo(map);
       map.fitBounds(polylineFeatureGroup.getBounds());
     });
   }
@@ -231,7 +191,7 @@ require(['jquery', 'leaflet', 'leafletSearch', 'leaflet-commons'], function($, l
   function init(){
     //Create SimpleMap
     $$('.map-container-simplemap').each(function(element){
-      var options = setCommonMapOptions(element);
+      var options = leafletCommons.setCommonMapOptions(element);
       //Get the data to be displayed on the map
       var data = {};
       data.icon = element.dataset.markericon;
@@ -245,7 +205,7 @@ require(['jquery', 'leaflet', 'leafletSearch', 'leaflet-commons'], function($, l
     });
     //Create PathMap
     $$('.map-container-pathmap').each(function(element){
-      var options = setCommonMapOptions(element);
+      var options = leafletCommons.setCommonMapOptions(element);
       //Get the data to be displayed on the map
       var data = {};
       leafletCommons.getLocationCoords(element.dataset.source, function(source){
@@ -359,8 +319,40 @@ require(['jquery', 'leaflet', 'leafletSearch', 'leaflet-commons'], function($, l
     </property>
     <property>
       <code>//COMMON FUNCTIONS
+//Some functions are interdependent so double check before editing a function
 define('leaflet-commons', ['jquery'], function($){
   return {
+
+    //Take options from the element and set for supplying to the map
+    setCommonMapOptions: function(element){
+      //Get options from the element (can be extended easily)
+      var options = {};
+      options.mapId = element.id;
+      var zoom = element.dataset.zoom;
+      options.zoom = zoom !== undefined ? zoom : 14;
+      options.tiles = element.dataset.tiles !== undefined ? element.dataset.tiles : 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+      return options;
+    },
+
+    //Create an empty map and return it
+    createEmptyMap: function(options, data){
+      //Create the map
+      var mapId = options.mapId,
+          zoom = options.zoom,
+          tiles = options.tiles,
+          map = L.map(mapId).setView(data.location, zoom);
+      //Add a tiles layer to the map (the background)
+      L.tileLayer(tiles, {
+        attribution: '&amp;copy; &lt;a href="https://www.openstreetmap.org/"&gt;OpenStreetMap&lt;/a&gt; | &lt;a href="https://www.xwiki.org"&gt;XWiki&lt;/a&gt;',
+        maxZoom: 18,
+        id: 'mapbox.streets'
+      }).addTo(map);
+      //Adding the navigation control
+      this.addNavigation(map);
+      //Adding the search control
+      this.addSearch(map);
+      return map;
+    },
 
     //Remove the old marker and add a new one
     addMarker: function(oldMarker, map, e){
@@ -415,7 +407,7 @@ define('leaflet-commons', ['jquery'], function($){
         jsonpParam: 'json_callback',
         propertyName: 'display_name',
         propertyLoc: ['lat', 'lon'],
-        marker: L.circleMarker([0, 0], {radius: 30}).bindPopup('Searched location'),
+        marker: L.circleMarker([0, 0], {radius: 30}),
         autoCollapse: true,
         autoType: false,
         minLength: 2,
@@ -503,6 +495,36 @@ define('leaflet-commons', ['jquery'], function($){
           coordinates.push([lat / factor, lng / factor]);
       }
       return coordinates;
+    },
+
+    //Gets a featureGroup of polylines that connect two paths from Open Source Routing Machine (project-osrm.org)
+    generatePath: function(data, callback){
+      var rootScope = this;
+      //Get the path as polyline from osm open source routing machine (osrm)
+      //OSRM takes coords as [longitude,latitude] not [latitude,longitude]
+      var sourceDestForOSRM = data.source.reverse().join() + ';' + data.destination.reverse().join();
+      var queryURL = 'http://router.project-osrm.org/route/v1/car/'+sourceDestForOSRM;
+      $.getJSON(queryURL, {'alternatives':'true', 'steps':'true', 'geometries':'polyline6', 'overview':'simplified'}).then(function(osrmObject) {
+        //Layers/features hierarchy: routesFeatureGroup -&gt; polylineFeatureGroup -&gt; polyline ('-&gt;' means 'contains')
+        var routesFeatureGroup = L.featureGroup();
+        var routeColors = ['#2662c1', '#518be8', '#79a9f7', '#8eb9ff', '#b2cfff', '#b2cfff'];
+        var routes = osrmObject.routes;
+        //Going reverse so that the recommended route (at Array(0)) is highest in layers
+        for(var i=routes.length-1; i&gt;=0; i--){
+          var latlngs = [];
+          var polylineFeatureGroup = L.featureGroup();
+          var steps = osrmObject.routes[i].legs[0].steps;
+          var polyline;
+          for(var j=0; j&lt;steps.length; j++){
+            //Polyline is decoded from the osrm response using mapbox/polyline decode method
+            polyline = L.polyline(rootScope.decodePolyline(steps[j].geometry, 6), {color: routeColors[i], weight: 7, stroke: 'white', lineCap: 'round'});
+            polylineFeatureGroup.addLayer(polyline);
+          }
+          polylineFeatureGroup.bindPopup("Route " + (i+1));
+          routesFeatureGroup.addLayer(polylineFeatureGroup);
+        }
+        callback(routesFeatureGroup);
+      });
     }
 
   }
@@ -692,6 +714,9 @@ define('leaflet-commons', ['jquery'], function($){
   border-radius: 0;
   background: white;
   color: black;
+}
+.leaflet-control-container&gt;div{
+  z-index: 999;
 }</code>
     </property>
     <property>

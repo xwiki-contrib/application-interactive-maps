@@ -27,12 +27,12 @@
   <defaultLanguage/>
   <translation>0</translation>
   <creator>xwiki:XWiki.Admin</creator>
-  <creationDate>1558225154000</creationDate>
+  <creationDate>1558529062000</creationDate>
   <parent>Map.Code.SimpleMap.SimpleMapClass</parent>
   <author>xwiki:XWiki.Admin</author>
   <contentAuthor>xwiki:XWiki.Admin</contentAuthor>
-  <date>1558524088000</date>
-  <contentUpdateDate>1558524088000</contentUpdateDate>
+  <date>1558529598000</date>
+  <contentUpdateDate>1558529598000</contentUpdateDate>
   <version>1.1</version>
   <title>#if($doc.documentReference.name == 'SimpleMapSheet')SimpleMapSheet#{else}$services.display.title($doc, {'displayerHint': 'default', 'outputSyntaxId': 'plain/1.0'})#end</title>
   <comment/>
@@ -42,13 +42,7 @@
   <content>{{velocity}}
 ## You can modify this page to customize the presentation of your object.
 ## At first you should keep the default presentation and just save the document.
-
-## Get the css and js for the map
-#set ($discard = $xwiki.ssx.use('Map.Code.Leaflet'))
-#set ($discard = $xwiki.jsx.use('Map.Code.Leaflet'))
-#set ($mapId = $util.generateRandomString(5))
 #set ($currentDoc = $doc.getDocumentReference())
-
 ## If editing, then display editing options
 #if ($xcontext.action == 'edit')
 {{html wiki="true"}}
@@ -61,16 +55,20 @@
         &lt;span class="xHint"&gt;$prop.hint&lt;/span&gt;
       &lt;/dt&gt;
       &lt;dd&gt;
-        $doc.display($prop.getName())
+        $doc.display($prop.name)
       &lt;/dd&gt;
     #end
   &lt;/dl&gt;
 )))
 {{/html}}
-#elseif ($currentDoc == 'xwiki:Map.Code.SimpleMap.SimpleMapSheet' || $currentDoc == 'xwiki:Map.Code.SimpleMap.SimpleMapTemplate')
+#elseif ($doc.documentReference.name == 'SimpleMapSheet' || $doc.documentReference.name == 'SimpleMapTemplate')
   ## Do nothing
 #else
+  ## Get the css and js for the map
+  #set ($discard = $xwiki.ssx.use('Map.Code.Leaflet'))
+  #set ($discard = $xwiki.jsx.use('Map.Code.Leaflet'))
   ## Create the map
+  #set ($mapId = $util.generateRandomString(5))
   #set ($class = $doc.getObject('Map.Code.SimpleMap.SimpleMapClass'))
   #set ($markerLoc = $class.getValue('markerLocation'))
   #set ($popupData = $class.getValue('popupData'))

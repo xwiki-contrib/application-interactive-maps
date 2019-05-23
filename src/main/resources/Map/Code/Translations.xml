@@ -27,21 +27,24 @@
   <defaultLanguage>en</defaultLanguage>
   <translation>0</translation>
   <creator>xwiki:XWiki.Admin</creator>
-  <creationDate>1558344072000</creationDate>
+  <creationDate>1558529062000</creationDate>
   <parent>WebHome</parent>
   <author>xwiki:XWiki.Admin</author>
   <contentAuthor>xwiki:XWiki.Admin</contentAuthor>
-  <date>1558472145000</date>
-  <contentUpdateDate>1558472145000</contentUpdateDate>
+  <date>1558582164000</date>
+  <contentUpdateDate>1558582164000</contentUpdateDate>
   <version>1.1</version>
   <title>Translations</title>
   <comment/>
   <minorEdit>false</minorEdit>
   <syntaxId>plain/1.0</syntaxId>
   <hidden>true</hidden>
-  <content>mapapp.markerLocation=Marker Position
-mapapp.popupData=Popup Information
-mapapp.mapName=Map Name
+  <content>intmap.mapEditor.mapName=Map Name
+intmap.mapEditor.createMap=Create Map
+intmap.markerLocation=Marker Position
+intmap.popupData=Popup Information
+intmap.basicMapEditor.hint=Click to place a marker. You can also view popup information if set.
+intmap.basicMapEditor.customMarker=Custom Marker Image
 simpleMap.livetable.doc.title=Map Name
 simpleMap.livetable.markerLocation=Marker Position
 simpleMap.livetable.doc.creationDate=Date Created
@@ -50,7 +53,12 @@ pathMap.livetable.doc.title=Map Name
 pathMap.livetable.source=Source
 pathMap.livetable.destination=Destination
 pathMap.livetable.doc.creationDate=Date Created
-pathMap.livetable._actions=Actions</content>
+pathMap.livetable._actions=Actions
+pathMap.livetable.emptyvalue=None
+intmap.pathMapEditor.hint=Click to place markers for source and destination.
+intmap.pathMapEditor.generatePath=Generate Path
+intmap.pathMapEditor.removePoints=Remove Points
+intmap.pathMapEditor.error=Both source and destination locations are required</content>
   <object>
     <name>Map.Code.Translations</name>
     <number>0</number>
