@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <!--
  * See the NOTICE file distributed with this work for additional
  * information regarding copyright ownership.
@@ -31,7 +30,7 @@
   <parent>XWiki.XWikiClasses</parent>
   <author>xwiki:XWiki.Admin</author>
   <contentAuthor>xwiki:XWiki.Admin</contentAuthor>
-  <date>1558529062000</date>
+  <date>1558606152000</date>
   <contentUpdateDate>1558529062000</contentUpdateDate>
   <version>1.1</version>
   <title>PathMapClass</title>

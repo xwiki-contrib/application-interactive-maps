@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <!--
  * See the NOTICE file distributed with this work for additional
  * information regarding copyright ownership.
@@ -31,7 +30,7 @@
   <parent>xwiki:Map.MapEditor.WebHome</parent>
   <author>xwiki:XWiki.Admin</author>
   <contentAuthor>xwiki:XWiki.Admin</contentAuthor>
-  <date>1558555098000</date>
+  <date>1558641136000</date>
   <contentUpdateDate>1558529061000</contentUpdateDate>
   <version>1.1</version>
   <title>Leaflet</title>
@@ -132,71 +131,74 @@
     'leaflet-search.src.min': ['leaflet']
   }
 });
-require(['jquery', 'leaflet', 'leafletSearch', 'leaflet-commons'], function($, leaflet, ls, leafletCommons){
+require(['jquery', 'leaflet', 'leafletSearch', 'leaflet-commons'], function ($, leaflet, ls, leafletCommons) {
   'use strict';
 
-  function createSimpleMap(options, data){
+  function createSimpleMap(options, data)
+  {
     var map = leafletCommons.createEmptyMap(options, data);
     //Set options for the icon of marker
     var markerIcon;
-    if(data.icon){
+    if (data.icon) {
       markerIcon = data.icon;
-    }else{
+    } else {
       markerIcon = "$services.webjars.url('leaflet', 'images/marker-icon.png')";
     }
     var icon = L.icon({
       iconUrl: markerIcon,
       iconRetinaUrl: "$services.webjars.url('leaflet', 'images/marker-icon-2x.png')",
       shadowUrl: "$services.webjars.url('leaflet', 'images/marker-shadow.png')",
-      iconSize: ['auto',41],
-      iconAnchor: [12,41],
-      popupAnchor: [1,-34],
-      tooltipAnchor: [16,-28],
-      shadowSize: [41,41]
+      iconSize: ['auto', 41],
+      iconAnchor: [12, 41],
+      popupAnchor: [1, -34],
+      tooltipAnchor: [16, -28],
+      shadowSize: [41, 41]
     });
     //Create a marker at the specified location and add it to map
-    var marker = L.marker(data.location, {icon: icon}).addTo(map);
+    var marker = L.marker(data.location, { icon: icon }).addTo(map);
     //If popup information is set, bind it to the marker
-    if(data.popup){
+    if (data.popup) {
       marker.bindPopup(data.popup);
     }
   }
 
-  function createPathMap(options, data){
+  function createPathMap(options, data)
+  {
     var map = leafletCommons.createEmptyMap(options, data);
     //Get the name of the place to set as popupn for source and destination
     var source = L.latLng(data.source);
-    leafletCommons.reverseGeocode(source, function(sourceName){
+    leafletCommons.reverseGeocode(source, function (sourceName) {
       var sourceMarker = L.marker(source);
-      if(sourceName){
+      if (sourceName) {
         sourceMarker.bindPopup(sourceName);
       }
       sourceMarker.addTo(map);
     });
     var destination = L.latLng(data.destination);
-    leafletCommons.reverseGeocode(destination, function(destinationName){
+    leafletCommons.reverseGeocode(destination, function (destinationName) {
       var destinationMarker = L.marker(destination);
-      if(destinationName){
+      if (destinationName) {
         destinationMarker.bindPopup(destinationName);
       }
       destinationMarker.addTo(map);
     });
     //Get the path as polyline from osm open source routing machine (osrm)
-    leafletCommons.generatePath(data, function(polylineFeatureGroup){
+    leafletCommons.generatePath(data, function (polylineFeatureGroup) {
       polylineFeatureGroup.addTo(map);
       map.fitBounds(polylineFeatureGroup.getBounds());
     });
   }
 
-  function init(){
+  function init()
+  {
     //Create SimpleMap
-    $$('.map-container-simplemap').each(function(element){
+    $$('.map-container-simplemap').each(function (element) {
       var options = leafletCommons.setCommonMapOptions(element);
       //Get the data to be displayed on the map
       var data = {};
       data.icon = element.dataset.markericon;
       data.location = element.dataset.location;
-      leafletCommons.getLocationCoords(data.location, function(location){
+      leafletCommons.getLocationCoords(data.location, function (location) {
         data.location = location;
         data.popup = element.dataset.popup;
         //Create the map with the data collected
@@ -204,12 +206,12 @@ require(['jquery', 'leaflet', 'leafletSearch', 'leaflet-commons'], function($, l
       });
     });
     //Create PathMap
-    $$('.map-container-pathmap').each(function(element){
+    $$('.map-container-pathmap').each(function (element) {
       var options = leafletCommons.setCommonMapOptions(element);
       //Get the data to be displayed on the map
       var data = {};
-      leafletCommons.getLocationCoords(element.dataset.source, function(source){
-        leafletCommons.getLocationCoords(element.dataset.destination, function(destination){
+      leafletCommons.getLocationCoords(element.dataset.source, function (source) {
+        leafletCommons.getLocationCoords(element.dataset.destination, function (destination) {
           data.location = source;
           data.source = source;
           data.destination = destination;
@@ -320,11 +322,12 @@ require(['jquery', 'leaflet', 'leafletSearch', 'leaflet-commons'], function($, l
     <property>
       <code>//COMMON FUNCTIONS
 //Some functions are interdependent so double check before editing a function
-define('leaflet-commons', ['jquery'], function($){
+define('leaflet-commons', ['jquery'], function ($) {
   return {
 
     //Take options from the element and set for supplying to the map
-    setCommonMapOptions: function(element){
+    setCommonMapOptions: function (element)
+    {
       //Get options from the element (can be extended easily)
       var options = {};
       options.mapId = element.id;
@@ -335,12 +338,13 @@ define('leaflet-commons', ['jquery'], function($){
     },
 
     //Create an empty map and return it
-    createEmptyMap: function(options, data){
+    createEmptyMap: function (options, data)
+    {
       //Create the map
       var mapId = options.mapId,
-          zoom = options.zoom,
-          tiles = options.tiles,
-          map = L.map(mapId).setView(data.location, zoom);
+        zoom = options.zoom,
+        tiles = options.tiles,
+        map = L.map(mapId).setView(data.location, zoom);
       //Add a tiles layer to the map (the background)
       L.tileLayer(tiles, {
         attribution: '&amp;copy; &lt;a href="https://www.openstreetmap.org/"&gt;OpenStreetMap&lt;/a&gt; | &lt;a href="https://www.xwiki.org"&gt;XWiki&lt;/a&gt;',
@@ -355,18 +359,20 @@ define('leaflet-commons', ['jquery'], function($){
     },
 
     //Remove the old marker and add a new one
-    addMarker: function(oldMarker, map, e){
-      if(oldMarker){
+    addMarker: function (oldMarker, map, e)
+    {
+      if (oldMarker) {
         oldMarker.remove();
       }
       return L.marker(e.latlng).addTo(map);
     },
 
     //Works only if the connection is secure (https etc.)
-    locateUser: function(map){
+    locateUser: function (map)
+    {
       var locMarker = L.circleMarker();
-      map.locate({setView: true, maxZoom: 16, watch: false});
-      map.on('locationfound', function(e){
+      map.locate({ setView: true, maxZoom: 16, watch: false });
+      map.on('locationfound', function (e) {
         locMarker.remove();
         locMarker = L.circleMarker(e.latlng, {
           color: '#146ea7',
@@ -378,10 +384,11 @@ define('leaflet-commons', ['jquery'], function($){
     },
 
     //Function for adding navigation control
-    addNavigation: function(map){
+    addNavigation: function (map)
+    {
       var rootScope = this;
       L.Control.navigation = L.Control.extend({
-        onAdd: function(map){
+        onAdd: function (map) {
           var container = L.DomUtil.create('div', 'leaflet-control-loc');
           var locateIcon = L.DomUtil.create('div', 'fa fa-map-marker');
           locateIcon.setAttribute('title', 'Current location');
@@ -392,22 +399,23 @@ define('leaflet-commons', ['jquery'], function($){
             .on(container, 'click', this._locateUser, this);
           return container;
         },
-        _locateUser: function(e){
+        _locateUser: function (e) {
           e.preventDefault();
           rootScope.locateUser(this._map);
         }
       });
-      (new L.Control.navigation({position: 'topright'})).addTo(map);
+      (new L.Control.navigation({ position: 'topright' })).addTo(map);
     },
 
     //Function for adding search control
-    addSearch: function(map){
+    addSearch: function (map)
+    {
       map.addControl(new L.Control.Search({
         url: 'http://nominatim.openstreetmap.org/search?format=json&amp;q={s}',
         jsonpParam: 'json_callback',
         propertyName: 'display_name',
         propertyLoc: ['lat', 'lon'],
-        marker: L.circleMarker([0, 0], {radius: 30}),
+        marker: L.circleMarker([0, 0], { radius: 30 }),
         autoCollapse: true,
         autoType: false,
         minLength: 2,
@@ -416,17 +424,18 @@ define('leaflet-commons', ['jquery'], function($){
     },
 
     //Return latlng if location is address or a string of latlng
-    getLocationCoords: function(location, callback){
+    getLocationCoords: function (location, callback)
+    {
       //Check if the location type is an address or coordinates
       var locType = 'address';
-      if(location){
+      if (location) {
         var checkLoc = location.split(',');
         //Location type is coordinates if there are two values and each is a number
-        if(checkLoc.length == 2 &amp;&amp; !isNaN(checkLoc[0].trim()) &amp;&amp; !isNaN(checkLoc[1].trim())){
+        if (checkLoc.length == 2 &amp;&amp; !isNaN(checkLoc[0].trim()) &amp;&amp; !isNaN(checkLoc[1].trim())) {
           locType = 'latLng';
         }
       }
-      if(locType == 'latLng'){
+      if (locType == 'latLng') {
         //Make an array for of the two coordinates
         var latLng = location.split(',').map((val) =&gt; {
           return val.trim()
@@ -439,7 +448,7 @@ define('leaflet-commons', ['jquery'], function($){
         var queryURL = 'https://nominatim.openstreetmap.org/search';
         var q = location;
         //Make the request
-        $.getJSON(queryURL, {'q':q, 'format':'json'}).then(function(locFromAddress) {
+        $.getJSON(queryURL, { 'q': q, 'format': 'json' }).then(function (locFromAddress) {
           if (locFromAddress != undefined &amp;&amp; locFromAddress.length &gt; 0) {
             var latLng = [locFromAddress[0].lat, locFromAddress[0].lon];
             //Set the location to the coordinates gotten from openstreetmap api
@@ -447,16 +456,17 @@ define('leaflet-commons', ['jquery'], function($){
             callback(location);
           } else {
             //Display an error if the address does not map to a location
-            new XWiki.widgets.Notification('Error while geocoding the address "' + q +'" with OpenStreetMap Nominatim', 'error');
+            new XWiki.widgets.Notification('Error while geocoding the address "' + q + '" with OpenStreetMap Nominatim', 'error');
           }
         });
       }
     },
 
-    reverseGeocode: function(location, callback){
+    reverseGeocode: function (location, callback)
+    {
       var queryURL = 'https://nominatim.openstreetmap.org/reverse';
       //Make the request
-      $.getJSON(queryURL, {'lat':location.lat, 'lon':location.lng, 'format':'json'}).then(function(locationInfo) {
+      $.getJSON(queryURL, { 'lat': location.lat, 'lon': location.lng, 'format': 'json' }).then(function (locationInfo) {
         if (locationInfo != undefined) {
           //Set the place name gotten from openstreetmap api
           var placeName = locationInfo.display_name;
@@ -464,66 +474,83 @@ define('leaflet-commons', ['jquery'], function($){
         } else {
           callback('Place');
           //Display an error if the address does not map to a location
-          new XWiki.widgets.Notification('Error while reverse geocoding the location "' + location +'" with OpenStreetMap Nominatim', 'error');
+          new XWiki.widgets.Notification('Error while reverse geocoding the location "' + location + '" with OpenStreetMap Nominatim', 'error');
         }
       });
     },
 
     //Decodes the polylines (taken from @mapbox/polyline)
-    decodePolyline: function(str, precision) {
+    decodePolyline: function (str, precision)
+    {
       var index = 0, lat = 0, lng = 0, coordinates = [], shift = 0, result = 0, byte = null, latitude_change, longitude_change, factor = Math.pow(10, Number.isInteger(precision) ? precision : 5);
       while (index &lt; str.length) {
-          // Reset shift, result, and byte
-          byte = null;
-          shift = 0;
-          result = 0;
-          do {
-              byte = str.charCodeAt(index++) - 63;
-              result |= (byte &amp; 0x1f) &lt;&lt; shift;
-              shift += 5;
-          } while (byte &gt;= 0x20);
-          latitude_change = ((result &amp; 1) ? ~(result &gt;&gt; 1) : (result &gt;&gt; 1));
-          shift = result = 0;
-          do {
-              byte = str.charCodeAt(index++) - 63;
-              result |= (byte &amp; 0x1f) &lt;&lt; shift;
-              shift += 5;
-          } while (byte &gt;= 0x20);
-          longitude_change = ((result &amp; 1) ? ~(result &gt;&gt; 1) : (result &gt;&gt; 1));
-          lat += latitude_change;
-          lng += longitude_change;
-          coordinates.push([lat / factor, lng / factor]);
+        // Reset shift, result, and byte
+        byte = null;
+        shift = 0;
+        result = 0;
+        do {
+          byte = str.charCodeAt(index++) - 63;
+          result |= (byte &amp; 0x1f) &lt;&lt; shift;
+          shift += 5;
+        } while (byte &gt;= 0x20);
+        latitude_change = ((result &amp; 1) ? ~(result &gt;&gt; 1) : (result &gt;&gt; 1));
+        shift = result = 0;
+        do {
+          byte = str.charCodeAt(index++) - 63;
+          result |= (byte &amp; 0x1f) &lt;&lt; shift;
+          shift += 5;
+        } while (byte &gt;= 0x20);
+        longitude_change = ((result &amp; 1) ? ~(result &gt;&gt; 1) : (result &gt;&gt; 1));
+        lat += latitude_change;
+        lng += longitude_change;
+        coordinates.push([lat / factor, lng / factor]);
       }
       return coordinates;
     },
 
     //Gets a featureGroup of polylines that connect two paths from Open Source Routing Machine (project-osrm.org)
-    generatePath: function(data, callback){
+    generatePath: function (data, callback)
+    {
       var rootScope = this;
       //Get the path as polyline from osm open source routing machine (osrm)
       //OSRM takes coords as [longitude,latitude] not [latitude,longitude]
       var sourceDestForOSRM = data.source.reverse().join() + ';' + data.destination.reverse().join();
-      var queryURL = 'http://router.project-osrm.org/route/v1/car/'+sourceDestForOSRM;
-      $.getJSON(queryURL, {'alternatives':'true', 'steps':'true', 'geometries':'polyline6', 'overview':'simplified'}).then(function(osrmObject) {
+      var queryURL = 'http://router.project-osrm.org/route/v1/car/' + sourceDestForOSRM;
+      $.getJSON(queryURL, { 'alternatives': 'true', 'steps': 'true', 'geometries': 'polyline6', 'overview': 'simplified' }).done(function (osrmObject) {
         //Layers/features hierarchy: routesFeatureGroup -&gt; polylineFeatureGroup -&gt; polyline ('-&gt;' means 'contains')
         var routesFeatureGroup = L.featureGroup();
         var routeColors = ['#2662c1', '#518be8', '#79a9f7', '#8eb9ff', '#b2cfff', '#b2cfff'];
         var routes = osrmObject.routes;
         //Going reverse so that the recommended route (at Array(0)) is highest in layers
-        for(var i=routes.length-1; i&gt;=0; i--){
+        for (var i = routes.length - 1; i &gt;= 0; i--) {
           var latlngs = [];
           var polylineFeatureGroup = L.featureGroup();
-          var steps = osrmObject.routes[i].legs[0].steps;
+          var steps = routes[i].legs[0].steps;
           var polyline;
-          for(var j=0; j&lt;steps.length; j++){
+          for (var j = 0; j &lt; steps.length; j++) {
             //Polyline is decoded from the osrm response using mapbox/polyline decode method
-            polyline = L.polyline(rootScope.decodePolyline(steps[j].geometry, 6), {color: routeColors[i], weight: 7, stroke: 'white', lineCap: 'round'});
+            polyline = L.polyline(rootScope.decodePolyline(steps[j].geometry, 6), { color: routeColors[i], weight: 7, stroke: 'white', lineCap: 'round' });
             polylineFeatureGroup.addLayer(polyline);
           }
-          polylineFeatureGroup.bindPopup("Route " + (i+1));
+          //Calculating the distance of the route
+          var routeDistance = parseInt(parseFloat(routes[i].distance) / 1000) + ' km';
+          //Calculating the duration of the route
+          var routeDuration = (parseFloat(routes[i].duration) / 60).toFixed(2);
+          if (routeDuration &lt; 60) {
+            routeDuration = Math.ceil(routeDuration) + ' mins';
+          } else {
+            var durationInHours = (routeDuration / 60).toFixed(2);
+            var hours = Math.floor(durationInHours);
+            var mins = Math.ceil((durationInHours - hours) * 60);
+            routeDuration = hours + ' hrs ' + mins + ' mins';
+          }
+          polylineFeatureGroup.bindPopup('&lt;b&gt;Route ' + (i + 1) + '&lt;/b&gt;&lt;br/&gt;Distance: ' + routeDistance + '&lt;br/&gt;Duration: ' + routeDuration);
           routesFeatureGroup.addLayer(polylineFeatureGroup);
         }
         callback(routesFeatureGroup);
+      })
+      .fail(function(){
+        new XWiki.widgets.Notification('Error getting path. Make sure the distance is not greater than 10000km', 'error');
       });
     }
 

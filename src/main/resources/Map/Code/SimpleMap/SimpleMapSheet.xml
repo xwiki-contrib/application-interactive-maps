@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <!--
  * See the NOTICE file distributed with this work for additional
  * information regarding copyright ownership.
@@ -31,8 +30,8 @@
   <parent>Map.Code.SimpleMap.SimpleMapClass</parent>
   <author>xwiki:XWiki.Admin</author>
   <contentAuthor>xwiki:XWiki.Admin</contentAuthor>
-  <date>1558529598000</date>
-  <contentUpdateDate>1558529598000</contentUpdateDate>
+  <date>1558582693000</date>
+  <contentUpdateDate>1558582693000</contentUpdateDate>
   <version>1.1</version>
   <title>#if($doc.documentReference.name == 'SimpleMapSheet')SimpleMapSheet#{else}$services.display.title($doc, {'displayerHint': 'default', 'outputSyntaxId': 'plain/1.0'})#end</title>
   <comment/>

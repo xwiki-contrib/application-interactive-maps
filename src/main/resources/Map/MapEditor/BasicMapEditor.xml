@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
-
 <!--
  * See the NOTICE file distributed with this work for additional
  * information regarding copyright ownership.
@@ -31,8 +30,8 @@
   <parent>Map.MapEditor.WebHome</parent>
   <author>xwiki:XWiki.Admin</author>
   <contentAuthor>xwiki:XWiki.Admin</contentAuthor>
-  <date>1558582379000</date>
-  <contentUpdateDate>1558582268000</contentUpdateDate>
+  <date>1558635929000</date>
+  <contentUpdateDate>1558582694000</contentUpdateDate>
   <version>1.1</version>
   <title>BasicMapEditor</title>
   <comment/>
@@ -198,33 +197,31 @@
       <cache>long</cache>
     </property>
     <property>
-      <code>require(['jquery', 'leaflet', 'leafletSearch', 'leaflet-commons'], function($, leaflet, ls, leafletCommons){
+      <code>require(['jquery', 'leaflet', 'leafletSearch', 'leaflet-commons'], function ($, leaflet, ls, leafletCommons) {
   'use strict';
 
-  function createSimpleMapPreview(element){
-  }
-
-  function init(){
-    $$('.simplemap-preview').each(function(element){
+  function init()
+  {
+    $$('.simplemap-preview').each(function (element) {
       var options = leafletCommons.setCommonMapOptions(element);
       var data = {};
       data.location = element.dataset.defaultloc.split(',');
       var map = leafletCommons.createEmptyMap(options, data);
 
       //Get hidden marker position field
-      #set ($markerPosPropName = $xwiki.getClass('Map.Code.SimpleMap.SimpleMapClass').getProperties()[0].getName())
+      #set($markerPosPropName = $xwiki.getClass('Map.Code.SimpleMap.SimpleMapClass').getProperties()[0].getName())
       var markerPosInputId = '${markerPosPropName}';
       //Add a default marker to the map
-      var marker = L.marker($('#'+markerPosInputId).val().split(',')).addTo(map);
+      var marker = L.marker($('#' + markerPosInputId).val().split(',')).addTo(map);
       //Handling the click on map to include marker and popup
-      map.on('click', function(e){
+      map.on('click', function (e) {
         //Get value of popup
-        #set ($popupDataPropName = $xwiki.getClass('Map.Code.SimpleMap.SimpleMapClass').getProperties()[1].getName())
+        #set($popupDataPropName = $xwiki.getClass('Map.Code.SimpleMap.SimpleMapClass').getProperties()[1].getName())
         var popupInputId = '${popupDataPropName}';
-        var popupInfo = $('#'+popupInputId).val();
-        $('#'+markerPosInputId).val(e.latlng.lat+','+e.latlng.lng);
+        var popupInfo = $('#' + popupInputId).val();
+        $('#' + markerPosInputId).val(e.latlng.lat + ',' + e.latlng.lng);
         marker = leafletCommons.addMarker(marker, map, e);
-        if(popupInfo){
+        if (popupInfo) {
           marker.bindPopup(popupInfo);
         }
       });
