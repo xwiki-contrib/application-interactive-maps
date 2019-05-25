@@ -35,8 +35,10 @@
 - [x] jsx for the Path Maps Map Editor
 - [x] Combine multiple Map Editors on a single page
 ## Day 6-7 (23-24 May 2019)
+- [x] Add distance and duration to routes of Path Map
 - [x] Report the progress to mentors
 - [x] Fix encoding issue in xml when formatting files using `mvn xar:format` (thanks to Evalica and Enygma for the fix)
-- [x] Add distance and duration to routes of Path Map
 - [x] Create templates for creating new maps
+- [x] Start planning for filterable list maps
+## Day 8 (25 May 2019)
 - [x] Improve and synchronize the style for leaflet controls
