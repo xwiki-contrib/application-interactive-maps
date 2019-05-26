@@ -1,4 +1,5 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.1" encoding="UTF-8"?>
+
 <!--
  * See the NOTICE file distributed with this work for additional
  * information regarding copyright ownership.
@@ -26,12 +27,9 @@
   <defaultLanguage/>
   <translation>0</translation>
   <creator>xwiki:XWiki.Admin</creator>
-  <creationDate>1558529061000</creationDate>
   <parent>xwiki:Map.MapEditor.WebHome</parent>
   <author>xwiki:XWiki.Admin</author>
   <contentAuthor>xwiki:XWiki.Admin</contentAuthor>
-  <date>1558641136000</date>
-  <contentUpdateDate>1558529061000</contentUpdateDate>
   <version>1.1</version>
   <title>Leaflet</title>
   <comment/>
@@ -125,10 +123,10 @@
       <code>requirejs.config({
   paths: {
     'leaflet': ['$services.webjars.url("leaflet", "leaflet.js")'],
-    'leafletSearch': ['https://cdn.jsdelivr.net/npm/leaflet-search@2.9.8/dist/leaflet-search.src.min'] //To be used as a webjar
+    'leafletSearch': ['https://cdn.jsdelivr.net/npm/leaflet-search@2.9.8/src/leaflet-search'] //To be used as a webjar
   },
   shim: {
-    'leaflet-search.src.min': ['leaflet']
+    'leaflet-search': ['leaflet']
   }
 });
 require(['jquery', 'leaflet', 'leafletSearch', 'leaflet-commons'], function ($, leaflet, ls, leafletCommons) {
@@ -344,7 +342,7 @@ define('leaflet-commons', ['jquery'], function ($) {
       var mapId = options.mapId,
         zoom = options.zoom,
         tiles = options.tiles,
-        map = L.map(mapId).setView(data.location, zoom);
+        map = new L.Map(mapId, {zoom: zoom, center: data.location });
       //Add a tiles layer to the map (the background)
       L.tileLayer(tiles, {
         attribution: '&amp;copy; &lt;a href="https://www.openstreetmap.org/"&gt;OpenStreetMap&lt;/a&gt; | &lt;a href="https://www.xwiki.org"&gt;XWiki&lt;/a&gt;',
@@ -411,7 +409,7 @@ define('leaflet-commons', ['jquery'], function ($) {
     addSearch: function (map)
     {
       map.addControl(new L.Control.Search({
-        url: 'http://nominatim.openstreetmap.org/search?format=json&amp;q={s}',
+        url: 'https://nominatim.openstreetmap.org/search?format=json&amp;q={s}',
         jsonpParam: 'json_callback',
         propertyName: 'display_name',
         propertyLoc: ['lat', 'lon'],
@@ -668,24 +666,41 @@ define('leaflet-commons', ['jquery'], function ($) {
     <property>
       <code>@import "$services.webjars.url('leaflet', 'leaflet.css')";
 @import "https://cdn.jsdelivr.net/npm/leaflet-search@2.9.8/src/leaflet-search.css";
-.map-container, .simplemap-preview{
+.map-container{
   border: 4px solid white;
   border-radius: 5px;
   box-shadow: 0px 0px 3px silver;
+}
+.leaflet-top{
+  top: 10px;
+}
+.leaflet-left{
+  left: 10px;
+}
+.leaflet-right{
+  right: 10px;
+}
+.leaflet-bottom{
+  bottom: 10px;
+}
+.leaflet-container .leaflet-control{
+  margin: 0;
 }
 .leaflet-container .leaflet-control-search, .leaflet-container .leaflet-control-search:hover, .leaflet-container .leaflet-control-search:active{
   background: none;
   border: none;
 }
-.leaflet-container .leaflet-control-loc, .leaflet-container .leaflet-control-search .search-button{
+.leaflet-container .leaflet-control-loc, .leaflet-container .leaflet-control-search .search-button, .leaflet-bar a, .leaflet-bar a:hover, .leaflet-touch .leaflet-bar a{
   background: white;
-  width: 40px;
-  height: 40px;
+  width: 35px;
+  height: 35px;
   text-align: center;
   cursor: pointer;
-  border-radius: 50%;
+  border-radius: 5px;
   overflow: hidden;
-  border: 1px solid silver;
+  color: #444444;
+  box-shadow: 0px 1px 4px 0px rgba(0, 0, 0, 0.3);
+  border: none;
   transition: background-color 0.3s;
 }
 .leaflet-container .leaflet-control-search .search-button{
@@ -697,7 +712,7 @@ define('leaflet-commons', ['jquery'], function ($) {
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
-  color: black;
+  color: #444444;
   font-size: 20px;
 }
 .leaflet-container .leaflet-control-search .search-button:before{
@@ -711,15 +726,17 @@ define('leaflet-commons', ['jquery'], function ($) {
   text-decoration: none;
 }
 .leaflet-container .leaflet-control-search input.search-input{
-  border: 1px solid silver;
-  border-radius: 15px;
-  color: dimgray;
-  height: 40px;
-  padding: 5px 10px;
+  box-shadow: 0px 1px 4px 0px rgba(0, 0, 0, 0.3);
+  border: none;
+  border-radius: 8px;
+  color: #444444;
+  height: 35px;
+  width: 200px;
+  padding: 5px 15px;
   margin: 0;
 }
 .leaflet-control-search .search-cancel{
-  margin: 10px 0;
+  margin: 7px 0;
   right: 42px;
 }
 .leaflet-control-search.search-load input.search-input{
@@ -727,23 +744,42 @@ define('leaflet-commons', ['jquery'], function ($) {
 }
 .leaflet-control-search .search-tooltip{
   border: none;
-  border-radius: 10px;
+  border-radius: 8px;
   background: white;
-  color: black;
+  color: #444444;
   padding: 5px;
   left: 0;
   right: 0;
   float: right;
-  overflow: auto;
+  overflow-x: hidden;
 }
 .leaflet-control-search .search-tooltip .search-tip{
   border: none;
   border-radius: 0;
   background: white;
-  color: black;
+  color: #444444;
 }
 .leaflet-control-container&gt;div{
   z-index: 999;
+}
+.leaflet-touch .leaflet-control-layers, .leaflet-touch .leaflet-bar{
+  border: none;
+}
+.leaflet-touch .leaflet-bar a:first-child{
+  border-radius: 5px;
+}
+.leaflet-touch .leaflet-bar a:last-child{
+  border-radius: 5px;
+}
+.leaflet-bar a:hover{
+  background: #f4f4f4;
+  transition: background 0.3s;
+}
+.leaflet-touch .leaflet-bar a{
+  line-height: 32px;
+}
+.leaflet-top .leaflet-control-loc, .leaflet-top .leaflet-control-search .search-button, .leaflet-top .leaflet-bar a, .leaflet-top .leaflet-bar a:hover, .leaflet-touch .leaflet-top .leaflet-bar a{
+  margin-bottom: 4px;
 }</code>
     </property>
     <property>
