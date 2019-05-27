@@ -38,7 +38,10 @@
 - [x] Add distance and duration to routes of Path Map
 - [x] Report the progress to mentors
 - [x] Fix encoding issue in xml when formatting files using `mvn xar:format` (thanks to Evalica and Enygma for the fix)
-- [x] Create templates for creating new maps
 - [x] Start planning for filterable list maps
-## Day 8 (25 May 2019)
+## Day 8-9 (25-26 May 2019)
+- [x] Template providers for creating new maps
 - [x] Improve and synchronize the style for leaflet controls
+## Day 10 (27 May 2019)
+- [x] Create class for filterable list map objects
+- [x] Start work on Map Editor for filterable list maps
