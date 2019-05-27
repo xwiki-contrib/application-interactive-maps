@@ -20,18 +20,18 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
 -->
 
-<xwikidoc version="1.3" reference="Map.MapEditor.BasicMapEditor" locale="">
+<xwikidoc version="1.3" reference="Map.MapEditor.FilterableListMapEditor" locale="">
   <web>Map.MapEditor</web>
-  <name>BasicMapEditor</name>
+  <name>FilterableListMapEditor</name>
   <language/>
   <defaultLanguage/>
   <translation>0</translation>
   <creator>xwiki:XWiki.Admin</creator>
-  <parent>Map.MapEditor.WebHome</parent>
+  <parent>WebHome</parent>
   <author>xwiki:XWiki.Admin</author>
   <contentAuthor>xwiki:XWiki.Admin</contentAuthor>
   <version>1.1</version>
-  <title>BasicMapEditor</title>
+  <title>FilterableListMapEditor</title>
   <comment/>
   <minorEdit>false</minorEdit>
   <syntaxId>xwiki/2.1</syntaxId>
@@ -39,49 +39,28 @@
   <content>{{velocity}}
 #set ($discard = $xwiki.ssx.use('Map.Code.Leaflet'))
 #set ($discard = $xwiki.jsx.use('Map.Code.Leaflet'))
-#set ($discard = $xwiki.jsx.use('Map.MapEditor.BasicMapEditor'))
+#set ($discard = $xwiki.jsx.use('Map.MapEditor.FilterableListMapEditor'))
 
 ## Handling creation of the map
-#if ("$!request.simpleMapSubmit" != '')
-  #set ($mapDocLocation = "Map.Maps.${request.mapName}")
-  #set ($newMap = $xwiki.getDocument($mapDocLocation))
-  #set ($discard = $newMap.setTitle(${request.mapName}))
-  #set ($discard = $newMap.setParent('Map.Maps'))
-  #set ($discard = $newMap.setContent('{{include document="Map.Code.SimpleMap.SimpleMapTemplate"/}}'))
-  ## Check if custom marker is uploaded
-  #if ("$!xwiki.fileupload.getFileName('customMarkerImg')" != '')
-    ## Set uploaded marker image as the attachment of the new map page
-    #set ($markerImgBytes = $xwiki.fileupload.getFileItemData('customMarkerImg'))
-    $newMap.addAttachment('marker.png', $markerImgBytes)
-  #end
-  ## Create and set values for the SimpleMapClass object
-  #set ($newMapObj = $newMap.newObject('Map.Code.SimpleMap.SimpleMapClass'))
-  #set ($discard = $newMapObj.set('markerLocation', $request.markerLocation))
-  #set ($discard = $newMapObj.set('popupData', $request.popupData))
-  #if (!$xwiki.exists($mapDocLocation) &amp;&amp; $xwiki.hasAccessLevel('edit', $xcontext.user, $mapDocLocation))
-    $newMap.save()
-    $response.sendRedirect($xwiki.getURL($mapDocLocation))
-  #end
+#if ("$!request.FLMapSubmit" != '')
+  $request
 #end
 
-## Map with Marker and Popup
+## Map with Path Between Points
 #if ('$!mapDocLocation' != '' &amp;&amp; $xwiki.exists($mapDocLocation))
 {{warning}}The target document already exists. Please choose a different name, or [[view the existing document&gt;&gt;$mapDocLocation]]{{/warning}}
 #end
-#set ($simpleMapClass = $xwiki.getClass('Map.Code.SimpleMap.SimpleMapClass'))
-{{html wiki='true'}}
+{{html wiki="true" clean="false"}}
+
 (% class="row" %)(((
   (% class="col-sm-6" %)(((
   ## Preview of the map
-  &lt;p class="xform"&gt;&lt;span class="xHint"&gt;$services.localization.render('intmap.basicMapEditor.hint')&lt;/span&gt;&lt;/p&gt;
-  (% class="simplemap-preview" id="map-${util.generateRandomString(5)}" style="width: 100%; height: 300px;" data-defaultloc="48.8566,2.3522" %)((()))
+  &lt;p class="noitems"&gt;$services.localization.render('intmap.FLMapEditor.hint')&lt;/p&gt;
+  (% class="map-container flmap-preview" id="map-${util.generateRandomString(5)}" style="width: 100%; height: 300px;" data-defaultloc="48.8566,2.3522" %)((()))
   )))
   (% class="col-sm-6" %)(((
   ## Form for creating the map
   &lt;form class="xform" action="" method="post" enctype="multipart/form-data"&gt;
-    ## Hidden input for marker position
-    #set ($markerPosPropName = $simpleMapClass.getProperties()[0].getName())
-    &lt;input type="hidden" id="${markerPosPropName}" name="${markerPosPropName}" value="48.8566,2.3522" required /&gt;
     &lt;dl&gt;
       &lt;dt&gt;
         &lt;label for="mapName"&gt;$services.localization.render('intmap.mapEditor.mapName') &lt;span class="xRequired"&gt;(Required)&lt;/span&gt;&lt;/label&gt;
@@ -89,34 +68,20 @@
       &lt;dd&gt;
         &lt;input type="text" name="mapName" value="" required /&gt;
       &lt;/dd&gt;
-      ## Get values of popupData property
-      #set ($popupDataPropName = $simpleMapClass.getProperties()[1].getName())
-      &lt;dt&gt;
-        &lt;label for="${popupDataPropName}"&gt;$simpleMapClass.getProperties()[1].getPrettyName()&lt;/label&gt;
-        &lt;span class="xHint"&gt;$simpleMapClass.getProperties()[1].getHint()&lt;/span&gt;
-      &lt;/dt&gt;
-      &lt;dd&gt;
-        &lt;textarea id="${popupDataPropName}" name="${popupDataPropName}"&gt;&lt;/textarea&gt;
-      &lt;/dd&gt;
-      ## Set custom marker image
-      &lt;dt&gt;
-        &lt;label for="customMarkerImg"&gt;$services.localization.render('intmap.basicMapEditor.customMarker')&lt;/label&gt;
-      &lt;/dt&gt;
-      &lt;dd&gt;
-        &lt;input type="file" id="customMarkerImg" name="customMarkerImg" accept="image/*" /&gt;
-      &lt;/dd&gt;
+      &lt;div id="popup-forms"&gt;&lt;/div&gt;
     &lt;/dl&gt;
-    &lt;p&gt;&lt;input type="submit" class="btn btn-primary" name="simpleMapSubmit" value="$services.localization.render('intmap.mapEditor.createMap')" /&gt;&lt;/p&gt;
+    &lt;p&gt;&lt;input type="submit" class="btn btn-primary" name="FLMapSubmit" value="Create Map" /&gt;&lt;/p&gt;
   &lt;/form&gt;
   )))
 )))
+
 {{/html}}
 {{/velocity}}</content>
   <object>
-    <name>Map.MapEditor.BasicMapEditor</name>
+    <name>Map.MapEditor.FilterableListMapEditor</name>
     <number>0</number>
     <className>XWiki.JavaScriptExtension</className>
-    <guid>6126feb0-b62e-4ff1-818b-24c47f37216a</guid>
+    <guid>f7d2fb8d-0563-4b6f-bb42-b0e30cde50cd</guid>
     <class>
       <name>XWiki.JavaScriptExtension</name>
       <customClass/>
@@ -200,28 +165,29 @@
 
   function init()
   {
-    $$('.simplemap-preview').each(function (element) {
+    $$('.flmap-preview').each(function (element) {
       var options = leafletCommons.setCommonMapOptions(element);
       var data = {};
       data.location = element.dataset.defaultloc.split(',');
       var map = leafletCommons.createEmptyMap(options, data);
-
-      //Get hidden marker position field
-      #set($markerPosPropName = $xwiki.getClass('Map.Code.SimpleMap.SimpleMapClass').getProperties()[0].getName())
-      var markerPosInputId = '${markerPosPropName}';
-      //Add a default marker to the map
-      var marker = L.marker($('#' + markerPosInputId).val().split(',')).addTo(map);
-      //Handling the click on map to include marker and popup
-      map.on('click', function (e) {
-        //Get value of popup
-        #set($popupDataPropName = $xwiki.getClass('Map.Code.SimpleMap.SimpleMapClass').getProperties()[1].getName())
-        var popupInputId = '${popupDataPropName}';
-        var popupInfo = $('#' + popupInputId).val();
-        $('#' + markerPosInputId).val(e.latlng.lat + ',' + e.latlng.lng);
-        marker = leafletCommons.addMarker(marker, map, e);
-        if (popupInfo) {
-          marker.bindPopup(popupInfo);
-        }
+      var markersArr = [];
+      var marker;
+      var i = 1;
+      map.on('click', function(e){
+        marker = {
+          marker: L.marker(e.latlng),
+          i: i
+        };
+        marker.marker.addTo(map);
+        var formsContainer = L.DomUtil.get('popup-forms');
+        var markerInfoContainer = L.DomUtil.create('div', 'popup-form-'+i, formsContainer);
+        $(markerInfoContainer).html('&lt;h4&gt;For Marker ' + i + '&lt;/h4&gt;\
+        &lt;dt&gt;&lt;label for="category"&gt;$services.localization.render("intmap.FLMapEditor.category")&lt;/label&gt;&lt;/dt&gt;\
+        &lt;dd&gt;&lt;input type="text" name="category[]"/&gt;&lt;/dd&gt;\
+        &lt;dt&gt;&lt;label for="popupInfo"&gt;$services.localization.render("intmap.popupData")&lt;/label&gt;&lt;/dt&gt;\
+        &lt;dd&gt;&lt;textarea name="popupInfo[]"&gt;&lt;/textarea&gt;&lt;/dd&gt;');
+        markersArr.push(marker);
+        i++;
       });
     });
   }
@@ -231,7 +197,7 @@
 });</code>
     </property>
     <property>
-      <name>basicmap-editor</name>
+      <name>flmap-editor</name>
     </property>
     <property>
       <parse>1</parse>

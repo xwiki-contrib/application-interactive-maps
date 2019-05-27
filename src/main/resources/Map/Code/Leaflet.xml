@@ -515,40 +515,46 @@ define('leaflet-commons', ['jquery'], function ($) {
       var sourceDestForOSRM = data.source.reverse().join() + ';' + data.destination.reverse().join();
       var queryURL = 'http://router.project-osrm.org/route/v1/car/' + sourceDestForOSRM;
       $.getJSON(queryURL, { 'alternatives': 'true', 'steps': 'true', 'geometries': 'polyline6', 'overview': 'simplified' }).done(function (osrmObject) {
-        //Layers/features hierarchy: routesFeatureGroup -&gt; polylineFeatureGroup -&gt; polyline ('-&gt;' means 'contains')
-        var routesFeatureGroup = L.featureGroup();
-        var routeColors = ['#2662c1', '#518be8', '#79a9f7', '#8eb9ff', '#b2cfff', '#b2cfff'];
-        var routes = osrmObject.routes;
-        //Going reverse so that the recommended route (at Array(0)) is highest in layers
-        for (var i = routes.length - 1; i &gt;= 0; i--) {
-          var latlngs = [];
-          var polylineFeatureGroup = L.featureGroup();
-          var steps = routes[i].legs[0].steps;
-          var polyline;
-          for (var j = 0; j &lt; steps.length; j++) {
-            //Polyline is decoded from the osrm response using mapbox/polyline decode method
-            polyline = L.polyline(rootScope.decodePolyline(steps[j].geometry, 6), { color: routeColors[i], weight: 7, stroke: 'white', lineCap: 'round' });
-            polylineFeatureGroup.addLayer(polyline);
+        if (osrmObject.code == 'Ok') {
+          //Layers/features hierarchy: routesFeatureGroup -&gt; polylineFeatureGroup -&gt; polyline ('-&gt;' means 'contains')
+          var routesFeatureGroup = L.featureGroup();
+          var routeColors = ['#2662c1', '#518be8', '#79a9f7', '#8eb9ff', '#b2cfff', '#b2cfff'];
+          var routes = osrmObject.routes;
+          //Going reverse so that the recommended route (at Array(0)) is highest in layers
+          for (var i = routes.length - 1; i &gt;= 0; i--) {
+            var latlngs = [];
+            var polylineFeatureGroup = L.featureGroup();
+            var steps = routes[i].legs[0].steps;
+            var polyline;
+            for (var j = 0; j &lt; steps.length; j++) {
+              //Polyline is decoded from the osrm response using mapbox/polyline decode method
+              polyline = L.polyline(rootScope.decodePolyline(steps[j].geometry, 6), { color: routeColors[i], weight: 7, stroke: 'white', lineCap: 'round' });
+              polylineFeatureGroup.addLayer(polyline);
+            }
+            //Calculating the distance of the route
+            var routeDistance = parseInt(parseFloat(routes[i].distance) / 1000) + ' km';
+            //Calculating the duration of the route
+            var routeDuration = (parseFloat(routes[i].duration) / 60).toFixed(2);
+            if (routeDuration &lt; 60) {
+              routeDuration = Math.ceil(routeDuration) + ' mins';
+            } else {
+              var durationInHours = (routeDuration / 60).toFixed(2);
+              var hours = Math.floor(durationInHours);
+              var mins = Math.ceil((durationInHours - hours) * 60);
+              routeDuration = hours + ' hrs ' + mins + ' mins';
+            }
+            polylineFeatureGroup.bindPopup('&lt;b&gt;Route ' + (i + 1) + '&lt;/b&gt;&lt;br/&gt;Distance: ' + routeDistance + '&lt;br/&gt;Duration: ' + routeDuration);
+            routesFeatureGroup.addLayer(polylineFeatureGroup);
           }
-          //Calculating the distance of the route
-          var routeDistance = parseInt(parseFloat(routes[i].distance) / 1000) + ' km';
-          //Calculating the duration of the route
-          var routeDuration = (parseFloat(routes[i].duration) / 60).toFixed(2);
-          if (routeDuration &lt; 60) {
-            routeDuration = Math.ceil(routeDuration) + ' mins';
-          } else {
-            var durationInHours = (routeDuration / 60).toFixed(2);
-            var hours = Math.floor(durationInHours);
-            var mins = Math.ceil((durationInHours - hours) * 60);
-            routeDuration = hours + ' hrs ' + mins + ' mins';
-          }
-          polylineFeatureGroup.bindPopup('&lt;b&gt;Route ' + (i + 1) + '&lt;/b&gt;&lt;br/&gt;Distance: ' + routeDistance + '&lt;br/&gt;Duration: ' + routeDuration);
-          routesFeatureGroup.addLayer(polylineFeatureGroup);
+          callback(routesFeatureGroup);
+        } else if (osrmObject.code == 'NoRoute') {
+          new XWiki.widgets.Notification('Error getting path. No route found.', 'error');
+        } else {
+          new XWiki.widgets.Notification('Error getting path. Make sure the distance is not greater than 10000km.', 'error');
         }
-        callback(routesFeatureGroup);
       })
       .fail(function(){
-        new XWiki.widgets.Notification('Error getting path. Make sure the distance is not greater than 10000km', 'error');
+        new XWiki.widgets.Notification('Error getting path. The path is not valid.', 'error');
       });
     }
 

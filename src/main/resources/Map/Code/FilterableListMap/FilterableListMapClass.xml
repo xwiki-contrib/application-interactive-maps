@@ -20,9 +20,9 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
 -->
 
-<xwikidoc version="1.3" reference="Map.Code.PathMap.PathMapClass" locale="">
-  <web>Map.Code.PathMap</web>
-  <name>PathMapClass</name>
+<xwikidoc version="1.3" reference="Map.Code.FilterableListMap.FilterableListMapClass" locale="">
+  <web>Map.Code.FilterableListMap</web>
+  <name>FilterableListMapClass</name>
   <language/>
   <defaultLanguage/>
   <translation>0</translation>
@@ -31,11 +31,11 @@
   <author>xwiki:XWiki.Admin</author>
   <contentAuthor>xwiki:XWiki.Admin</contentAuthor>
   <version>1.1</version>
-  <title>PathMapClass</title>
+  <title>FilterableListMapClass</title>
   <comment/>
   <minorEdit>false</minorEdit>
   <syntaxId>xwiki/2.1</syntaxId>
-  <hidden>true</hidden>
+  <hidden>false</hidden>
   <content>{{velocity}}
 ## Replace the default space with the space where you want your documents to be created.
 ## Replace the default parent with the one of your choice and save the document.
@@ -44,7 +44,7 @@
 #set ($defaultParent = 'Map.WebHome')
 {{/velocity}}</content>
   <class>
-    <name>Map.Code.PathMap.PathMapClass</name>
+    <name>Map.Code.FilterableListMap.FilterableListMapClass</name>
     <customClass/>
     <customMapping/>
     <defaultViewSheet/>
@@ -52,84 +52,43 @@
     <defaultWeb/>
     <nameField/>
     <validationScript/>
-    <destination>
+    <category>
       <customDisplay/>
       <disabled>0</disabled>
-      <hint>Location of the destination</hint>
-      <name>destination</name>
-      <number>2</number>
-      <picker>0</picker>
-      <prettyName>Destination</prettyName>
-      <size>30</size>
-      <unmodifiable>0</unmodifiable>
-      <validationMessage/>
-      <validationRegExp/>
-      <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
-    </destination>
-    <source>
-      <customDisplay/>
-      <disabled>0</disabled>
-      <hint>Location of the source</hint>
-      <name>source</name>
+      <hint/>
+      <name>category</name>
       <number>1</number>
-      <picker>0</picker>
-      <prettyName>Source Point</prettyName>
+      <picker>1</picker>
+      <prettyName>category</prettyName>
       <size>30</size>
       <unmodifiable>0</unmodifiable>
       <validationMessage/>
       <validationRegExp/>
       <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
-    </source>
+    </category>
+    <popupData>
+      <contenttype/>
+      <customDisplay/>
+      <disabled>0</disabled>
+      <editor/>
+      <hint/>
+      <name>popupData</name>
+      <number>2</number>
+      <picker>1</picker>
+      <prettyName>popupData</prettyName>
+      <rows>5</rows>
+      <size>40</size>
+      <unmodifiable>0</unmodifiable>
+      <validationMessage/>
+      <validationRegExp/>
+      <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
+    </popupData>
   </class>
   <object>
-    <name>Map.Code.PathMap.PathMapClass</name>
-    <number>0</number>
-    <className>XWiki.ClassSheetBinding</className>
-    <guid>fcfee29a-0efb-4522-b122-297cff5e4556</guid>
-    <class>
-      <name>XWiki.ClassSheetBinding</name>
-      <customClass/>
-      <customMapping/>
-      <defaultViewSheet/>
-      <defaultEditSheet/>
-      <defaultWeb/>
-      <nameField/>
-      <validationScript/>
-      <sheet>
-        <cache>0</cache>
-        <classname/>
-        <customDisplay/>
-        <disabled>0</disabled>
-        <displayType>input</displayType>
-        <hint/>
-        <idField/>
-        <multiSelect>0</multiSelect>
-        <name>sheet</name>
-        <number>1</number>
-        <picker>1</picker>
-        <prettyName>Sheet</prettyName>
-        <relationalStorage>0</relationalStorage>
-        <separator> </separator>
-        <separators/>
-        <size>30</size>
-        <sort>none</sort>
-        <sql/>
-        <unmodifiable>0</unmodifiable>
-        <validationMessage/>
-        <validationRegExp/>
-        <valueField/>
-        <classType>com.xpn.xwiki.objects.classes.PageClass</classType>
-      </sheet>
-    </class>
-    <property>
-      <sheet>PathMapSheet</sheet>
-    </property>
-  </object>
-  <object>
-    <name>Map.Code.PathMap.PathMapClass</name>
+    <name>Map.Code.FilterableListMap.FilterableListMapClass</name>
     <number>0</number>
     <className>XWiki.DocumentSheetBinding</className>
-    <guid>6d421fbc-5043-4bf0-870d-e943cbccd87b</guid>
+    <guid>7b62f1c8-e9f4-4212-bd17-1ceee8eccf3a</guid>
     <class>
       <name>XWiki.DocumentSheetBinding</name>
       <customClass/>
