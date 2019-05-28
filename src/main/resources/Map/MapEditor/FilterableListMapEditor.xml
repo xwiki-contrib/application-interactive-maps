@@ -36,14 +36,30 @@
   <minorEdit>false</minorEdit>
   <syntaxId>xwiki/2.1</syntaxId>
   <hidden>true</hidden>
-  <content>{{velocity}}
+  <content>
+{{velocity}}
 #set ($discard = $xwiki.ssx.use('Map.Code.Leaflet'))
 #set ($discard = $xwiki.jsx.use('Map.Code.Leaflet'))
 #set ($discard = $xwiki.jsx.use('Map.MapEditor.FilterableListMapEditor'))
 
 ## Handling creation of the map
 #if ("$!request.FLMapSubmit" != '')
-  $request
+  #set ($mapDocLocation = "Map.Maps.${request.mapName}")
+  #set ($newMap = $xwiki.getDocument($mapDocLocation))
+  #set ($discard = $newMap.setTitle(${request.mapName}))
+  #set ($discard = $newMap.setParent('Map.Maps'))
+  #set ($discard = $newMap.setContent('A page for filtered list maps.'))
+  #set ($servletReq = $request.getHttpServletRequest())
+  #set ($popupDataArr = $servletReq.getParameterValues('popupInfo'))
+  #foreach ($categoryItem in $servletReq.getParameterValues('category'))
+    #set ($newMapObj = $newMap.newObject('Map.Code.FilterableListMap.FilterableListMapClass'))
+    #set ($discard = $newMapObj.set('category', $categoryItem))
+    #set ($discard = $newMapObj.set('popupData', $popupDataArr[${foreach.index}]))
+  #end
+  #if (!$xwiki.exists($mapDocLocation) &amp;&amp; $xwiki.hasAccessLevel('edit', $xcontext.user, $mapDocLocation))
+    $newMap.save()
+    $response.sendRedirect($xwiki.getURL($mapDocLocation))
+  #end
 #end
 
 ## Map with Path Between Points
@@ -60,7 +76,8 @@
   )))
   (% class="col-sm-6" %)(((
   ## Form for creating the map
-  &lt;form class="xform" action="" method="post" enctype="multipart/form-data"&gt;
+  &lt;form id="create-fl-map-form" class="xform" action="" method="post"&gt;
+    &lt;input type="hidden" name="noOfMarkers" /&gt;
     &lt;dl&gt;
       &lt;dt&gt;
         &lt;label for="mapName"&gt;$services.localization.render('intmap.mapEditor.mapName') &lt;span class="xRequired"&gt;(Required)&lt;/span&gt;&lt;/label&gt;
@@ -170,23 +187,30 @@
       var data = {};
       data.location = element.dataset.defaultloc.split(',');
       var map = leafletCommons.createEmptyMap(options, data);
-      var markersArr = [];
+
+      //Extending marker to include information for deleting form fields
+      var flMarker = L.Marker.extend({
+        options: {
+          markerNumber: 0
+        }
+      });
       var marker;
       var i = 1;
       map.on('click', function(e){
-        marker = {
-          marker: L.marker(e.latlng),
-          i: i
-        };
-        marker.marker.addTo(map);
+        marker = new flMarker(e.latlng, { markerNumber: i }).bindTooltip('Marker ' + i);
+        marker.on('click', function(){
+          $('.form-marker-'+this.options.markerNumber).remove();
+          this.remove();
+        });
+        marker.addTo(map);
         var formsContainer = L.DomUtil.get('popup-forms');
-        var markerInfoContainer = L.DomUtil.create('div', 'popup-form-'+i, formsContainer);
+        var markerInfoContainer = L.DomUtil.create('div', 'form-marker-'+i, formsContainer);
         $(markerInfoContainer).html('&lt;h4&gt;For Marker ' + i + '&lt;/h4&gt;\
+        &lt;input type="hidden" name="markerLocation" value=' + e.latlng.lat + ',' + e.latlng.lng + ' /&gt;\
         &lt;dt&gt;&lt;label for="category"&gt;$services.localization.render("intmap.FLMapEditor.category")&lt;/label&gt;&lt;/dt&gt;\
-        &lt;dd&gt;&lt;input type="text" name="category[]"/&gt;&lt;/dd&gt;\
+        &lt;dd&gt;&lt;input type="text" name="category"/&gt;&lt;/dd&gt;\
         &lt;dt&gt;&lt;label for="popupInfo"&gt;$services.localization.render("intmap.popupData")&lt;/label&gt;&lt;/dt&gt;\
-        &lt;dd&gt;&lt;textarea name="popupInfo[]"&gt;&lt;/textarea&gt;&lt;/dd&gt;');
-        markersArr.push(marker);
+        &lt;dd&gt;&lt;textarea name="popupInfo"&gt;&lt;/textarea&gt;&lt;/dd&gt;');
         i++;
       });
     });

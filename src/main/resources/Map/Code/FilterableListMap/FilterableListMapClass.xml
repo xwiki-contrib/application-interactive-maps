@@ -87,6 +87,50 @@
   <object>
     <name>Map.Code.FilterableListMap.FilterableListMapClass</name>
     <number>0</number>
+    <className>XWiki.ClassSheetBinding</className>
+    <guid>f81c9a41-1d30-4c09-9c82-7fb88bae1760</guid>
+    <class>
+      <name>XWiki.ClassSheetBinding</name>
+      <customClass/>
+      <customMapping/>
+      <defaultViewSheet/>
+      <defaultEditSheet/>
+      <defaultWeb/>
+      <nameField/>
+      <validationScript/>
+      <sheet>
+        <cache>0</cache>
+        <classname/>
+        <customDisplay/>
+        <disabled>0</disabled>
+        <displayType>input</displayType>
+        <hint/>
+        <idField/>
+        <multiSelect>0</multiSelect>
+        <name>sheet</name>
+        <number>1</number>
+        <picker>1</picker>
+        <prettyName>Sheet</prettyName>
+        <relationalStorage>0</relationalStorage>
+        <separator> </separator>
+        <separators/>
+        <size>30</size>
+        <sort>none</sort>
+        <sql/>
+        <unmodifiable>0</unmodifiable>
+        <validationMessage/>
+        <validationRegExp/>
+        <valueField/>
+        <classType>com.xpn.xwiki.objects.classes.PageClass</classType>
+      </sheet>
+    </class>
+    <property>
+      <sheet>FilterableListMapSheet</sheet>
+    </property>
+  </object>
+  <object>
+    <name>Map.Code.FilterableListMap.FilterableListMapClass</name>
+    <number>0</number>
     <className>XWiki.DocumentSheetBinding</className>
     <guid>7b62f1c8-e9f4-4212-bd17-1ceee8eccf3a</guid>
     <class>
