@@ -1,4 +1,4 @@
-# Marks the progress of the Map Application
+# Marks the progress of the Interactive Maps Application
 ## Day 1 (18 May 2019)
 - [x] JavaScript jsx code for a simple map with marker and popup
 - [x] Code for creating a new map
@@ -45,3 +45,8 @@
 ## Day 10 (27 May 2019)
 - [x] Create class for filterable list map objects
 - [x] Start work on Map Editor for filterable list maps
+## Day 11 (28 May 2019)
+- [x] Improve filterable list map editor
+- [x] Create FilterableListMapSheet and FilterableListMapTemplate
+- [x] Handle multiple field forms in FL Map Editor with same name
+- [x] Display the data in FilterableListMapSheet for manipulating later
