@@ -7,13 +7,11 @@ Create interactive maps easily, share locations and associate structured data wi
 * [Issue Tracker](https://jira.xwiki.org/projects/INTMAP) 
 * Communication: [Mailing List](http://dev.xwiki.org/xwiki/bin/view/Community/MailingLists), [IRC](http://dev.xwiki.org/xwiki/bin/view/Community/IRC)
 * [Development Practices](http://dev.xwiki.org)
-* Minimal XWiki version supported: XWiki 8.4
+* Minimal XWiki version supported: XWiki 10.11
 * License: LGPL 2.1+
 * Translations: N/A 
 * Sonar Dashboard: N/A 
 * Continuous Integration Status: N/A
-
-[comment]: <> (Some things to be updated)
 
 ## This application is under development
 The progress is documented in [PROGRESS.md](https://github.com/xwiki-contrib/application-map/blob/master/PROGRESS.md)
