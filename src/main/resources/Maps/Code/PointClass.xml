@@ -20,18 +20,18 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
 -->
 
-<xwikidoc version="1.3" reference="Map.Code.PathMap.PathMapClass" locale="">
-  <web>Map.Code.PathMap</web>
-  <name>PathMapClass</name>
+<xwikidoc version="1.3" reference="Maps.Code.PointClass" locale="">
+  <web>Maps.Code</web>
+  <name>PointClass</name>
   <language/>
   <defaultLanguage/>
   <translation>0</translation>
   <creator>xwiki:XWiki.Admin</creator>
-  <parent>XWiki.XWikiClasses</parent>
+  <parent>WebHome</parent>
   <author>xwiki:XWiki.Admin</author>
   <contentAuthor>xwiki:XWiki.Admin</contentAuthor>
   <version>1.1</version>
-  <title>PathMapClass</title>
+  <title>PointClass</title>
   <comment/>
   <minorEdit>false</minorEdit>
   <syntaxId>xwiki/2.1</syntaxId>
@@ -40,11 +40,11 @@
 ## Replace the default space with the space where you want your documents to be created.
 ## Replace the default parent with the one of your choice and save the document.
 ##
-#set ($defaultSpace = 'Map')
-#set ($defaultParent = 'Map.WebHome')
+#set ($defaultSpace = 'Maps')
+#set ($defaultParent = 'Maps.WebHome')
 {{/velocity}}</content>
   <class>
-    <name>Map.Code.PathMap.PathMapClass</name>
+    <name>Maps.Code.PointClass</name>
     <customClass/>
     <customMapping/>
     <defaultViewSheet/>
@@ -52,40 +52,26 @@
     <defaultWeb/>
     <nameField/>
     <validationScript/>
-    <destination>
+    <location>
       <customDisplay/>
       <disabled>0</disabled>
-      <hint>Location of the destination</hint>
-      <name>destination</name>
-      <number>2</number>
-      <picker>0</picker>
-      <prettyName>Destination</prettyName>
-      <size>30</size>
-      <unmodifiable>0</unmodifiable>
-      <validationMessage/>
-      <validationRegExp/>
-      <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
-    </destination>
-    <source>
-      <customDisplay/>
-      <disabled>0</disabled>
-      <hint>Location of the source</hint>
-      <name>source</name>
+      <hint>Location in coordinates or place name</hint>
+      <name>location</name>
       <number>1</number>
       <picker>0</picker>
-      <prettyName>Source Point</prettyName>
+      <prettyName>Location</prettyName>
       <size>30</size>
       <unmodifiable>0</unmodifiable>
       <validationMessage/>
       <validationRegExp/>
       <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
-    </source>
+    </location>
   </class>
   <object>
-    <name>Map.Code.PathMap.PathMapClass</name>
+    <name>Maps.Code.PointClass</name>
     <number>0</number>
     <className>XWiki.ClassSheetBinding</className>
-    <guid>fcfee29a-0efb-4522-b122-297cff5e4556</guid>
+    <guid>bcc804d6-efed-4316-b10c-dbe56fb600e7</guid>
     <class>
       <name>XWiki.ClassSheetBinding</name>
       <customClass/>
@@ -122,14 +108,14 @@
       </sheet>
     </class>
     <property>
-      <sheet>PathMapSheet</sheet>
+      <sheet>PointSheet</sheet>
     </property>
   </object>
   <object>
-    <name>Map.Code.PathMap.PathMapClass</name>
+    <name>Maps.Code.PointClass</name>
     <number>0</number>
     <className>XWiki.DocumentSheetBinding</className>
-    <guid>6d421fbc-5043-4bf0-870d-e943cbccd87b</guid>
+    <guid>165b96e0-f499-4ee7-913b-20bd75dcf7e8</guid>
     <class>
       <name>XWiki.DocumentSheetBinding</name>
       <customClass/>

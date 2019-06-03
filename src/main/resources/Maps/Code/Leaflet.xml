@@ -20,14 +20,14 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
 -->
 
-<xwikidoc version="1.3" reference="Map.Code.Leaflet" locale="">
-  <web>Map.Code</web>
+<xwikidoc version="1.3" reference="Maps.Code.Leaflet" locale="">
+  <web>Maps.Code</web>
   <name>Leaflet</name>
   <language/>
   <defaultLanguage/>
   <translation>0</translation>
   <creator>xwiki:XWiki.Admin</creator>
-  <parent>xwiki:Map.MapEditor.WebHome</parent>
+  <parent>xwiki:Maps.Code.MapClass</parent>
   <author>xwiki:XWiki.Admin</author>
   <contentAuthor>xwiki:XWiki.Admin</contentAuthor>
   <version>1.1</version>
@@ -38,208 +38,10 @@
   <hidden>true</hidden>
   <content/>
   <object>
-    <name>Map.Code.Leaflet</name>
+    <name>Maps.Code.Leaflet</name>
     <number>0</number>
     <className>XWiki.JavaScriptExtension</className>
-    <guid>183f1668-1ba5-4beb-aba5-6588a615dccf</guid>
-    <class>
-      <name>XWiki.JavaScriptExtension</name>
-      <customClass/>
-      <customMapping/>
-      <defaultViewSheet/>
-      <defaultEditSheet/>
-      <defaultWeb/>
-      <nameField/>
-      <validationScript/>
-      <cache>
-        <cache>0</cache>
-        <defaultValue>long</defaultValue>
-        <disabled>0</disabled>
-        <displayType>select</displayType>
-        <multiSelect>0</multiSelect>
-        <name>cache</name>
-        <number>5</number>
-        <prettyName>Caching policy</prettyName>
-        <relationalStorage>0</relationalStorage>
-        <separator> </separator>
-        <separators>|, </separators>
-        <size>1</size>
-        <unmodifiable>0</unmodifiable>
-        <values>long|short|default|forbid</values>
-        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
-      </cache>
-      <code>
-        <contenttype>PureText</contenttype>
-        <disabled>0</disabled>
-        <editor>PureText</editor>
-        <name>code</name>
-        <number>2</number>
-        <prettyName>Code</prettyName>
-        <rows>20</rows>
-        <size>50</size>
-        <unmodifiable>0</unmodifiable>
-        <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
-      </code>
-      <name>
-        <disabled>0</disabled>
-        <name>name</name>
-        <number>1</number>
-        <prettyName>Name</prettyName>
-        <size>30</size>
-        <unmodifiable>0</unmodifiable>
-        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
-      </name>
-      <parse>
-        <disabled>0</disabled>
-        <displayFormType>select</displayFormType>
-        <displayType>yesno</displayType>
-        <name>parse</name>
-        <number>4</number>
-        <prettyName>Parse content</prettyName>
-        <unmodifiable>0</unmodifiable>
-        <classType>com.xpn.xwiki.objects.classes.BooleanClass</classType>
-      </parse>
-      <use>
-        <cache>0</cache>
-        <disabled>0</disabled>
-        <displayType>select</displayType>
-        <multiSelect>0</multiSelect>
-        <name>use</name>
-        <number>3</number>
-        <prettyName>Use this extension</prettyName>
-        <relationalStorage>0</relationalStorage>
-        <separator> </separator>
-        <separators>|, </separators>
-        <size>1</size>
-        <unmodifiable>0</unmodifiable>
-        <values>currentPage|onDemand|always</values>
-        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
-      </use>
-    </class>
-    <property>
-      <cache>long</cache>
-    </property>
-    <property>
-      <code>requirejs.config({
-  paths: {
-    'leaflet': ['$services.webjars.url("leaflet", "leaflet.js")'],
-    'leafletSearch': ['https://cdn.jsdelivr.net/npm/leaflet-search@2.9.8/src/leaflet-search'] //To be used as a webjar
-  },
-  shim: {
-    'leaflet-search': ['leaflet']
-  }
-});
-require(['jquery', 'leaflet', 'leafletSearch', 'leaflet-commons'], function ($, leaflet, ls, leafletCommons) {
-  'use strict';
-
-  function createSimpleMap(options, data)
-  {
-    var map = leafletCommons.createEmptyMap(options, data);
-    //Set options for the icon of marker
-    var markerIcon;
-    if (data.icon) {
-      markerIcon = data.icon;
-    } else {
-      markerIcon = "$services.webjars.url('leaflet', 'images/marker-icon.png')";
-    }
-    var icon = L.icon({
-      iconUrl: markerIcon,
-      iconRetinaUrl: "$services.webjars.url('leaflet', 'images/marker-icon-2x.png')",
-      shadowUrl: "$services.webjars.url('leaflet', 'images/marker-shadow.png')",
-      iconSize: ['auto', 41],
-      iconAnchor: [12, 41],
-      popupAnchor: [1, -34],
-      tooltipAnchor: [16, -28],
-      shadowSize: [41, 41]
-    });
-    //Create a marker at the specified location and add it to map
-    var marker = L.marker(data.location, { icon: icon }).addTo(map);
-    //If popup information is set, bind it to the marker
-    if (data.popup) {
-      marker.bindPopup(data.popup);
-    }
-  }
-
-  function createPathMap(options, data)
-  {
-    var map = leafletCommons.createEmptyMap(options, data);
-    //Get the name of the place to set as popupn for source and destination
-    var source = L.latLng(data.source);
-    leafletCommons.reverseGeocode(source, function (sourceName) {
-      var sourceMarker = L.marker(source);
-      if (sourceName) {
-        sourceMarker.bindPopup(sourceName);
-      }
-      sourceMarker.addTo(map);
-    });
-    var destination = L.latLng(data.destination);
-    leafletCommons.reverseGeocode(destination, function (destinationName) {
-      var destinationMarker = L.marker(destination);
-      if (destinationName) {
-        destinationMarker.bindPopup(destinationName);
-      }
-      destinationMarker.addTo(map);
-    });
-    //Get the path as polyline from osm open source routing machine (osrm)
-    leafletCommons.generatePath(data, function (polylineFeatureGroup) {
-      polylineFeatureGroup.addTo(map);
-      map.fitBounds(polylineFeatureGroup.getBounds());
-    });
-  }
-
-  function init()
-  {
-    //Create SimpleMap
-    $$('.map-container-simplemap').each(function (element) {
-      var options = leafletCommons.setCommonMapOptions(element);
-      //Get the data to be displayed on the map
-      var data = {};
-      data.icon = element.dataset.markericon;
-      data.location = element.dataset.location;
-      leafletCommons.getLocationCoords(data.location, function (location) {
-        data.location = location;
-        data.popup = element.dataset.popup;
-        //Create the map with the data collected
-        createSimpleMap(options, data);
-      });
-    });
-    //Create PathMap
-    $$('.map-container-pathmap').each(function (element) {
-      var options = leafletCommons.setCommonMapOptions(element);
-      //Get the data to be displayed on the map
-      var data = {};
-      leafletCommons.getLocationCoords(element.dataset.source, function (source) {
-        leafletCommons.getLocationCoords(element.dataset.destination, function (destination) {
-          data.location = source;
-          data.source = source;
-          data.destination = destination;
-          //Create the map with the data collected
-          createPathMap(options, data);
-        });
-      });
-    });
-  };
-
-  //Run the init() function when dom is loaded
-  (XWiki &amp;&amp; XWiki.domIsLoaded &amp;&amp; init()) || document.observe('xwiki:dom:loaded', init);
-
-});</code>
-    </property>
-    <property>
-      <name>leaflet-map</name>
-    </property>
-    <property>
-      <parse>1</parse>
-    </property>
-    <property>
-      <use>onDemand</use>
-    </property>
-  </object>
-  <object>
-    <name>Map.Code.Leaflet</name>
-    <number>1</number>
-    <className>XWiki.JavaScriptExtension</className>
-    <guid>a77b225d-df4c-4db8-810d-84371ea7fcbf</guid>
+    <guid>ebfce277-8371-4473-802b-f91065f1aa63</guid>
     <class>
       <name>XWiki.JavaScriptExtension</name>
       <customClass/>
@@ -336,23 +138,32 @@ define('leaflet-commons', ['jquery'], function ($) {
     },
 
     //Create an empty map and return it
-    createEmptyMap: function (options, data)
+    createEmptyMap: function (options)
     {
       //Create the map
-      var mapId = options.mapId,
-        zoom = options.zoom,
-        tiles = options.tiles,
-        map = new L.Map(mapId, {zoom: zoom, center: data.location });
-      //Add a tiles layer to the map (the background)
-      L.tileLayer(tiles, {
-        attribution: '&amp;copy; &lt;a href="https://www.openstreetmap.org/"&gt;OpenStreetMap&lt;/a&gt; | &lt;a href="https://www.xwiki.org"&gt;XWiki&lt;/a&gt;',
-        maxZoom: 18,
-        id: 'mapbox.streets'
-      }).addTo(map);
-      //Adding the navigation control
-      this.addNavigation(map);
-      //Adding the search control
-      this.addSearch(map);
+      var rootScope = this,
+          mapId = 'map-' + options.id,
+          zoom = options.defaultZoom !== null ? options.defaultZoom : 12,
+          tiles = options.tiles !== '' ? options.tiles : 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+          defaultLoc = options.defaultLocation !== '' ? options.defaultLocation : '48,2',
+          map = new L.Map(mapId, {zoom: zoom, center: [48, 2]});
+      this.getLocationCoords(defaultLoc, function (location) {
+        map.setView(location);
+        //Add a tiles layer to the map (the background)
+        L.tileLayer(tiles, {
+          attribution: '&amp;copy; &lt;a href="https://www.openstreetmap.org/"&gt;OpenStreetMap&lt;/a&gt; | &lt;a href="https://www.xwiki.org"&gt;XWiki&lt;/a&gt;',
+          maxZoom: 17,
+          id: 'mapbox.streets'
+        }).addTo(map);
+        //Adding the navigation control
+        if (options.includeCurrentLocation == 1) {
+          rootScope.addNavigation(map);
+        }
+        //Adding the search control
+        if (options.includeSearch == 1) {
+          rootScope.addSearch(map);
+        }
+      });
       return map;
     },
 
@@ -387,7 +198,7 @@ define('leaflet-commons', ['jquery'], function ($) {
       var rootScope = this;
       L.Control.navigation = L.Control.extend({
         onAdd: function (map) {
-          var container = L.DomUtil.create('div', 'leaflet-control-loc');
+          var container = L.DomUtil.create('div', 'leaflet-control-custom');
           var locateIcon = L.DomUtil.create('div', 'fa fa-map-marker');
           locateIcon.setAttribute('title', 'Current location');
           locateIcon.setAttribute('aria-label', 'Current location');
@@ -559,23 +370,166 @@ define('leaflet-commons', ['jquery'], function ($) {
     }
 
   }
-})</code>
+});</code>
     </property>
     <property>
-      <name>leaflet-common-functions</name>
+      <name>leaflet-commons</name>
     </property>
     <property>
       <parse>1</parse>
     </property>
     <property>
-      <use>onDemand</use>
+      <use>currentPage</use>
     </property>
   </object>
   <object>
-    <name>Map.Code.Leaflet</name>
+    <name>Maps.Code.Leaflet</name>
+    <number>1</number>
+    <className>XWiki.JavaScriptExtension</className>
+    <guid>b67d32b1-3adb-4cc1-83a4-d20befaa80cf</guid>
+    <class>
+      <name>XWiki.JavaScriptExtension</name>
+      <customClass/>
+      <customMapping/>
+      <defaultViewSheet/>
+      <defaultEditSheet/>
+      <defaultWeb/>
+      <nameField/>
+      <validationScript/>
+      <cache>
+        <cache>0</cache>
+        <defaultValue>long</defaultValue>
+        <disabled>0</disabled>
+        <displayType>select</displayType>
+        <multiSelect>0</multiSelect>
+        <name>cache</name>
+        <number>5</number>
+        <prettyName>Caching policy</prettyName>
+        <relationalStorage>0</relationalStorage>
+        <separator> </separator>
+        <separators>|, </separators>
+        <size>1</size>
+        <unmodifiable>0</unmodifiable>
+        <values>long|short|default|forbid</values>
+        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
+      </cache>
+      <code>
+        <contenttype>PureText</contenttype>
+        <disabled>0</disabled>
+        <editor>PureText</editor>
+        <name>code</name>
+        <number>2</number>
+        <prettyName>Code</prettyName>
+        <rows>20</rows>
+        <size>50</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
+      </code>
+      <name>
+        <disabled>0</disabled>
+        <name>name</name>
+        <number>1</number>
+        <prettyName>Name</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </name>
+      <parse>
+        <disabled>0</disabled>
+        <displayFormType>select</displayFormType>
+        <displayType>yesno</displayType>
+        <name>parse</name>
+        <number>4</number>
+        <prettyName>Parse content</prettyName>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.BooleanClass</classType>
+      </parse>
+      <use>
+        <cache>0</cache>
+        <disabled>0</disabled>
+        <displayType>select</displayType>
+        <multiSelect>0</multiSelect>
+        <name>use</name>
+        <number>3</number>
+        <prettyName>Use this extension</prettyName>
+        <relationalStorage>0</relationalStorage>
+        <separator> </separator>
+        <separators>|, </separators>
+        <size>1</size>
+        <unmodifiable>0</unmodifiable>
+        <values>currentPage|onDemand|always</values>
+        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
+      </use>
+    </class>
+    <property>
+      <cache>long</cache>
+    </property>
+    <property>
+      <code>requirejs.config({
+  paths: {
+    'leaflet': ['$services.webjars.url("leaflet", "leaflet.js")'],
+    'leafletSearch': ['https://cdn.jsdelivr.net/npm/leaflet-search@2.9.8/src/leaflet-search'] //To be used as a webjar
+  },
+  shim: {
+    'leaflet-search': ['leaflet']
+  }
+});
+require(['jquery', 'leaflet', 'leafletSearch', 'leaflet-commons'], function ($, leaflet, ls, leafletCommons) {
+  'use strict';
+  function init()
+  {
+    //Create SimpleMap
+    $$('.map-container').each(function (element) {
+      var options = JSON.parse(element.dataset.options);
+      var map = leafletCommons.createEmptyMap(options);
+      var mapData = JSON.parse(element.dataset.mapdata);
+      var allLayers = L.featureGroup();
+      var dataLength = mapData.length - 1;
+      var i = 0;
+      mapData.each(function (data) {
+        leafletCommons.getLocationCoords(data.location, function (location) {
+          var marker;
+          var popupData = '&lt;h2&gt;' + data.title + '&lt;/h2&gt;' + data.popupContent;
+          if (data.markerIcon) {
+            var icon = L.icon({
+              iconUrl: data.markerIcon,
+              iconSize: ['', 41]
+            });
+            marker = L.marker(location, {icon: icon}).bindPopup(popupData);
+          } else {
+            marker = L.marker(location).bindPopup(popupData);
+          }
+          allLayers.addLayer(marker);
+          if(dataLength == i){
+            allLayers.addTo(map);
+            map.fitBounds(allLayers.getBounds());
+          }
+          i++;
+        });
+      });
+    });
+  }
+
+  //Run the init() function when dom is loaded
+  (XWiki &amp;&amp; XWiki.domIsLoaded &amp;&amp; init()) || document.observe('xwiki:dom:loaded', init);
+
+});</code>
+    </property>
+    <property>
+      <name>leaflet-main</name>
+    </property>
+    <property>
+      <parse>1</parse>
+    </property>
+    <property>
+      <use>currentPage</use>
+    </property>
+  </object>
+  <object>
+    <name>Maps.Code.Leaflet</name>
     <number>0</number>
     <className>XWiki.StyleSheetExtension</className>
-    <guid>efc35b1a-4b82-4816-9d4a-b9b9481591a3</guid>
+    <guid>57be6a87-fcec-494d-b91d-aa24d9abfa0b</guid>
     <class>
       <name>XWiki.StyleSheetExtension</name>
       <customClass/>
@@ -696,7 +650,7 @@ define('leaflet-commons', ['jquery'], function ($) {
   background: none;
   border: none;
 }
-.leaflet-container .leaflet-control-loc, .leaflet-container .leaflet-control-search .search-button, .leaflet-bar a, .leaflet-bar a:hover, .leaflet-touch .leaflet-bar a{
+.leaflet-container .leaflet-control-custom, .leaflet-container .leaflet-control-search .search-button, .leaflet-bar a, .leaflet-bar a:hover, .leaflet-touch .leaflet-bar a{
   background: white;
   width: 35px;
   height: 35px;
@@ -713,7 +667,7 @@ define('leaflet-commons', ['jquery'], function ($) {
   font-family: FontAwesome;
   position: relative;
 }
-.leaflet-control-loc&gt;.fa, .leaflet-container .leaflet-control-search .search-button:before{
+.leaflet-control-custom&gt;.fa, .leaflet-container .leaflet-control-search .search-button:before{
   position: absolute;
   left: 50%;
   top: 50%;
@@ -726,7 +680,7 @@ define('leaflet-commons', ['jquery'], function ($) {
   font-size: 17px;
   margin-top: -2px;
 }
-.leaflet-container .leaflet-control-loc:hover, .leaflet-container .leaflet-control-search .search-button:hover{
+.leaflet-container .leaflet-control-custom:hover, .leaflet-container .leaflet-control-search .search-button:hover{
   background: #f4f4f4;
   transition: background 0.3s;
   text-decoration: none;
@@ -784,8 +738,16 @@ define('leaflet-commons', ['jquery'], function ($) {
 .leaflet-touch .leaflet-bar a{
   line-height: 32px;
 }
-.leaflet-top .leaflet-control-loc, .leaflet-top .leaflet-control-search .search-button, .leaflet-top .leaflet-bar a, .leaflet-top .leaflet-bar a:hover, .leaflet-touch .leaflet-top .leaflet-bar a{
+.leaflet-top .leaflet-control-custom, .leaflet-top .leaflet-control-search .search-button, .leaflet-top .leaflet-bar a, .leaflet-top .leaflet-bar a:hover, .leaflet-touch .leaflet-top .leaflet-bar a{
   margin-bottom: 4px;
+}
+.leaflet-control-search .search-alert{
+  background: white;
+  width: 100%;
+  height: 30px;
+  padding: 9px 12px;
+  border-radius: 8px;
+  box-shadow: 0px 1px 4px 0px rgba(0, 0, 0, 0.3);
 }</code>
     </property>
     <property>
@@ -798,7 +760,7 @@ define('leaflet-commons', ['jquery'], function ($) {
       <parse>1</parse>
     </property>
     <property>
-      <use>currentPage</use>
+      <use>onDemand</use>
     </property>
   </object>
 </xwikidoc>

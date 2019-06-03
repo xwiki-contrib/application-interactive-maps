@@ -20,14 +20,14 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
 -->
 
-<xwikidoc version="1.3" reference="Map.Code.Translations" locale="">
-  <web>Map.Code</web>
+<xwikidoc version="1.3" reference="Maps.Code.Translations" locale="">
+  <web>Maps.Code</web>
   <name>Translations</name>
   <language/>
   <defaultLanguage>en</defaultLanguage>
   <translation>0</translation>
   <creator>xwiki:XWiki.Admin</creator>
-  <parent>WebHome</parent>
+  <parent>Maps.WebHome</parent>
   <author>xwiki:XWiki.Admin</author>
   <contentAuthor>xwiki:XWiki.Admin</contentAuthor>
   <version>1.1</version>
@@ -36,33 +36,14 @@
   <minorEdit>false</minorEdit>
   <syntaxId>plain/1.0</syntaxId>
   <hidden>true</hidden>
-  <content>intmap.mapEditor.mapName=Map Name
-intmap.mapEditor.createMap=Create Map
-intmap.markerLocation=Marker Position
-intmap.popupData=Popup Information
-intmap.basicMapEditor.hint=Click to place a marker. You can also view popup information if set.
-intmap.basicMapEditor.customMarker=Custom Marker Image
-simpleMap.livetable.doc.title=Map Name
-simpleMap.livetable.markerLocation=Marker Position
-simpleMap.livetable.doc.creationDate=Date Created
-simpleMap.livetable._actions=Actions
-pathMap.livetable.doc.title=Map Name
-pathMap.livetable.source=Source
-pathMap.livetable.destination=Destination
-pathMap.livetable.doc.creationDate=Date Created
-pathMap.livetable._actions=Actions
-pathMap.livetable.emptyvalue=None
-intmap.pathMapEditor.hint=Click to place markers for source and destination.
-intmap.pathMapEditor.generatePath=Generate Path
-intmap.pathMapEditor.removePoints=Remove Points
-intmap.pathMapEditor.error=Both source and destination locations are required
-intmap.FLMapEditor.hint=Click on the map to define a place
-intmap.FLMapEditor.category=Category</content>
+  <content>maps.livetable.doc.title=Map Name
+maps.livetable.doc.creationDate=Date Created
+maps.livetable._actions=Edit/Delete</content>
   <object>
-    <name>Map.Code.Translations</name>
+    <name>Maps.Code.Translations</name>
     <number>0</number>
     <className>XWiki.TranslationDocumentClass</className>
-    <guid>1b5ffa63-62d3-4451-908b-ed2f9223c348</guid>
+    <guid>9a5b5a37-0b17-4b0f-a163-3316b22df1db</guid>
     <class>
       <name>XWiki.TranslationDocumentClass</name>
       <customClass/>

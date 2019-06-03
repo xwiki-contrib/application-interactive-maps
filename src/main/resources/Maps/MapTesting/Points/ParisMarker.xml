@@ -20,30 +20,34 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
 -->
 
-<xwikidoc version="1.3" reference="Map.Code.FilterableListMap.FilterableListMapTemplate" locale="">
-  <web>Map.Code.FilterableListMap</web>
-  <name>FilterableListMapTemplate</name>
+<xwikidoc version="1.3" reference="Maps.MapTesting.Points.ParisMarker" locale="">
+  <web>Maps.MapTesting.Points</web>
+  <name>ParisMarker</name>
   <language/>
   <defaultLanguage/>
   <translation>0</translation>
   <creator>xwiki:XWiki.Admin</creator>
-  <parent>Map.Code.FilterableListMap.FilterableListMapClass</parent>
+  <parent>Maps.MapTesting.Points.Islamabad.WebHome</parent>
   <author>xwiki:XWiki.Admin</author>
   <contentAuthor>xwiki:XWiki.Admin</contentAuthor>
   <version>1.1</version>
-  <title/>
-  <comment/>
+  <title>ParisMarker</title>
   <minorEdit>false</minorEdit>
   <syntaxId>xwiki/2.1</syntaxId>
   <hidden>false</hidden>
-  <content/>
+  <content>===== Some Data =====
+
+(% class="box warningmessage" %)
+(((
+Some information here
+)))</content>
   <object>
-    <name>Map.Code.FilterableListMap.FilterableListMapTemplate</name>
+    <name>Maps.MapTesting.Points.ParisMarker</name>
     <number>0</number>
-    <className>Map.Code.FilterableListMap.FilterableListMapClass</className>
-    <guid>68d78491-d82f-428c-8072-1b29980e53da</guid>
+    <className>Maps.Code.PointClass</className>
+    <guid>ad8eb2af-0100-4d90-8c50-b9d6f8d073c3</guid>
     <class>
-      <name>Map.Code.FilterableListMap.FilterableListMapClass</name>
+      <name>Maps.Code.PointClass</name>
       <customClass/>
       <customMapping/>
       <defaultViewSheet/>
@@ -51,43 +55,23 @@
       <defaultWeb/>
       <nameField/>
       <validationScript/>
-      <category>
+      <location>
         <customDisplay/>
         <disabled>0</disabled>
-        <hint/>
-        <name>category</name>
+        <hint>Location in coordinates or place name</hint>
+        <name>location</name>
         <number>1</number>
-        <picker>1</picker>
-        <prettyName>category</prettyName>
+        <picker>0</picker>
+        <prettyName>Location</prettyName>
         <size>30</size>
         <unmodifiable>0</unmodifiable>
         <validationMessage/>
         <validationRegExp/>
         <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
-      </category>
-      <popupData>
-        <contenttype/>
-        <customDisplay/>
-        <disabled>0</disabled>
-        <editor/>
-        <hint/>
-        <name>popupData</name>
-        <number>2</number>
-        <picker>1</picker>
-        <prettyName>popupData</prettyName>
-        <rows>5</rows>
-        <size>40</size>
-        <unmodifiable>0</unmodifiable>
-        <validationMessage/>
-        <validationRegExp/>
-        <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
-      </popupData>
+      </location>
     </class>
     <property>
-      <category/>
-    </property>
-    <property>
-      <popupData/>
+      <location>paris</location>
     </property>
   </object>
 </xwikidoc>
