@@ -31,6 +31,12 @@
 - [x] Make TemplateProvider for MapTemplate
 - [x] Add page title to popup information
 - [x] Add livetable for created maps on page Maps.WebHome
+## Day 7 (4 June 2019)
+- [x] Change MapSheet to neglect pages that are not map items
+- [x] Change Leaflet to ignore pages with no location data
+- [x] Study Solr Search Application
+- [x] Look into Main.SolrSearch and Main.SolrSearchMacros
+- [x] Edit solr search results to output JSON
 ---
 # Marks the progress of the Interactive Maps Application (Old)
 ## Day 1 (18 May 2019)
