@@ -478,7 +478,7 @@ require(['jquery', 'leaflet', 'leafletSearch', 'leaflet-commons'], function ($, 
   'use strict';
   function init()
   {
-    //Create SimpleMap
+    //Create map
     $$('.map-container').each(function (element) {
       var options = JSON.parse(element.dataset.options);
       var map = leafletCommons.createEmptyMap(options);
@@ -487,25 +487,32 @@ require(['jquery', 'leaflet', 'leafletSearch', 'leaflet-commons'], function ($, 
       var dataLength = mapData.length - 1;
       var i = 0;
       mapData.each(function (data) {
-        leafletCommons.getLocationCoords(data.location, function (location) {
-          var marker;
-          var popupData = '&lt;h2&gt;' + data.title + '&lt;/h2&gt;' + data.popupContent;
-          if (data.markerIcon) {
-            var icon = L.icon({
-              iconUrl: data.markerIcon,
-              iconSize: ['', 41]
-            });
-            marker = L.marker(location, {icon: icon}).bindPopup(popupData);
-          } else {
-            marker = L.marker(location).bindPopup(popupData);
-          }
-          allLayers.addLayer(marker);
-          if(dataLength == i){
-            allLayers.addTo(map);
-            map.fitBounds(allLayers.getBounds());
-          }
-          i++;
-        });
+        if (data.location != null) {
+          leafletCommons.getLocationCoords(data.location, function (location) {
+            var marker;
+            var popupData = '&lt;h2&gt;' + data.title + '&lt;/h2&gt;' + data.popupContent;
+            if (data.markerIcon) {
+              var icon = L.icon({
+                iconUrl: data.markerIcon,
+                iconSize: ['', 41]
+              });
+              marker = L.marker(location, {icon: icon}).bindPopup(popupData);
+            } else {
+              marker = L.marker(location).bindPopup(popupData);
+            }
+            allLayers.addLayer(marker);
+            if(dataLength == i){
+              allLayers.addTo(map);
+              //Using timeout function to delay fitting of bounds because of async behavior
+              setTimeout(function(){
+                map.fitBounds(allLayers.getBounds());
+              }, 200);
+            }
+            i++;
+          });
+        } else {
+          new XWiki.widgets.Notification('Error while adding items to the map. Make sure the query is correct.', 'error');
+        }
       });
     });
   }

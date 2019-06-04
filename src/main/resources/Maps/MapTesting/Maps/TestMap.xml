@@ -154,7 +154,7 @@
       <includeSearch>1</includeSearch>
     </property>
     <property>
-      <query>object:Maps.Code.PointClass</query>
+      <query>spaces:Points AND spaces:Islamabad</query>
     </property>
     <property>
       <tiles/>

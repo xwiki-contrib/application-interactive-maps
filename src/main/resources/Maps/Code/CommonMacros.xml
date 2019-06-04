@@ -49,14 +49,15 @@
   #set ($searchResponse = $query.execute()[0])
   #set ($mapDataArr = [])
   #foreach ($response in $searchResponse.getResults())
-    #if ($response.get('object.Maps.Code.PointClass') != '')
+    ## Check if the page contains a Point object
+    #if ("$!response.get('property.Maps.Code.PointClass.location__')" != '')
       #set ($responseData = {})
       ## Get document title
       #set ($title = $response.get('title_'))
       ## Get document content as html
       #set ($popupContent = "#getHtml($response.get('doccontentraw_'))")
       ## Get the location
-      #set ($location = $response.get('property.Maps.Code.PointClass.location_string')[0])
+      #set ($location = $response.get('property.Maps.Code.PointClass.location__')[0])
       ## Set the collected information
       #set ($discard = $responseData.put('title', $title))
       #set ($discard = $responseData.put('location', $location))
