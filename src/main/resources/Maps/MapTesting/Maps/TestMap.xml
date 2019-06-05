@@ -154,7 +154,8 @@
       <includeSearch>1</includeSearch>
     </property>
     <property>
-      <query>spaces:Points AND spaces:Islamabad</query>
+      <query>spaces:Islamabad
+</query>
     </property>
     <property>
       <tiles/>

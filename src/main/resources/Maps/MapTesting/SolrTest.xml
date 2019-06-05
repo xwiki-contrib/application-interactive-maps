@@ -20,75 +20,27 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
 -->
 
-<xwikidoc version="1.3" reference="Maps.Code.CommonMacros" locale="">
-  <web>Maps.Code</web>
-  <name>CommonMacros</name>
+<xwikidoc version="1.3" reference="Maps.MapTesting.SolrTest" locale="">
+  <web>Maps.MapTesting</web>
+  <name>SolrTest</name>
   <language/>
   <defaultLanguage/>
   <translation>0</translation>
   <creator>xwiki:XWiki.Admin</creator>
-  <parent>Maps.Code.Leaflet</parent>
+  <parent>WebHome</parent>
   <author>xwiki:XWiki.Admin</author>
   <contentAuthor>xwiki:XWiki.Admin</contentAuthor>
   <version>1.1</version>
-  <title>CommonMacros</title>
+  <title>SolrTest</title>
   <comment/>
   <minorEdit>false</minorEdit>
   <syntaxId>xwiki/2.1</syntaxId>
-  <hidden>true</hidden>
+  <hidden>false</hidden>
   <content>{{include reference="Main.SolrSearchConfig" /}}
 
 {{include reference="Main.SolrSearchMacros" /}}
 
-{{velocity output="false"}}
-
-## Get HTML from XWiki/2.1 syntax
-#macro (getHtml $xwiki)
-  #set ($xdom = $services.rendering.parse($xwiki, "xwiki/2.1"))
-  $services.rendering.render($xdom, "xhtml/1.0")
-#end
-## Handle the response of solr query
-#macro (handleSolrResponse $searchResponse)
-  #set ($mapDataArr = [])
-  #foreach ($response in $searchResponse.getResults())
-    ## Check if the page contains a Point object
-    #if ("$!response.get('property.Maps.Code.PointClass.location__')" != '')
-      #set ($responseData = {})
-      ## Get document title
-      #set ($title = $response.get('title_'))
-      ## Get document content as html
-      #set ($popupContent = "#getHtml($response.get('doccontentraw_'))")
-      ## Get the location
-      #set ($location = $response.get('property.Maps.Code.PointClass.location__')[0])
-      ## Set the collected information
-      #set ($discard = $responseData.put('title', $title))
-      #set ($discard = $responseData.put('location', $location))
-      #set ($discard = $responseData.put('popupContent', $popupContent))
-      ## Get attachment URL for marker icon if attachment available
-      #set ($targetDoc = $xwiki.getDocument($response.get('fullname')))
-      #set ($firstAttachment = $targetDoc.getAttachmentList())
-      #if (!$firstAttachment.isEmpty())
-        #set ($attachmentURL = $targetDoc.getAttachmentURL($firstAttachment.get(0).getFilename()))
-        #set ($discard = $responseData.put('markerIcon', $attachmentURL))
-      #end
-      ## Add the collected data into array
-      #set ($discard = $mapDataArr.add($responseData))
-    #end
-  #end
-  $jsontool.serialize($mapDataArr)
-#end
-## Run the solr query and get data for map in json
-#macro (handleMapQuery $queryStatement)
-  #set ($query = $services.query.createQuery($queryStatement, 'solr'))
-  #set ($discard = $query.bindValue('fq', '{!q.op=AND} type:DOCUMENT'))
-  #set ($searchResponse = $query.execute()[0])
-  #set ($mapData = "#handleSolrResponse(${searchResponse})")
-  $mapData
-#end
-
-##
-## The macros below belong to Main.SolrSearchMacros and have been altered to support map queries
-##
+{{velocity}}
 
 #macro (getMapResults)
   ## $queryStatement is set before using the macro
@@ -117,7 +69,9 @@
 #end
 #macro (displayMapItemResults)
   (% class="search-results" %)(((
-    #set ($mapData = "#handleSolrResponse(${searchResponse})")
+    #foreach ($result in $searchResponse.getResults())
+      asdasd
+    #end
     ## $mapId, $mapObjJSON are already set before using this macro
     (% class="map-container" id="map-${mapId}" data-options='${mapObjJSON}' data-mapdata='${mapData}' style="width: 100%; height: 400px;" %)((()))
   )))
@@ -149,7 +103,6 @@
       (% class="search-results-container row" %)(((
         #if ($facetEnabled)
           (% class="col-xs-12 col-sm-4 col-sm-push-8 col-md-3 col-md-push-9" %)(((
-          asdasdasdasd
             #displaySearchFacets($searchResponse)
           )))
         #end
@@ -163,6 +116,6 @@
   #set($void = $services.progress.popLevel())
   #set($void = $services.progress.endStep())
 #end
-
+#displayMapUI
 {{/velocity}}</content>
 </xwikidoc>

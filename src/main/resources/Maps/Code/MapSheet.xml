@@ -36,7 +36,8 @@
   <minorEdit>false</minorEdit>
   <syntaxId>xwiki/2.1</syntaxId>
   <hidden>true</hidden>
-  <content>{{include reference="Maps.Code.CommonMacros"/}}
+  <content>{{include reference="Maps.Code.CommonMacros" /}}
+
 {{velocity}}
 ## You can modify this page to customize the presentation of your object.
 ## At first you should keep the default presentation and just save the document.
@@ -79,8 +80,15 @@
 
   ## Get all the data to be displayed inside the map
   #set ($queryStatement = $mapObjMapping.get('query'))
-  #set ($mapData = "#handleMapQuery(${queryStatement})")
-  (% class="map-container" id="map-${mapId}" data-options='${mapObjJSON}' data-mapdata='${mapData}' style="width: 100%; height: 400px;" %)((()))
+
+  #if ("$!request.text" != '')
+    #set ($discard = $xwiki.ssx.use('Maps.Code.Leaflet'))
+    #set ($discard = $xwiki.jsx.use('Maps.Code.Leaflet'))
+    #displayMapUI
+  #else
+    #set ($mapData = "#handleMapQuery(${queryStatement})")
+    (% class="map-container" id="map-${mapId}" data-options='${mapObjJSON}' data-mapdata='${mapData}' style="width: 100%; height: 400px;" %)((()))
+  #end
 #end
 {{/velocity}}</content>
 </xwikidoc>
