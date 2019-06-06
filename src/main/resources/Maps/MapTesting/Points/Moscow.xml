@@ -20,33 +20,30 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
 -->
 
-<xwikidoc version="1.3" reference="Maps.MapTesting.Points.ParisMarker" locale="">
+<xwikidoc version="1.3" reference="Maps.MapTesting.Points.Moscow" locale="">
   <web>Maps.MapTesting.Points</web>
-  <name>ParisMarker</name>
+  <name>Moscow</name>
   <language/>
   <defaultLanguage/>
   <translation>0</translation>
   <creator>xwiki:XWiki.Admin</creator>
-  <parent>Maps.MapTesting.Points.Islamabad.WebHome</parent>
+  <parent>Maps.MapTesting.Points</parent>
   <author>xwiki:XWiki.Admin</author>
   <contentAuthor>xwiki:XWiki.Admin</contentAuthor>
   <version>1.1</version>
-  <title>ParisMarker</title>
+  <title>Moscow</title>
   <comment/>
   <minorEdit>false</minorEdit>
   <syntaxId>xwiki/2.1</syntaxId>
   <hidden>false</hidden>
-  <content>===== Some Data =====
+  <content>We are in Russia now! :D
 
-(% class="box warningmessage" %)
-(((
-Some information here
-)))</content>
+Same</content>
   <object>
-    <name>Maps.MapTesting.Points.ParisMarker</name>
+    <name>Maps.MapTesting.Points.Moscow</name>
     <number>0</number>
     <className>Maps.Code.PointClass</className>
-    <guid>ad8eb2af-0100-4d90-8c50-b9d6f8d073c3</guid>
+    <guid>98cf2fef-afaa-4353-b9cb-ad85fd289450</guid>
     <class>
       <name>Maps.Code.PointClass</name>
       <customClass/>
@@ -72,7 +69,7 @@ Some information here
       </location>
     </class>
     <property>
-      <location>paris</location>
+      <location>Moscow, Russia</location>
     </property>
   </object>
 </xwikidoc>

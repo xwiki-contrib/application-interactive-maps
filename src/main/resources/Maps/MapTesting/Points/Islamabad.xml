@@ -20,14 +20,14 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
 -->
 
-<xwikidoc version="1.3" reference="Maps.MapTesting.Points.Islamabad.WebHome" locale="">
-  <web>Maps.MapTesting.Points.Islamabad</web>
-  <name>WebHome</name>
+<xwikidoc version="1.3" reference="Maps.MapTesting.Points.Islamabad" locale="">
+  <web>Maps.MapTesting.Points</web>
+  <name>Islamabad</name>
   <language/>
   <defaultLanguage/>
   <translation>0</translation>
   <creator>xwiki:XWiki.Admin</creator>
-  <parent>Maps.MapTesting.Points.Islamabad</parent>
+  <parent>Maps.MapTesting.Points</parent>
   <author>xwiki:XWiki.Admin</author>
   <contentAuthor>xwiki:XWiki.Admin</contentAuthor>
   <version>1.1</version>
@@ -36,9 +36,9 @@
   <minorEdit>false</minorEdit>
   <syntaxId>xwiki/2.1</syntaxId>
   <hidden>false</hidden>
-  <content>=== Some data to be inside the popup ===
+  <content>Islamabad is covered in **mountains**. :O
 
-Some testing</content>
+Same</content>
   <attachment>
     <filename>google-location-icon-icon-location.png</filename>
     <mimetype>image/png</mimetype>
@@ -50,10 +50,10 @@ Some testing</content>
     <filesize>32168</filesize>
   </attachment>
   <object>
-    <name>Maps.MapTesting.Points.Islamabad.WebHome</name>
+    <name>Maps.MapTesting.Points.Islamabad</name>
     <number>0</number>
     <className>Maps.Code.PointClass</className>
-    <guid>fc0d2884-6571-47b0-a021-903317e0abdc</guid>
+    <guid>361df223-ea58-4d99-b74f-6af7caa888e0</guid>
     <class>
       <name>Maps.Code.PointClass</name>
       <customClass/>

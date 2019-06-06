@@ -82,10 +82,12 @@
   #set ($queryStatement = $mapObjMapping.get('query'))
 
   #if ("$!request.text" != '')
-    #set ($discard = $xwiki.ssx.use('Maps.Code.Leaflet'))
-    #set ($discard = $xwiki.jsx.use('Maps.Code.Leaflet'))
     #displayMapUI
   #else
+    (% class="map-search" %)(((
+      #set ($text = "$!request.text")
+      #displaySearchForm()
+    )))
     #set ($mapData = "#handleMapQuery(${queryStatement})")
     (% class="map-container" id="map-${mapId}" data-options='${mapObjJSON}' data-mapdata='${mapData}' style="width: 100%; height: 400px;" %)((()))
   #end

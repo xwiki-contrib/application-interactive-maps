@@ -41,7 +41,6 @@
 {{include reference="Main.SolrSearchMacros" /}}
 
 {{velocity output="false"}}
-
 ## Get HTML from XWiki/2.1 syntax
 #macro (getHtml $xwiki)
   #set ($xdom = $services.rendering.parse($xwiki, "xwiki/2.1"))
@@ -52,14 +51,14 @@
   #set ($mapDataArr = [])
   #foreach ($response in $searchResponse.getResults())
     ## Check if the page contains a Point object
-    #if ("$!response.get('property.Maps.Code.PointClass.location__')" != '')
+    #if ("$!response.get('property.Maps.Code.PointClass.location_string')" != '')
       #set ($responseData = {})
       ## Get document title
       #set ($title = $response.get('title_'))
       ## Get document content as html
       #set ($popupContent = "#getHtml($response.get('doccontentraw_'))")
       ## Get the location
-      #set ($location = $response.get('property.Maps.Code.PointClass.location__')[0])
+      #set ($location = $response.get('property.Maps.Code.PointClass.location_string')[0])
       ## Set the collected information
       #set ($discard = $responseData.put('title', $title))
       #set ($discard = $responseData.put('location', $location))
@@ -149,7 +148,6 @@
       (% class="search-results-container row" %)(((
         #if ($facetEnabled)
           (% class="col-xs-12 col-sm-4 col-sm-push-8 col-md-3 col-md-push-9" %)(((
-          asdasdasdasd
             #displaySearchFacets($searchResponse)
           )))
         #end
@@ -164,5 +162,35 @@
   #set($void = $services.progress.endStep())
 #end
 
+##
+## Facet macros
+##
+
+#macro (displaySearchFacetBody $facetField)
+  &lt;div class="search-facet-body"&gt;
+    #set ($facetDisplayer = $solrConfig.facetDisplayers.get($facetField.name))
+    #if (!$facetDisplayer &amp;&amp; $facetField.name.startsWith('property.'))
+      ## Choose a facet displayer based on the property type.
+      #getXClassProperty($facetField.name $property)
+      ## We rely on configuration instead of using a naming convention like "Main.Solr${property.classType}Facet"
+      ## because most of the property types don't need a custom facet displayer.
+      #set ($facetDisplayer = $solrConfig.facetDisplayersByPropertyType.get($property.classType))
+    #end
+    #displaySearchFacetValues($facetValues)
+    ## Below code does not render the facets properly
+    #*
+    #if ($facetDisplayer)
+      #set ($facetDisplayer = $xwiki.getDocument($facetDisplayer))
+      #if ("$!facetDisplayer.content" != '')
+        $!facetDisplayer.getRenderedContent(false)
+      #else
+        #displaySearchFacetValues($facetValues)
+      #end
+    #else
+      #displaySearchFacetValues($facetValues)
+    #end
+    *#
+  &lt;/div&gt;
+#end
 {{/velocity}}</content>
 </xwikidoc>
