@@ -37,6 +37,16 @@
 - [x] Study Solr Search Application
 - [x] Look into Main.SolrSearch and Main.SolrSearchMacros
 - [x] Edit solr search results to output JSON
+## Day 8 (5 June 2019)
+- [x] Extract macros from Main.SolrSearchMacros
+- [x] Edit search macros to work for maps
+- [x] Display map with search facets
+## Day 9 (6 June 2019)
+- [x] Make search form visible for default MapSheet
+- [ ] Try fixing facet macros not working for MapSheet
+- [x] Use #displaySearchFacetValues macro as an alternative to $facetDisplayer
+- [x] Code to capture XWiki dom update for changes in facets
+- [x] Allow map updates for changes in search and facets
 ---
 # Marks the progress of the Interactive Maps Application (Old)
 ## Day 1 (18 May 2019)
