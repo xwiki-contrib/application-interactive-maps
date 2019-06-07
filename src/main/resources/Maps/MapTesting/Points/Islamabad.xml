@@ -82,4 +82,43 @@ Same</content>
       <location>islamabad</location>
     </property>
   </object>
+  <object>
+    <name>Maps.MapTesting.Points.Islamabad</name>
+    <number>0</number>
+    <className>XWiki.TagClass</className>
+    <guid>10b09d6d-d550-4076-b175-4ff96f1f3d05</guid>
+    <class>
+      <name>XWiki.TagClass</name>
+      <customClass/>
+      <customMapping/>
+      <defaultViewSheet/>
+      <defaultEditSheet/>
+      <defaultWeb/>
+      <nameField/>
+      <validationScript/>
+      <tags>
+        <cache>0</cache>
+        <disabled>0</disabled>
+        <displayType>input</displayType>
+        <multiSelect>1</multiSelect>
+        <name>tags</name>
+        <number>1</number>
+        <prettyName>Tags</prettyName>
+        <relationalStorage>1</relationalStorage>
+        <separator>|</separator>
+        <separators>|,</separators>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <values/>
+        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
+      </tags>
+    </class>
+    <property>
+      <tags>
+        <value>islamabad</value>
+        <value> mountaneous</value>
+        <value> capital</value>
+      </tags>
+    </property>
+  </object>
 </xwikidoc>

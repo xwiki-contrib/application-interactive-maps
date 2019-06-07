@@ -20,36 +20,30 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
 -->
 
-<xwikidoc version="1.3" reference="Maps.Code.Translations" locale="">
-  <web>Maps.Code</web>
-  <name>Translations</name>
+<xwikidoc version="1.3" reference="Maps.MapTesting.Points.MorePoints.Beijing" locale="">
+  <web>Maps.MapTesting.Points.MorePoints</web>
+  <name>Beijing</name>
   <language/>
-  <defaultLanguage>en</defaultLanguage>
+  <defaultLanguage/>
   <translation>0</translation>
   <creator>xwiki:XWiki.Admin</creator>
-  <parent>Maps.WebHome</parent>
+  <parent>Maps.MapTesting.Points.Koln</parent>
   <author>xwiki:XWiki.Admin</author>
   <contentAuthor>xwiki:XWiki.Admin</contentAuthor>
   <version>1.1</version>
-  <title>Translations</title>
+  <title>Beijing</title>
   <comment/>
   <minorEdit>false</minorEdit>
-  <syntaxId>plain/1.0</syntaxId>
-  <hidden>true</hidden>
-  <content>maps.livetable.doc.title=Map Name
-maps.livetable.doc.creationDate=Date Created
-maps.livetable._actions=Edit/Delete
-
-## Solr translations override
-solr.facets.title=Filter the map
-solr.facets.hint=Filter the map item results</content>
+  <syntaxId>xwiki/2.1</syntaxId>
+  <hidden>false</hidden>
+  <content>The capital of China is a busy city :D</content>
   <object>
-    <name>Maps.Code.Translations</name>
+    <name>Maps.MapTesting.Points.MorePoints.Beijing</name>
     <number>0</number>
-    <className>XWiki.TranslationDocumentClass</className>
-    <guid>9a5b5a37-0b17-4b0f-a163-3316b22df1db</guid>
+    <className>Maps.Code.PointClass</className>
+    <guid>fe08adfd-266d-4cd2-ab75-c02789696909</guid>
     <class>
-      <name>XWiki.TranslationDocumentClass</name>
+      <name>Maps.Code.PointClass</name>
       <customClass/>
       <customMapping/>
       <defaultViewSheet/>
@@ -57,25 +51,23 @@ solr.facets.hint=Filter the map item results</content>
       <defaultWeb/>
       <nameField/>
       <validationScript/>
-      <scope>
-        <cache>0</cache>
+      <location>
+        <customDisplay/>
         <disabled>0</disabled>
-        <displayType>select</displayType>
-        <multiSelect>0</multiSelect>
-        <name>scope</name>
+        <hint>Location in coordinates or place name</hint>
+        <name>location</name>
         <number>1</number>
-        <prettyName>Scope</prettyName>
-        <relationalStorage>0</relationalStorage>
-        <separator> </separator>
-        <separators>|, </separators>
-        <size>1</size>
+        <picker>0</picker>
+        <prettyName>Location</prettyName>
+        <size>30</size>
         <unmodifiable>0</unmodifiable>
-        <values>GLOBAL|WIKI|USER|ON_DEMAND</values>
-        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
-      </scope>
+        <validationMessage/>
+        <validationRegExp/>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </location>
     </class>
     <property>
-      <scope>WIKI</scope>
+      <location>Beijing, China</location>
     </property>
   </object>
 </xwikidoc>
