@@ -47,6 +47,11 @@
 - [x] Use #displaySearchFacetValues macro as an alternative to $facetDisplayer
 - [x] Code to capture XWiki dom update for changes in facets
 - [x] Allow map updates for changes in search and facets
+## Day 10 (7 June 2019)
+- [x] Make search form and filter widget visible for default MapSheet view
+- [x] Custom config for solr search
+- [x] Merge pull request from @slauriere for museum maps
+- [ ] Do not reload map for changes in filters (currently solr filters reload all page content asynchronously)
 ---
 # Marks the progress of the Interactive Maps Application (Old)
 ## Day 1 (18 May 2019)
