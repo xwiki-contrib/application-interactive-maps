@@ -1,0 +1,108 @@
+<?xml version="1.1" encoding="UTF-8"?>
+
+<!--
+ * See the NOTICE file distributed with this work for additional
+ * information regarding copyright ownership.
+ *
+ * This is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation; either version 2.1 of
+ * the License, or (at your option) any later version.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this software; if not, write to the Free
+ * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+-->
+
+<xwikidoc version="1.3" reference="Maps.MapTesting.Museums.Code.DataImporter" locale="">
+  <web>Maps.MapTesting.Museums.Code</web>
+  <name>DataImporter</name>
+  <language/>
+  <defaultLanguage/>
+  <translation>0</translation>
+  <creator>xwiki:XWiki.Admin</creator>
+  <parent>WebHome</parent>
+  <author>xwiki:XWiki.Admin</author>
+  <contentAuthor>xwiki:XWiki.Admin</contentAuthor>
+  <version>1.1</version>
+  <title>Data Importer</title>
+  <comment/>
+  <minorEdit>false</minorEdit>
+  <syntaxId>xwiki/2.1</syntaxId>
+  <hidden>false</hidden>
+  <content>{{velocity}}
+
+{{info}}
+This page allows to import museum data from Wikidata into the wiki, with the following information for each museum: name, country, coordinates.
+* Step 1: head to https://query.wikidata.org/ and enter the SPARQL query below in the input field:
+
+  {{code}}
+SELECT ?item ?itemLabel ?coord ?lon ?lat ?country ?countryLabel
+WHERE
+{
+ ?item wdt:P17 ?country.
+ ?item wdt:P31 wd:Q33506.   # is a museum
+ ?item p:P625 ?coordinate.
+ ?coordinate ps:P625 ?coord.
+ ?coordinate psv:P625 ?coordinate_node.
+ ?coordinate_node wikibase:geoLongitude ?lon.
+ ?coordinate_node wikibase:geoLatitude ?lat.
+ SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
+} limit 100
+  {{/code}}
+
+* Step 2: download the result as a file "data.json" and attach this file to this page.
+* Step 3: hit the "Import data" button below.
+
+{{html}}
+&lt;form action="" method="post"&gt;
+&lt;button type="submit" name="action" value="import"&gt;Import museum data&lt;/button&gt;
+&lt;button type="submit" name="action" value="delete"&gt;Delete all museum pages&lt;/button&gt;
+&lt;/form&gt;
+
+{{/html}}
+{{/info}}
+
+#set ($POINT_CLASS_NAME = 'Maps.Code.PointClass')
+#set ($MUSEUM_CLASS_NAME = 'Maps.MapTesting.Museums.Code.MuseumClass')
+
+#if ($request.action == 'import')
+  #set ($dataAttachment = $doc.getAttachment('data.json'))
+  #set ($json = $dataAttachment.getContentAsString())
+  #set ($data = $jsontool.parse($json))
+  #set ($counter = 0)
+  #foreach ($item in $data)
+    #if ($counter &lt; 100)
+      #set ($itemLabel = $item.itemLabel)
+      #if (!$itemLabel.matches('^Q\d*$'))
+        #set ($counter = $counter + 1)
+        #set ($reference = $services.model.createDocumentReference("", "", $itemLabel))
+        #set ($page = $xwiki.getDocument($reference))
+        #set ($museum = $page.getObject($MUSEUM_CLASS_NAME))
+        #if (!$museum)
+          #set ($museum = $page.newObject($MUSEUM_CLASS_NAME))
+          #set ($point = $page.newObject($POINT_CLASS_NAME))
+          #set ($discard = $museum.set('country', $item.countryLabel))
+          #set ($discard = $point.set('location', "${item.lat},${item.lon}"))
+          #set ($discard = $page.save())
+          * [[$page.fullName]]
+        #end
+      #end
+    #end
+  #end
+#elseif ($request.action == "delete")
+  #set ($hql = "select obj.name from BaseObject as obj where obj.className = :className")
+  #set ($entries = $services.query.hql($hql).bindValue('className', $MUSEUM_CLASS_NAME).execute())
+  #foreach ($entry in $entries)
+    $xwiki.getDocument($entry).delete()
+  #end
+#end
+
+{{/velocity}}</content>
+</xwikidoc>

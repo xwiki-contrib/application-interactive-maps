@@ -1,0 +1,163 @@
+<?xml version="1.1" encoding="UTF-8"?>
+
+<!--
+ * See the NOTICE file distributed with this work for additional
+ * information regarding copyright ownership.
+ *
+ * This is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation; either version 2.1 of
+ * the License, or (at your option) any later version.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this software; if not, write to the Free
+ * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+-->
+
+<xwikidoc version="1.3" reference="Maps.MapTesting.Museums.Map" locale="">
+  <web>Maps.MapTesting.Museums</web>
+  <name>Map</name>
+  <language/>
+  <defaultLanguage/>
+  <translation>0</translation>
+  <creator>xwiki:XWiki.Admin</creator>
+  <parent>Main.WebHome</parent>
+  <author>xwiki:XWiki.Admin</author>
+  <contentAuthor>xwiki:XWiki.Admin</contentAuthor>
+  <version>1.1</version>
+  <title>World Museums Map</title>
+  <comment/>
+  <minorEdit>false</minorEdit>
+  <syntaxId>xwiki/2.1</syntaxId>
+  <hidden>false</hidden>
+  <content/>
+  <object>
+    <name>Maps.MapTesting.Museums.Map</name>
+    <number>0</number>
+    <className>Maps.Code.MapClass</className>
+    <guid>13a538a6-418e-4702-82ce-a0565443f828</guid>
+    <class>
+      <name>Maps.Code.MapClass</name>
+      <customClass/>
+      <customMapping/>
+      <defaultViewSheet/>
+      <defaultEditSheet/>
+      <defaultWeb/>
+      <nameField/>
+      <validationScript/>
+      <defaultLocation>
+        <customDisplay/>
+        <disabled>0</disabled>
+        <hint>Location to which the map will open to</hint>
+        <name>defaultLocation</name>
+        <number>6</number>
+        <picker>0</picker>
+        <prettyName>Default Location</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <validationMessage/>
+        <validationRegExp/>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </defaultLocation>
+      <defaultZoom>
+        <customDisplay/>
+        <disabled>0</disabled>
+        <hint>The zoom which the map will open to</hint>
+        <name>defaultZoom</name>
+        <number>1</number>
+        <numberType>integer</numberType>
+        <prettyName>Default Zoom</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <validationMessage/>
+        <validationRegExp/>
+        <classType>com.xpn.xwiki.objects.classes.NumberClass</classType>
+      </defaultZoom>
+      <includeCurrentLocation>
+        <customDisplay/>
+        <defaultValue/>
+        <disabled>0</disabled>
+        <displayFormType>checkbox</displayFormType>
+        <displayType/>
+        <hint/>
+        <name>includeCurrentLocation</name>
+        <number>4</number>
+        <prettyName>Include Current Location</prettyName>
+        <unmodifiable>0</unmodifiable>
+        <validationMessage/>
+        <validationRegExp/>
+        <classType>com.xpn.xwiki.objects.classes.BooleanClass</classType>
+      </includeCurrentLocation>
+      <includeSearch>
+        <customDisplay/>
+        <defaultValue/>
+        <disabled>0</disabled>
+        <displayFormType>checkbox</displayFormType>
+        <displayType/>
+        <hint/>
+        <name>includeSearch</name>
+        <number>3</number>
+        <prettyName>Include Search</prettyName>
+        <unmodifiable>0</unmodifiable>
+        <validationMessage/>
+        <validationRegExp/>
+        <classType>com.xpn.xwiki.objects.classes.BooleanClass</classType>
+      </includeSearch>
+      <query>
+        <contenttype>PureText</contenttype>
+        <customDisplay/>
+        <disabled>0</disabled>
+        <editor>Text</editor>
+        <hint>Solr query to get data for the map</hint>
+        <name>query</name>
+        <number>6</number>
+        <picker>0</picker>
+        <prettyName>Query</prettyName>
+        <rows>5</rows>
+        <size>40</size>
+        <unmodifiable>0</unmodifiable>
+        <validationMessage/>
+        <validationRegExp/>
+        <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
+      </query>
+      <tiles>
+        <customDisplay/>
+        <disabled>0</disabled>
+        <hint>The background tiles</hint>
+        <name>tiles</name>
+        <number>2</number>
+        <picker>0</picker>
+        <prettyName>Tiles</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <validationMessage/>
+        <validationRegExp/>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </tiles>
+    </class>
+    <property>
+      <defaultLocation/>
+    </property>
+    <property>
+      <defaultZoom>14</defaultZoom>
+    </property>
+    <property>
+      <includeCurrentLocation>0</includeCurrentLocation>
+    </property>
+    <property>
+      <includeSearch>1</includeSearch>
+    </property>
+    <property>
+      <query>spaces:Museums</query>
+    </property>
+    <property>
+      <tiles>https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png</tiles>
+    </property>
+  </object>
+</xwikidoc>
