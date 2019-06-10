@@ -167,13 +167,31 @@ define('leaflet-commons', ['jquery'], function ($) {
       return map;
     },
 
-    //Remove the old marker and add a new one
-    addMarker: function (oldMarker, map, e)
+    //Add a new marker
+    addMarker: function (iconUrl, location, popupData, callback)
     {
-      if (oldMarker) {
-        oldMarker.remove();
+      var marker;
+      if (iconUrl) {
+        //Get image size for fixing marker offset
+        var markerImg = new Image();
+        markerImg.src = iconUrl;
+        markerImg.on('load', function (){
+          var height = 41;
+          var aspectRatio = this.width/this.height;
+          var width = aspectRatio * height;
+          var icon = L.icon({
+            iconUrl: iconUrl,
+            iconSize: [width, height],
+            iconAnchor: [width/2, (height-1)],
+            popupAnchor: [0, -(height-5)]
+          });
+          marker = L.marker(location, {icon: icon}).bindPopup(popupData);
+          callback(marker);
+        });
+      } else {
+        marker = L.marker(location).bindPopup(popupData);
+        callback(marker);
       }
-      return L.marker(e.latlng).addTo(map);
     },
 
     //Works only if the connection is secure (https etc.)
@@ -489,22 +507,14 @@ require(['jquery', 'leaflet', 'leafletSearch', 'leaflet-commons'], function ($, 
       mapData.each(function (data) {
         if (data.location != null) {
           leafletCommons.getLocationCoords(data.location, function (location) {
-            var marker;
             var popupData = '&lt;h2&gt;' + data.title + '&lt;/h2&gt;' + data.popupContent;
-            if (data.markerIcon) {
-              var icon = L.icon({
-                iconUrl: data.markerIcon,
-                iconSize: ['', 41]
-              });
-              marker = L.marker(location, {icon: icon}).bindPopup(popupData);
-            } else {
-              marker = L.marker(location).bindPopup(popupData);
-            }
-            allLayers.addLayer(marker);
+            leafletCommons.addMarker(data.markerIcon, location, popupData, function (marker) {
+              allLayers.addLayer(marker);
+            });
             if(dataLength == i){
-              allLayers.addTo(map);
               //Using timeout function to delay fitting of bounds because of async behavior
               setTimeout(function(){
+                allLayers.addTo(map);
                 map.fitBounds(allLayers.getBounds());
               }, 200);
             }
