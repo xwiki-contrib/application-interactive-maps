@@ -644,10 +644,13 @@ require(['jquery', 'leaflet', 'leafletSearch', 'leaflet-commons'], function ($, 
     <property>
       <code>@import "$services.webjars.url('leaflet', 'leaflet.css')";
 @import "https://cdn.jsdelivr.net/npm/leaflet-search@2.9.8/src/leaflet-search.css";
+
+@box-shadow: darken(@xwiki-page-content-bg, 30%);
+
 .map-container{
   border: 4px solid @xwiki-page-content-bg;
   border-radius: 5px;
-  box-shadow: 0px 0px 3px darken(@xwiki-page-content-bg, 20%);
+  box-shadow: 0px 0px 3px @box-shadow;
 }
 .leaflet-top{
   top: 10px;
@@ -677,7 +680,7 @@ require(['jquery', 'leaflet', 'leafletSearch', 'leaflet-commons'], function ($, 
   border-radius: 5px;
   overflow: hidden;
   color: @text-color;
-  box-shadow: 0px 1px 4px 0px darken(@xwiki-page-content-bg, 30%);
+  box-shadow: 0px 1px 4px 0px @box-shadow;
   border: none;
   transition: background-color 0.3s;
 }
@@ -704,7 +707,7 @@ require(['jquery', 'leaflet', 'leafletSearch', 'leaflet-commons'], function ($, 
   text-decoration: none;
 }
 .leaflet-container .leaflet-control-search input.search-input{
-  box-shadow: 0px 1px 4px 0px darken(@xwiki-page-content-bg, 70%);
+  box-shadow: 0px 1px 4px 0px @box-shadow;
   background: @xwiki-page-content-bg;
   border: none;
   border-radius: 8px;
@@ -766,7 +769,7 @@ require(['jquery', 'leaflet', 'leafletSearch', 'leaflet-commons'], function ($, 
   height: 30px;
   padding: 9px 12px;
   border-radius: 8px;
-  box-shadow: 0px 1px 4px 0px darken(@xwiki-page-content-bg, 70%);
+  box-shadow: 0px 1px 4px 0px @box-shadow;
 }
 .map-search{
   margin-bottom: 15px;
@@ -774,7 +777,7 @@ require(['jquery', 'leaflet', 'leafletSearch', 'leaflet-commons'], function ($, 
 .leaflet-popup-content-wrapper, .leaflet-popup-tip {
     background: @xwiki-page-content-bg;
     color: @text-color;
-    box-shadow: 0 3px 14px darken(@xwiki-page-content-bg, 70%);
+    box-shadow: 0 3px 14px @box-shadow;
 }</code>
     </property>
     <property>
