@@ -645,9 +645,9 @@ require(['jquery', 'leaflet', 'leafletSearch', 'leaflet-commons'], function ($, 
       <code>@import "$services.webjars.url('leaflet', 'leaflet.css')";
 @import "https://cdn.jsdelivr.net/npm/leaflet-search@2.9.8/src/leaflet-search.css";
 .map-container{
-  border: 4px solid white;
+  border: 4px solid @xwiki-page-content-bg;
   border-radius: 5px;
-  box-shadow: 0px 0px 3px silver;
+  box-shadow: 0px 0px 3px darken(@xwiki-page-content-bg, 20%);
 }
 .leaflet-top{
   top: 10px;
@@ -669,15 +669,15 @@ require(['jquery', 'leaflet', 'leafletSearch', 'leaflet-commons'], function ($, 
   border: none;
 }
 .leaflet-container .leaflet-control-custom, .leaflet-container .leaflet-control-search .search-button, .leaflet-bar a, .leaflet-bar a:hover, .leaflet-touch .leaflet-bar a{
-  background: white;
+  background: @xwiki-page-content-bg;
   width: 35px;
   height: 35px;
   text-align: center;
   cursor: pointer;
   border-radius: 5px;
   overflow: hidden;
-  color: #444444;
-  box-shadow: 0px 1px 4px 0px rgba(0, 0, 0, 0.3);
+  color: @text-color;
+  box-shadow: 0px 1px 4px 0px darken(@xwiki-page-content-bg, 30%);
   border: none;
   transition: background-color 0.3s;
 }
@@ -690,7 +690,7 @@ require(['jquery', 'leaflet', 'leafletSearch', 'leaflet-commons'], function ($, 
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
-  color: #444444;
+  color: @text-color;
   font-size: 20px;
 }
 .leaflet-container .leaflet-control-search .search-button:before{
@@ -699,15 +699,16 @@ require(['jquery', 'leaflet', 'leafletSearch', 'leaflet-commons'], function ($, 
   margin-top: -2px;
 }
 .leaflet-container .leaflet-control-custom:hover, .leaflet-container .leaflet-control-search .search-button:hover{
-  background: #f4f4f4;
+  background: darken(@xwiki-page-content-bg, 15%);
   transition: background 0.3s;
   text-decoration: none;
 }
 .leaflet-container .leaflet-control-search input.search-input{
-  box-shadow: 0px 1px 4px 0px rgba(0, 0, 0, 0.3);
+  box-shadow: 0px 1px 4px 0px darken(@xwiki-page-content-bg, 70%);
+  background: @xwiki-page-content-bg;
   border: none;
   border-radius: 8px;
-  color: #444444;
+  color: @text-color;
   height: 35px;
   width: 200px;
   padding: 5px 15px;
@@ -718,13 +719,13 @@ require(['jquery', 'leaflet', 'leafletSearch', 'leaflet-commons'], function ($, 
   right: 42px;
 }
 .leaflet-control-search.search-load input.search-input{
-  background: white;
+  background: @xwiki-page-content-bg;
 }
 .leaflet-control-search .search-tooltip{
   border: none;
   border-radius: 8px;
-  background: white;
-  color: #444444;
+  background: @xwiki-page-content-bg;
+  color: @text-color;
   padding: 5px;
   left: 0;
   right: 0;
@@ -734,8 +735,8 @@ require(['jquery', 'leaflet', 'leafletSearch', 'leaflet-commons'], function ($, 
 .leaflet-control-search .search-tooltip .search-tip{
   border: none;
   border-radius: 0;
-  background: white;
-  color: #444444;
+  background: @xwiki-page-content-bg;
+  color: @text-color;
 }
 .leaflet-control-container&gt;div{
   z-index: 999;
@@ -750,7 +751,7 @@ require(['jquery', 'leaflet', 'leafletSearch', 'leaflet-commons'], function ($, 
   border-radius: 5px;
 }
 .leaflet-bar a:hover{
-  background: #f4f4f4;
+  background: darken(@xwiki-page-content-bg, 15%);
   transition: background 0.3s;
 }
 .leaflet-touch .leaflet-bar a{
@@ -760,19 +761,24 @@ require(['jquery', 'leaflet', 'leafletSearch', 'leaflet-commons'], function ($, 
   margin-bottom: 4px;
 }
 .leaflet-control-search .search-alert{
-  background: white;
+  background: @xwiki-page-content-bg;
   width: 100%;
   height: 30px;
   padding: 9px 12px;
   border-radius: 8px;
-  box-shadow: 0px 1px 4px 0px rgba(0, 0, 0, 0.3);
+  box-shadow: 0px 1px 4px 0px darken(@xwiki-page-content-bg, 70%);
 }
 .map-search{
   margin-bottom: 15px;
+}
+.leaflet-popup-content-wrapper, .leaflet-popup-tip {
+    background: @xwiki-page-content-bg;
+    color: @text-color;
+    box-shadow: 0 3px 14px darken(@xwiki-page-content-bg, 70%);
 }</code>
     </property>
     <property>
-      <contentType>CSS</contentType>
+      <contentType>LESS</contentType>
     </property>
     <property>
       <name>leaflet-css</name>
