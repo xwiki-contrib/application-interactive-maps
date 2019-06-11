@@ -385,6 +385,23 @@ define('leaflet-commons', ['jquery'], function ($) {
       .fail(function(){
         new XWiki.widgets.Notification('Error getting path. The path is not valid.', 'error');
       });
+    },
+
+    replaceParameter: function (url, param, value)
+    {
+        var re = new RegExp("[\\?&amp;]" + param + "=([^&amp;#]*)"),
+            match = re.exec(url),
+            delimiter,
+            newString;
+        if (match === null) {
+            var hasQuestionMark = /\?/.test(url);
+            delimiter = hasQuestionMark ? "&amp;" : "?";
+            newString = url + delimiter + param + "=" + value;
+        } else {
+            delimiter = match[0].charAt(0);
+            newString = url.replace(re, delimiter + param + "=" + value);
+        }
+        return newString;
     }
 
   }
@@ -397,7 +414,7 @@ define('leaflet-commons', ['jquery'], function ($) {
       <parse>1</parse>
     </property>
     <property>
-      <use>currentPage</use>
+      <use>onDemand</use>
     </property>
   </object>
   <object>
@@ -496,6 +513,7 @@ require(['jquery', 'leaflet', 'leafletSearch', 'leaflet-commons'], function ($, 
   'use strict';
   function init()
   {
+
     //Create map
     $$('.map-container').each(function (element) {
       var options = JSON.parse(element.dataset.options);
@@ -525,6 +543,15 @@ require(['jquery', 'leaflet', 'leafletSearch', 'leaflet-commons'], function ($, 
         }
       });
     });
+
+    $('.search-form').submit(function (e) {
+      e.preventDefault();
+      var formVal = $(this).find('input[type=search]').val();
+      var viewURL = window.location.href;
+      viewURL = leafletCommons.replaceParameter(viewURL, 'text', formVal);
+      $(document).trigger('xwiki:search:update', viewURL);
+    });
+
   }
 
   //Run the init() function when dom is loaded
@@ -540,7 +567,7 @@ require(['jquery', 'leaflet', 'leafletSearch', 'leaflet-commons'], function ($, 
       <parse>1</parse>
     </property>
     <property>
-      <use>currentPage</use>
+      <use>onDemand</use>
     </property>
   </object>
   <object>
