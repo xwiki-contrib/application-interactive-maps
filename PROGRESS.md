@@ -1,4 +1,4 @@
-# Marks the progress of the Interactive Maps Application (new)
+# Marks the progress of the Interactive Maps Application
 ## Day 1 (29 May 2019)
 - [x] Make new space for application in XWiki
 - [x] Set up reusable Leaflet code from previous application iteration
@@ -52,6 +52,14 @@
 - [x] Custom config for solr search
 - [x] Merge pull request from @slauriere for museum maps
 - [ ] Do not reload map for changes in filters (currently solr filters reload all page content asynchronously)
+## Day 11-12 (8-9 June 2019)
+- [ ] Weekend
+## Day 13 (10 June 2019)
+- [x] Apply theme colors to map and map items (tiles not included)
+- [x] Fix icon offset of custom markers
+## Day 14 (11 June 2019)
+- [x] Thoroughly examine Main.SolrSearch for async jsx code
+- [x] Make the map query search asynchronous
 ---
 # Marks the progress of the Interactive Maps Application (Old)
 ## Day 1 (18 May 2019)
