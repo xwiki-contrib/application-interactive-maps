@@ -39,8 +39,7 @@
   <content>{{include reference="Maps.Code.CommonMacros" /}}
 
 {{velocity}}
-## You can modify this page to customize the presentation of your object.
-## At first you should keep the default presentation and just save the document.
+## If the document is being edited then display the edit form
 #if ($xcontext.action == 'edit')
   {{html wiki="true" clean="false"}}
   {{info}}Leave a field empty for its default value{{/info}}

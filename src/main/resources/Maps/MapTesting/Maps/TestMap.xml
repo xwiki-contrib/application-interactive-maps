@@ -148,7 +148,7 @@
       <defaultZoom/>
     </property>
     <property>
-      <includeCurrentLocation>0</includeCurrentLocation>
+      <includeCurrentLocation>1</includeCurrentLocation>
     </property>
     <property>
       <includeSearch>1</includeSearch>

@@ -47,9 +47,9 @@
 })
 {{/velocity}}
 
-{{include reference="Main.SolrSearchConfig" /}}
+{{include reference="Main.SolrSearchConfig"/}}
 
-{{include reference="Main.SolrSearchMacros" /}}
+{{include reference="Main.SolrSearchMacros"/}}
 
 {{velocity output="false"}}
 ## Get HTML from XWiki/2.1 syntax
@@ -112,7 +112,7 @@
   #set ($query = $services.query.createQuery($queryString, 'solr'))
   ##
   ## Set query parameters.
-  #set ($discard = $query.setLimit($rows))
+  #set ($discard = $query.setLimit(50))
   #set ($discard = $query.setOffset($start))
   #set ($discard = $query.bindValue('sort', "${sort} ${sortOrder}"))
   #set ($discard = $query.bindValue('tie', $solrConfig.tieBreaker))
@@ -163,8 +163,18 @@
       (((
         (% class="search-results" %)(((
           #set ($mapData = "#handleSolrResponse(${searchResponse})")
+          #set ($mapData = $mapData.replaceAll("'", '\\"'))
           ## $mapId, $mapObjJSON are already set before using this macro
-          (% class="map-container" id="map-${mapId}" data-options='${mapObjJSON}' data-mapdata='${mapData}' style="width: 100%; height: 400px;" %)((()))
+          {{html wiki="true" clean="false"}}
+          (% class="map-wrapper" %)(((
+            (% class="map-container" id="map-${mapId}" data-options='${mapObjJSON}' data-mapdata='${mapData}' %)((()))
+            (% class="map-popup" %)(((
+              &lt;h2&gt;&lt;/h2&gt;
+              &lt;hr/&gt;
+              (% class="popup-content" %)((()))
+            )))
+          )))
+          {{/html}}
         )))
       )))
     )))

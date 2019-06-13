@@ -147,6 +147,7 @@ define('leaflet-commons', ['jquery'], function ($) {
           tiles = options.tiles !== '' ? options.tiles : 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
           defaultLoc = options.defaultLocation !== '' ? options.defaultLocation : '48,2',
           map = new L.Map(mapId, {zoom: zoom, center: [48, 2]});
+      map.zoomControl.setPosition('topright');
       this.getLocationCoords(defaultLoc, function (location) {
         map.setView(location);
         //Add a tiles layer to the map (the background)
@@ -168,7 +169,7 @@ define('leaflet-commons', ['jquery'], function ($) {
     },
 
     //Add a new marker
-    addMarker: function (iconUrl, location, popupData, callback)
+    addMarker: function (iconUrl, location, callback)
     {
       var marker;
       if (iconUrl) {
@@ -185,11 +186,11 @@ define('leaflet-commons', ['jquery'], function ($) {
             iconAnchor: [width/2, (height-1)],
             popupAnchor: [0, -(height-5)]
           });
-          marker = L.marker(location, {icon: icon}).bindPopup(popupData);
+          marker = L.marker(location, {icon: icon});
           callback(marker);
         });
       } else {
-        marker = L.marker(location).bindPopup(popupData);
+        marker = L.marker(location);
         callback(marker);
       }
     },
@@ -264,8 +265,8 @@ define('leaflet-commons', ['jquery'], function ($) {
       }
       if (locType == 'latLng') {
         //Make an array for of the two coordinates
-        var latLng = location.split(',').map((val) =&gt; {
-          return val.trim()
+        var latLng = location.split(',').map(function (val) {
+          return val.trim();
         });
         //Set the location to the array
         location = latLng;
@@ -518,15 +519,33 @@ require(['jquery', 'leaflet', 'leafletSearch', 'leaflet-commons'], function ($, 
     $$('.map-container').each(function (element) {
       var options = JSON.parse(element.dataset.options);
       var map = leafletCommons.createEmptyMap(options);
+      var $popupContainer = $('.map-popup');
       var mapData = JSON.parse(element.dataset.mapdata);
       var allLayers = L.featureGroup();
       var dataLength = mapData.length - 1;
       var i = 0;
+      map.on('click', function(){
+        $popupContainer.removeClass('open');
+      });
+      var lastClickedMarker;
       mapData.each(function (data) {
         if (data.location != null) {
           leafletCommons.getLocationCoords(data.location, function (location) {
-            var popupData = '&lt;h2&gt;' + data.title + '&lt;/h2&gt;' + data.popupContent;
-            leafletCommons.addMarker(data.markerIcon, location, popupData, function (marker) {
+            leafletCommons.addMarker(data.markerIcon, location, function (marker) {
+              marker.on('click', function(e){
+                var title = data.title;
+                var content = data.popupContent;
+                $popupContainer.children('h2').html(title);
+                $popupContainer.children('.popup-content').html(content);
+                //If the last marker clicked is not this then don't close the popup
+                if(lastClickedMarker == this){
+                  $popupContainer.toggleClass('open');
+                }
+                else{
+                  $popupContainer.addClass('open');
+                }
+                lastClickedMarker = this;
+              });
               allLayers.addLayer(marker);
             });
             if(dataLength == i){
@@ -673,11 +692,19 @@ require(['jquery', 'leaflet', 'leafletSearch', 'leaflet-commons'], function ($, 
 @import "https://cdn.jsdelivr.net/npm/leaflet-search@2.9.8/src/leaflet-search.css";
 
 @box-shadow: darken(@xwiki-page-content-bg, 30%);
-
+/*
+ * Leaflet common
+*/
+.map-wrapper{
+  position: relative;
+}
 .map-container{
+  width: 100%;
+  height: 400px;
   border: 4px solid @xwiki-page-content-bg;
   border-radius: 5px;
   box-shadow: 0px 0px 3px @box-shadow;
+  z-index: 990;
 }
 .leaflet-top{
   top: 10px;
@@ -691,9 +718,21 @@ require(['jquery', 'leaflet', 'leafletSearch', 'leaflet-commons'], function ($, 
 .leaflet-bottom{
   bottom: 10px;
 }
-.leaflet-container .leaflet-control{
+.leaflet-container .leaflet-top .leaflet-control{
   margin: 0;
+  margin-bottom: 10px;
 }
+.map-search{
+  margin-bottom: 15px;
+}
+.leaflet-popup-content-wrapper, .leaflet-popup-tip {
+    background: @xwiki-page-content-bg;
+    color: @text-color;
+    box-shadow: 0 3px 14px @box-shadow;
+}
+/*
+ * Leaflet controls
+*/
 .leaflet-container .leaflet-control-search, .leaflet-container .leaflet-control-search:hover, .leaflet-container .leaflet-control-search:active{
   background: none;
   border: none;
@@ -798,13 +837,60 @@ require(['jquery', 'leaflet', 'leafletSearch', 'leaflet-commons'], function ($, 
   border-radius: 8px;
   box-shadow: 0px 1px 4px 0px @box-shadow;
 }
-.map-search{
+/*
+ * Leaflet popup
+*/
+.map-popup{
+  position: absolute;
+  left: 10px;
+  top: 10px;
+  transform: translateX(-100%) scale(0.7);
+  opacity: 0;
+  visibility: hidden;
+  width: 250px;
+  height: auto;
+  max-height: 95%;
+  overflow: hidden;
+  padding: 10px;
+  color: @text-color;
+  background: @xwiki-page-content-bg;
+  border-radius: 5px;
+  box-shadow: 0px 0px 3px @box-shadow;
+  border: 4px solid @xwiki-page-content-bg;
+  z-index: 991;
+  transition: all 0.2s;
+}
+.map-popup.open{
+  transform: translateX(0) scale(1);
+  opacity: 1;
+  visibility: visible;
+  transition: all 0.4s;
+}
+.map-popup h2{
+  font-size: 22px;
+  margin: 0;
+}
+.map-popup hr{
+  margin-top: 15px;
   margin-bottom: 15px;
 }
-.leaflet-popup-content-wrapper, .leaflet-popup-tip {
-    background: @xwiki-page-content-bg;
-    color: @text-color;
-    box-shadow: 0 3px 14px @box-shadow;
+.map-popup .popup-content{
+  max-height: 300px;
+  overflow-y: auto;
+}
+@media screen and (max-width: 768px){
+  .map-popup{
+    position: relative;
+    margin-top: 10px;
+    left: 0;
+    top: 0;
+    width: 95%;
+    height: 0;
+    margin: 10px auto;
+  }
+  .map-popup.open{
+    height: auto;
+  }
 }</code>
     </property>
     <property>
