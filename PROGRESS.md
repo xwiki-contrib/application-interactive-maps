@@ -60,6 +60,13 @@
 ## Day 14 (11 June 2019)
 - [x] Thoroughly examine Main.SolrSearch for async jsx code
 - [x] Make the map query search asynchronous
+## Day 15 (12 June 2019)
+- [x] Examine why some museum filters have errors e.g. Germany
+- [x] Fix defective mapData json
+- [x] Change map item limit (in solr query) from 10 items to 50 items
+## Day 16 (13 June 2019)
+- [x] Add custom space for popups
+- [x] Make popups responsive for easy viewing on small devices
 ---
 # Marks the progress of the Interactive Maps Application (Old)
 ## Day 1 (18 May 2019)
