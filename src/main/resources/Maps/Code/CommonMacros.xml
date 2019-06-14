@@ -155,11 +155,11 @@
     #end
     (% class="search-results-container row" %)(((
       #if ($facetEnabled)
-        (% class="col-xs-12 col-sm-4 col-sm-push-8 col-md-3 col-md-push-9" %)(((
+        (% class="map-filters col-xs-12 col-sm-3 open" %)(((
           #displaySearchFacets($searchResponse)
         )))
       #end
-      (% class="search-results-left col-xs-12#if ($facetEnabled) col-sm-8 col-sm-pull-4 col-md-9 col-md-pull-3#end" %)
+      (% class="map-results search-results-left col-xs-12 col-sm-9" %)
       (((
         (% class="search-results" %)(((
           #set ($mapData = "#handleSolrResponse(${searchResponse})")
@@ -212,6 +212,53 @@
     #end
     *#
   &lt;/div&gt;
+#end
+
+#macro(displaySearchForm)
+  #set($void = $services.progress.startStep('#displaySearchForm'))
+  #set($void = $services.progress.pushLevel())
+  {{html clean="false"}}
+  &lt;form class="map-search-form row" action="$doc.getURL()" role="search"&gt;
+    &lt;div class="hidden"&gt;
+      &lt;input type="hidden" name="sort" value="$!escapetool.xml($sort)"/&gt;
+      &lt;input type="hidden" name="sortOrder" value="$!escapetool.xml($sortOrder)"/&gt;
+      &lt;input type="hidden" name="highlight" value="$highlightEnabled"/&gt;
+      &lt;input type="hidden" name="facet" value="$facetEnabled"/&gt;
+      ## The parameter used to determine if the request has been redirected with default search filters.
+      &lt;input type="hidden" name="r" value="$!escapetool.xml($request.r)"/&gt;
+      #if ("$!request.debug" != '')
+        &lt;input type="hidden" name="debug" value="$escapetool.xml($request.debug)"/&gt;
+      #end
+      ## Preserve the current facet values when submitting a new search query.
+      #foreach ($entry in $request.parameterMap.entrySet())
+        #if ($entry.key.startsWith('f_') || $entry.key.startsWith('l_'))
+          #foreach ($value in $entry.value)
+            &lt;input type="hidden" name="$escapetool.xml($entry.key)" value="$escapetool.xml($value)"/&gt;
+          #end
+        #end
+      #end
+    &lt;/div&gt;
+    &lt;div class="col-xs-12"&gt;
+      ## $mabObj is set in MapSheet
+      &lt;div class="map-search"&gt;
+        #if("$!mapObj.get('includeSearch')" == 'Yes')
+          &lt;select name="search-type" class="search-type form-control"&gt;
+            &lt;option disabled selected&gt;$services.localization.render('intmap.search.searchType')&lt;/option&gt;
+            &lt;option value="location"#if ("$!request.get('search_type')" == 'location') selected#end&gt;$services.localization.render('intmap.search.location')&lt;/option&gt;
+            &lt;option value="item"#if ("$!request.get('search_type')" == 'item') selected#end&gt;$services.localization.render('intmap.search.item')&lt;/option&gt;
+          &lt;/select&gt;
+        #end
+        &lt;input type="search" name="text" class="form-control withTip useTitleAsTip map-search-input"
+          title="$services.localization.render('intmap.search.placeholder')" value="$escapetool.xml($text)"/&gt;
+        &lt;button type="submit" class="btn btn-primary map-search-btn"&gt;
+          &lt;span class="fa fa-search"&gt;&lt;/span&gt;
+        &lt;/button&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/form&gt;
+  {{/html}}
+  #set($void = $services.progress.popLevel())
+  #set($void = $services.progress.endStep())
 #end
 {{/velocity}}</content>
 </xwikidoc>

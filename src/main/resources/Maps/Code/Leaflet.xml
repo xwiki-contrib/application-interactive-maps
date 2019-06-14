@@ -160,10 +160,7 @@ define('leaflet-commons', ['jquery'], function ($) {
         if (options.includeCurrentLocation == 1) {
           rootScope.addNavigation(map);
         }
-        //Adding the search control
-        if (options.includeSearch == 1) {
-          rootScope.addSearch(map);
-        }
+        rootScope.addFilterControl(map);
       });
       return map;
     },
@@ -235,7 +232,32 @@ define('leaflet-commons', ['jquery'], function ($) {
       (new L.Control.navigation({ position: 'topright' })).addTo(map);
     },
 
-    //Function for adding search control
+    //Adding filter control
+    addFilterControl: function (map)
+    {
+      var rootScope = this;
+      L.Control.navigation = L.Control.extend({
+        onAdd: function (map) {
+          var container = L.DomUtil.create('div', 'leaflet-control-custom');
+          var locateIcon = L.DomUtil.create('div', 'fa fa-filter');
+          locateIcon.setAttribute('title', 'Filters');
+          locateIcon.setAttribute('aria-label', 'Filters');
+          container.appendChild(locateIcon);
+          L.DomEvent.on(container, 'click', L.DomEvent.stopPropagation)
+            .on(container, 'click', L.DomEvent.stop)
+            .on(container, 'click', this._toggleFilters, this);
+          return container;
+        },
+        _toggleFilters: function (e) {
+          e.preventDefault();
+          $('.map-filters').toggleClass('open col-sm-3');
+          $('.map-results').toggleClass('filter-active col-sm-9');
+        }
+      });
+      (new L.Control.navigation({ position: 'topright' })).addTo(map);
+    },
+
+    //Function for adding search control (deprecated)
     addSearch: function (map)
     {
       map.addControl(new L.Control.Search({
@@ -503,22 +525,20 @@ define('leaflet-commons', ['jquery'], function ($) {
     <property>
       <code>requirejs.config({
   paths: {
-    'leaflet': ['$services.webjars.url("leaflet", "leaflet.js")'],
-    'leafletSearch': ['https://cdn.jsdelivr.net/npm/leaflet-search@2.9.8/src/leaflet-search'] //To be used as a webjar
-  },
-  shim: {
-    'leaflet-search': ['leaflet']
+    'leaflet': ['$services.webjars.url("leaflet", "leaflet.js")']
   }
 });
-require(['jquery', 'leaflet', 'leafletSearch', 'leaflet-commons'], function ($, leaflet, ls, leafletCommons) {
+require(['jquery', 'leaflet', 'leaflet-commons'], function ($, leaflet, leafletCommons) {
   'use strict';
   function init()
   {
 
+    var map
+
     //Create map
     $$('.map-container').each(function (element) {
       var options = JSON.parse(element.dataset.options);
-      var map = leafletCommons.createEmptyMap(options);
+      map = leafletCommons.createEmptyMap(options);
       var $popupContainer = $('.map-popup');
       var mapData = JSON.parse(element.dataset.mapdata);
       var allLayers = L.featureGroup();
@@ -563,12 +583,22 @@ require(['jquery', 'leaflet', 'leafletSearch', 'leaflet-commons'], function ($, 
       });
     });
 
-    $('.search-form').submit(function (e) {
+    $('.map-search-form').submit(function (e) {
       e.preventDefault();
       var formVal = $(this).find('input[type=search]').val();
+      var searchType = $(this).find('.search-type').children('option:selected').val();
       var viewURL = window.location.href;
-      viewURL = leafletCommons.replaceParameter(viewURL, 'text', formVal);
-      $(document).trigger('xwiki:search:update', viewURL);
+      if(searchType == 'location'){
+        leafletCommons.getLocationCoords(formVal, function(location){
+          if(location &amp;&amp; map){
+            map.setView(L.latLng(location), 14);
+          }
+        });
+      } else {
+        viewURL = leafletCommons.replaceParameter(viewURL, 'text', formVal);
+        viewURL = leafletCommons.replaceParameter(viewURL, 'search_type', searchType);
+        $(document).trigger('xwiki:search:update', viewURL);
+      }
     });
 
   }
@@ -887,11 +917,79 @@ require(['jquery', 'leaflet', 'leafletSearch', 'leaflet-commons'], function ($, 
     width: 95%;
     height: 0;
     margin: 10px auto;
+    transform: translateY(-200%) scale(0.7);
   }
   .map-popup.open{
     height: auto;
+    transform: translateY(0) scale(1);
   }
-}</code>
+}
+/*
+ * Map search
+*/
+.map-search{
+  position: relative;
+  width: 100%;
+}
+.map-search .map-search-input{
+  padding-right: 30px;
+  width: 100%;
+  background: @xwiki-page-content-bg;
+  color: @text-color;
+  display: inline;
+}
+.map-search .map-search-btn{
+  background: none;
+  border: none;
+  color: @brand-primary;
+  font-size: 18px;
+  margin: 0;
+  padding: 0;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  right: 10px;
+}
+.map-search-btn:hover, .map-search-btn:active, .map-search-btn:active:focus, .map-search-btn:hover:active, .map-search-btn:visited, .map-search-btn:focus{
+  background: none;
+  border: none;
+  color: @brand-primary;
+  text-shadow: 0px 0px 5px fade(@brand-primary, 50%);
+  box-shadow: none;
+  outline: none;
+}
+/*
+ * If location search is included
+*/
+.map-search .search-type{
+  display: inline;
+  width: 23%;
+  margin-right: -5px;
+  border-right: 0;
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+  background: @xwiki-page-content-bg;
+  color: fade(@text-color, 60%);
+}
+.map-search .search-type + .map-search-input{
+  width: 76%;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+}
+.map-search .search-type + .map-search-input + .map-search-btn{
+  right: 20px;
+}
+/*
+ * Map filters
+*/
+.map-filters{
+  display: none;
+}
+.map-filters.open{
+  display: block;
+}
+
+</code>
     </property>
     <property>
       <contentType>LESS</contentType>

@@ -103,7 +103,7 @@
         <hint/>
         <name>includeSearch</name>
         <number>3</number>
-        <prettyName>Include Search</prettyName>
+        <prettyName>Include Location Search</prettyName>
         <unmodifiable>0</unmodifiable>
         <validationMessage/>
         <validationRegExp/>
@@ -151,7 +151,7 @@
       <includeCurrentLocation>1</includeCurrentLocation>
     </property>
     <property>
-      <includeSearch>1</includeSearch>
+      <includeSearch>0</includeSearch>
     </property>
     <property>
       <query>spaces:Points</query>

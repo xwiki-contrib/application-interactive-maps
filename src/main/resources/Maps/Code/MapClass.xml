@@ -104,7 +104,7 @@
       <hint/>
       <name>includeSearch</name>
       <number>3</number>
-      <prettyName>Include Search</prettyName>
+      <prettyName>Include Location Search</prettyName>
       <unmodifiable>0</unmodifiable>
       <validationMessage/>
       <validationRegExp/>

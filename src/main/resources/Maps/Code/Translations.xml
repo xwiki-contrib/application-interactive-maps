@@ -42,7 +42,11 @@ maps.livetable._actions=Edit/Delete
 
 ## Solr translations override
 solr.facets.title=Filter the map
-solr.facets.hint=Filter the map item results</content>
+solr.facets.hint=Filter the map item results
+intmap.search.placeholder=Search
+intmap.search.item=Item
+intmap.search.location=Location
+intmap.search.searchType=Select type</content>
   <object>
     <name>Maps.Code.Translations</name>
     <number>0</number>
