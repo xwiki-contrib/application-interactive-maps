@@ -160,7 +160,9 @@ define('leaflet-commons', ['jquery'], function ($) {
         if (options.includeCurrentLocation == 1) {
           rootScope.addNavigation(map);
         }
-        rootScope.addFilterControl(map);
+        if ($('.map-search-form').find('input[name=facet]').val() == 'true') {
+          rootScope.addFilterControl(map);
+        }
       });
       return map;
     },
@@ -250,6 +252,7 @@ define('leaflet-commons', ['jquery'], function ($) {
         },
         _toggleFilters: function (e) {
           e.preventDefault();
+          $('#facetjs').val() == 'true' ? $('#facetjs').val('false') : $('#facetjs').val('true');
           $('.map-filters').toggleClass('open col-sm-3');
           $('.map-results').toggleClass('filter-active col-sm-9');
         }
@@ -533,7 +536,7 @@ require(['jquery', 'leaflet', 'leaflet-commons'], function ($, leaflet, leafletC
   function init()
   {
 
-    var map
+    var map;
 
     //Create map
     $$('.map-container').each(function (element) {
@@ -549,7 +552,7 @@ require(['jquery', 'leaflet', 'leaflet-commons'], function ($, leaflet, leafletC
       });
       var lastClickedMarker;
       mapData.each(function (data) {
-        if (data.location != null) {
+        if (data.location != null &amp;&amp; data.type == 'point') {
           leafletCommons.getLocationCoords(data.location, function (location) {
             leafletCommons.addMarker(data.markerIcon, location, function (marker) {
               marker.on('click', function(e){
@@ -600,6 +603,21 @@ require(['jquery', 'leaflet', 'leaflet-commons'], function ($, leaflet, leafletC
         $(document).trigger('xwiki:search:update', viewURL);
       }
     });
+
+    $('#show-map-result').on('click', function(){
+      $('.search-item-results').toggleClass('open');
+    });
+
+    $('.search-item-results .goto-loc').on('click', function(){
+      var loc = this.dataset.location;
+      if (loc) {
+        leafletCommons.getLocationCoords(loc, function(location){
+          if(location &amp;&amp; map){
+            map.setView(L.latLng(location), 14);
+          }
+        });
+      }
+    })
 
   }
 
@@ -880,7 +898,7 @@ require(['jquery', 'leaflet', 'leaflet-commons'], function ($, leaflet, leafletC
   width: 250px;
   height: auto;
   max-height: 95%;
-  overflow: hidden;
+  overflow-y: auto;
   padding: 10px;
   color: @text-color;
   background: @xwiki-page-content-bg;
@@ -903,10 +921,6 @@ require(['jquery', 'leaflet', 'leaflet-commons'], function ($, leaflet, leafletC
 .map-popup hr{
   margin-top: 15px;
   margin-bottom: 15px;
-}
-.map-popup .popup-content{
-  max-height: 300px;
-  overflow-y: auto;
 }
 @media screen and (max-width: 768px){
   .map-popup{
@@ -987,6 +1001,78 @@ require(['jquery', 'leaflet', 'leaflet-commons'], function ($, leaflet, leafletC
 }
 .map-filters.open{
   display: block;
+}
+/*
+ * Map search results
+*/
+.search-item-results{
+  max-height: 0;
+  overflow: hidden;
+  border-radius: 10px;
+  box-shadow: 0px 0px 5px @box-shadow;
+  margin-top: 10px;
+  padding: 0px 20px;
+  transition: all 0.5s;
+}
+.search-item-results.open{
+  max-height: 400px;
+  overflow-y: auto;
+  padding: 10px 20px;
+  transition: all 0.5s;
+}
+.search-item-results .search-result-item{
+  padding: 5px 0;
+  border-bottom: 1px solid @box-shadow;
+  position: relative;
+}
+.search-item-results .search-result-item:last-child{
+  border-bottom: none;
+}
+.search-item-results .search-result-item h4{
+  margin: 10px 0;
+  font-size: 18px;
+}
+.search-item-results .search-result-item .goto-loc{
+  width: 35px;
+  height: 35px;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  right: 10px;
+  font-size: 18px;
+  cursor: pointer;
+  border-radius: 50%;
+  background: transparent;
+  border: 2px solid @text-color;
+  color: @text-color;
+  transition: all 0.5s;
+}
+.search-item-results .search-result-item .goto-loc:hover{
+  box-shadow: 0px 0px 5px fade(@text-color, 50%);
+}
+.search-item-results .search-result-item .fa.fa-map-marker{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  transition: all 0.5s;
+}
+.search-item-results .search-result-item .goto-loc:hover .fa.fa-map-marker{
+  animation: markerJump linear 0.5s;
+}
+@keyframes markerJump{
+  40% {
+    transform: translate(-50%, -90%);
+  }
+  70% {
+    transform: translate(-50%, -35%);
+  }
+  85% {
+    transform: translate(-50%, -70%);
+  }
+  100% {
+    transform: translate(-50%, -50%);
+  }
 }
 
 </code>

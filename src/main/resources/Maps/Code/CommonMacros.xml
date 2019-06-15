@@ -64,6 +64,8 @@
     ## Check if the page contains a Point object
     #if ("$!response.get('property.Maps.Code.PointClass.location_string')" != '')
       #set ($responseData = {})
+      #set ($discard = $responseData.put('type', 'point'))
+      #set ($discard = $responseData.put('doclocation', $response.get('fullname')))
       ## Get document title
       #set ($title = $response.get('title_'))
       ## Get document content as html
@@ -153,29 +155,44 @@
     #if ($debug)
       #displaySearchDebugInfo()
     #end
+    #set ($mapData = "#handleSolrResponse(${searchResponse})")
+    #set ($mapData = $mapData.replaceAll("'", '\\"'))
+    #if ($text != '' &amp;&amp; $mapDataArr.size() &gt; 0)
+
+      {{html clean="false" wiki="true"}}
+        &lt;button class="btn btn-primary" id="show-map-result"&gt;$services.localization.render('intmap.search.showResults')&lt;/button&gt;
+        (% class="search-item-results" %)(((
+          #foreach ($item in $mapDataArr)
+            (% class="search-result-item %)(((
+              ==== [[$item.get('title')&gt;&gt;$item.get('doclocation')||target="_blank"]] ====
+              (% class="goto-loc" data-location="${item.get('location')}" title="$services.localization.render('intmap.search.gotoLoc')" %)(((
+                &lt;i class="fa fa-map-marker"&gt;&lt;/i&gt;
+              )))
+            )))
+          #end
+        )))
+      {{/html}}
+
+    #end
     (% class="search-results-container row" %)(((
       #if ($facetEnabled)
-        (% class="map-filters col-xs-12 col-sm-3 open" %)(((
+        (% class="map-filters col-xs-12" %)(((
           #displaySearchFacets($searchResponse)
         )))
       #end
-      (% class="map-results search-results-left col-xs-12 col-sm-9" %)
+      (% class="map-results col-xs-12" %)
       (((
-        (% class="search-results" %)(((
-          #set ($mapData = "#handleSolrResponse(${searchResponse})")
-          #set ($mapData = $mapData.replaceAll("'", '\\"'))
-          ## $mapId, $mapObjJSON are already set before using this macro
-          {{html wiki="true" clean="false"}}
-          (% class="map-wrapper" %)(((
-            (% class="map-container" id="map-${mapId}" data-options='${mapObjJSON}' data-mapdata='${mapData}' %)((()))
-            (% class="map-popup" %)(((
-              &lt;h2&gt;&lt;/h2&gt;
-              &lt;hr/&gt;
-              (% class="popup-content" %)((()))
-            )))
+        ## $mapId, $mapObjJSON are already set before using this macro
+        {{html wiki="true" clean="false"}}
+        (% class="map-wrapper" %)(((
+          (% class="map-container" id="map-${mapId}" data-options='${mapObjJSON}' data-mapdata='${mapData}' %)((()))
+          (% class="map-popup" %)(((
+            &lt;h2&gt;&lt;/h2&gt;
+            &lt;hr/&gt;
+            (% class="popup-content" %)((()))
           )))
-          {{/html}}
         )))
+        {{/html}}
       )))
     )))
   )))

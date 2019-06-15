@@ -151,7 +151,7 @@
       <includeCurrentLocation>1</includeCurrentLocation>
     </property>
     <property>
-      <includeSearch>0</includeSearch>
+      <includeSearch>1</includeSearch>
     </property>
     <property>
       <query>spaces:Points</query>
