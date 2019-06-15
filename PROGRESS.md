@@ -67,6 +67,16 @@
 ## Day 16 (13 June 2019)
 - [x] Add custom space for popups
 - [x] Make popups responsive for easy viewing on small devices
+## Day 17 (14 June 2019)
+- [x] Add filter controls
+- [x] Add support for search type
+- [x] Change search form to support both location and item type search
+- [x] Remove old search control
+## Day 18 (15 June 2019)
+- [x] Add list of map results
+- [x] Add link to the map item page for each result
+- [x] Allow moving to the map item location from search results
+- [x] Fix long titles problem in popups
 ---
 # Marks the progress of the Interactive Maps Application (Old)
 ## Day 1 (18 May 2019)
