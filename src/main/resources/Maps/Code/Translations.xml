@@ -40,6 +40,14 @@
 maps.livetable.doc.creationDate=Date Created
 maps.livetable._actions=Edit/Delete
 
+## For MapClass
+intmap.mapclass.defaultZoom=Default Zoom
+intmap.mapclass.tiles=Tiles
+intmap.mapclass.includeSearch=Include Location Search
+intmap.mapclass.includeCurrentLocation=Include Current Location
+intmap.mapclass.query=Query
+intmap.mapclass.defaultLocation=Default Location
+
 ## Solr translations override
 solr.facets.title=Filter the map
 solr.facets.hint=Filter the map item results
@@ -48,7 +56,8 @@ intmap.search.item=Item
 intmap.search.location=Location
 intmap.search.searchType=Select type
 intmap.search.showResults=Show result items
-intmap.search.gotoLoc=Go to location</content>
+intmap.search.gotoLoc=Go to location
+</content>
   <object>
     <name>Maps.Code.Translations</name>
     <number>0</number>

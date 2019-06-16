@@ -20,30 +20,28 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
 -->
 
-<xwikidoc version="1.3" reference="Maps.MapTesting.Points.Moscow" locale="">
-  <web>Maps.MapTesting.Points</web>
-  <name>Moscow</name>
+<xwikidoc version="1.3" reference="Maps.Demo.EiffelTowerParis.EiffelTowerPoint" locale="">
+  <web>Maps.Demo.EiffelTowerParis</web>
+  <name>EiffelTowerPoint</name>
   <language/>
   <defaultLanguage/>
   <translation>0</translation>
   <creator>xwiki:XWiki.Admin</creator>
-  <parent>Maps.MapTesting.Points</parent>
+  <parent>Maps.Demo.EiffelTowerParis.WebHome</parent>
   <author>xwiki:XWiki.Admin</author>
   <contentAuthor>xwiki:XWiki.Admin</contentAuthor>
   <version>1.1</version>
-  <title>Moscow</title>
+  <title>Eiffel Tower</title>
   <comment/>
   <minorEdit>false</minorEdit>
   <syntaxId>xwiki/2.1</syntaxId>
   <hidden>false</hidden>
-  <content>We are in Russia now! :D
-
-Same</content>
+  <content>The Eiffel Tower (/ˈaɪfəl/ EYE-fəl; French: tour Eiffel [tuʁ‿ɛfɛl] (About this soundlisten)) is a wrought-iron lattice tower on the Champ de Mars in Paris, France. It is named after the engineer Gustave Eiffel, whose company designed and built the tower.</content>
   <object>
-    <name>Maps.MapTesting.Points.Moscow</name>
+    <name>Maps.Demo.EiffelTowerParis.EiffelTowerPoint</name>
     <number>0</number>
     <className>Maps.Code.PointClass</className>
-    <guid>98cf2fef-afaa-4353-b9cb-ad85fd289450</guid>
+    <guid>f8a78384-ebcc-4348-8d7c-31dbaeaaa8b6</guid>
     <class>
       <name>Maps.Code.PointClass</name>
       <customClass/>
@@ -69,7 +67,7 @@ Same</content>
       </location>
     </class>
     <property>
-      <location>Moscow, Russia</location>
+      <location>Eiffel Tower, Paris</location>
     </property>
   </object>
 </xwikidoc>

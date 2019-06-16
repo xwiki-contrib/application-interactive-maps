@@ -252,7 +252,6 @@ define('leaflet-commons', ['jquery'], function ($) {
         },
         _toggleFilters: function (e) {
           e.preventDefault();
-          $('#facetjs').val() == 'true' ? $('#facetjs').val('false') : $('#facetjs').val('true');
           $('.map-filters').toggleClass('open col-sm-3');
           $('.map-results').toggleClass('filter-active col-sm-9');
         }

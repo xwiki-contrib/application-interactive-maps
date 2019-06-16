@@ -20,30 +20,29 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
 -->
 
-<xwikidoc version="1.3" reference="Maps.MapTesting.Points.Moscow" locale="">
-  <web>Maps.MapTesting.Points</web>
-  <name>Moscow</name>
+<xwikidoc version="1.3" reference="Maps.Demo.XWikiSAS.XWikiSASFrance" locale="">
+  <web>Maps.Demo.XWikiSAS</web>
+  <name>XWikiSASFrance</name>
   <language/>
   <defaultLanguage/>
   <translation>0</translation>
   <creator>xwiki:XWiki.Admin</creator>
-  <parent>Maps.MapTesting.Points</parent>
+  <parent>Maps.Demo.XWikiSAS.WebHome</parent>
   <author>xwiki:XWiki.Admin</author>
   <contentAuthor>xwiki:XWiki.Admin</contentAuthor>
   <version>1.1</version>
-  <title>Moscow</title>
+  <title>XWiki SAS France</title>
   <comment/>
   <minorEdit>false</minorEdit>
   <syntaxId>xwiki/2.1</syntaxId>
   <hidden>false</hidden>
-  <content>We are in Russia now! :D
-
-Same</content>
+  <content>XWiki SAS is an innovative French company created in 2004 by Ludovic Dubost, visionary in the use of wikis.
+This is their office in France.</content>
   <object>
-    <name>Maps.MapTesting.Points.Moscow</name>
+    <name>Maps.Demo.XWikiSAS.XWikiSASFrance</name>
     <number>0</number>
     <className>Maps.Code.PointClass</className>
-    <guid>98cf2fef-afaa-4353-b9cb-ad85fd289450</guid>
+    <guid>41b7482c-dbd7-4957-9cbb-998410c9657a</guid>
     <class>
       <name>Maps.Code.PointClass</name>
       <customClass/>
@@ -69,7 +68,7 @@ Same</content>
       </location>
     </class>
     <property>
-      <location>Moscow, Russia</location>
+      <location>XWiki SAS, France</location>
     </property>
   </object>
 </xwikidoc>

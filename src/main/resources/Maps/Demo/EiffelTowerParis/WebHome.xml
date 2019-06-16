@@ -20,28 +20,28 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
 -->
 
-<xwikidoc version="1.3" reference="Maps.MapTesting.Maps.TestMap" locale="">
-  <web>Maps.MapTesting.Maps</web>
-  <name>TestMap</name>
+<xwikidoc version="1.3" reference="Maps.Demo.EiffelTowerParis.WebHome" locale="">
+  <web>Maps.Demo.EiffelTowerParis</web>
+  <name>WebHome</name>
   <language/>
   <defaultLanguage/>
   <translation>0</translation>
   <creator>xwiki:XWiki.Admin</creator>
-  <parent>xwiki:Maps.MapTesting.CreateMap</parent>
+  <parent>Maps.WebHome</parent>
   <author>xwiki:XWiki.Admin</author>
   <contentAuthor>xwiki:XWiki.Admin</contentAuthor>
   <version>1.1</version>
-  <title/>
+  <title>Eiffel Tower, Paris</title>
   <comment/>
   <minorEdit>false</minorEdit>
   <syntaxId>xwiki/2.1</syntaxId>
   <hidden>false</hidden>
   <content/>
   <object>
-    <name>Maps.MapTesting.Maps.TestMap</name>
+    <name>Maps.Demo.EiffelTowerParis.WebHome</name>
     <number>0</number>
     <className>Maps.Code.MapClass</className>
-    <guid>8e1ede4f-4dd4-4af7-862c-64f2a33c681b</guid>
+    <guid>2af303c2-7a1a-46fd-a35c-372dccba2de0</guid>
     <class>
       <name>Maps.Code.MapClass</name>
       <customClass/>
@@ -145,22 +145,22 @@
       <apiKey/>
     </property>
     <property>
-      <defaultLocation>Paris</defaultLocation>
+      <defaultLocation>Eiffel Tower, Paris</defaultLocation>
     </property>
     <property>
-      <defaultZoom/>
+      <defaultZoom>14</defaultZoom>
     </property>
     <property>
       <includeCurrentLocation>1</includeCurrentLocation>
     </property>
     <property>
-      <includeSearch>1</includeSearch>
+      <includeSearch>0</includeSearch>
     </property>
     <property>
-      <query>spaces:Points</query>
+      <query>space:Maps.Demo.EiffelTowerParis</query>
     </property>
     <property>
-      <tiles/>
+      <tiles>https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png</tiles>
     </property>
   </object>
 </xwikidoc>
