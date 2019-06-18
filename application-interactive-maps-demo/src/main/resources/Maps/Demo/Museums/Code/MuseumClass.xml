@@ -20,8 +20,8 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
 -->
 
-<xwikidoc version="1.3" reference="Maps.MapTesting.Museums.Code.MuseumClass" locale="">
-  <web>Maps.MapTesting.Museums.Code</web>
+<xwikidoc version="1.3" reference="Maps.Demo.Museums.Code.MuseumClass" locale="">
+  <web>Maps.Demo.Museums.Code</web>
   <name>MuseumClass</name>
   <language/>
   <defaultLanguage/>
@@ -38,7 +38,7 @@
   <hidden>false</hidden>
   <content/>
   <class>
-    <name>Maps.MapTesting.Museums.Code.MuseumClass</name>
+    <name>Maps.Demo.Museums.Code.MuseumClass</name>
     <customClass/>
     <customMapping/>
     <defaultViewSheet/>

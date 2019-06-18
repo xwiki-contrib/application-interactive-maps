@@ -20,56 +20,24 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
 -->
 
-<xwikidoc version="1.3" reference="Maps.MapTesting.Points.Moscow" locale="">
-  <web>Maps.MapTesting.Points</web>
-  <name>Moscow</name>
+<xwikidoc version="1.3" reference="Maps.Demo.Museums.WebHome" locale="">
+  <web>Maps.Demo.Museums</web>
+  <name>WebHome</name>
   <language/>
   <defaultLanguage/>
   <translation>0</translation>
   <creator>xwiki:XWiki.Admin</creator>
-  <parent>Maps.MapTesting.Points</parent>
+  <parent>Main.WebHome</parent>
   <author>xwiki:XWiki.Admin</author>
   <contentAuthor>xwiki:XWiki.Admin</contentAuthor>
   <version>1.1</version>
-  <title>Moscow</title>
+  <title>Museums</title>
   <comment/>
   <minorEdit>false</minorEdit>
   <syntaxId>xwiki/2.1</syntaxId>
   <hidden>false</hidden>
-  <content>We are in Russia now! :D
+  <content>
 
-Same</content>
-  <object>
-    <name>Maps.MapTesting.Points.Moscow</name>
-    <number>0</number>
-    <className>Maps.Code.PointClass</className>
-    <guid>98cf2fef-afaa-4353-b9cb-ad85fd289450</guid>
-    <class>
-      <name>Maps.Code.PointClass</name>
-      <customClass/>
-      <customMapping/>
-      <defaultViewSheet/>
-      <defaultEditSheet/>
-      <defaultWeb/>
-      <nameField/>
-      <validationScript/>
-      <location>
-        <customDisplay/>
-        <disabled>0</disabled>
-        <hint>Location in coordinates or place name</hint>
-        <name>location</name>
-        <number>1</number>
-        <picker>0</picker>
-        <prettyName>Location</prettyName>
-        <size>30</size>
-        <unmodifiable>0</unmodifiable>
-        <validationMessage/>
-        <validationRegExp/>
-        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
-      </location>
-    </class>
-    <property>
-      <location>Moscow, Russia</location>
-    </property>
-  </object>
+* [[World Museums Map&gt;&gt;Map]]
+* [[World Museums Data Importer&gt;&gt;.Code.DataImporter]]</content>
 </xwikidoc>

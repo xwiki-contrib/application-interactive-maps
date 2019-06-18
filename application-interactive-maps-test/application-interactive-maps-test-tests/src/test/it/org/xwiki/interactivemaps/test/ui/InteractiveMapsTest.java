@@ -1,6 +1,4 @@
-<?xml version="1.1" encoding="UTF-8"?>
-
-<!--
+/*
  * See the NOTICE file distributed with this work for additional
  * information regarding copyright ownership.
  *
@@ -18,26 +16,23 @@
  * License along with this software; if not, write to the Free
  * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
--->
+ */
+package org.xwiki.interactivemaps.test.ui;
 
-<xwikidoc version="1.3" reference="Maps.MapTesting.Museums.WebHome" locale="">
-  <web>Maps.MapTesting.Museums</web>
-  <name>WebHome</name>
-  <language/>
-  <defaultLanguage/>
-  <translation>0</translation>
-  <creator>xwiki:XWiki.Admin</creator>
-  <parent>Main.WebHome</parent>
-  <author>xwiki:XWiki.Admin</author>
-  <contentAuthor>xwiki:XWiki.Admin</contentAuthor>
-  <version>1.1</version>
-  <title>Museums</title>
-  <comment/>
-  <minorEdit>false</minorEdit>
-  <syntaxId>xwiki/2.1</syntaxId>
-  <hidden>false</hidden>
-  <content>
+import org.junit.Test;
+import org.xwiki.test.ui.AbstractTest;
 
-* [[World Museums Map&gt;&gt;Map]]
-* [[World Museums Data Importer&gt;&gt;.Code.DataImporter]]</content>
-</xwikidoc>
+import org.junit.Assert;
+
+/**
+ * UI tests for the Release Notes Application.
+ *
+ * @version $Id$
+ */
+public class InteractiveMapsTest extends AbstractTest
+{
+    @Test
+    public void verifyFeatures()
+    {
+    }
+}

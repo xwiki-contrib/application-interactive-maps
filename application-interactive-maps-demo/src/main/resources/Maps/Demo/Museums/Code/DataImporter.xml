@@ -20,8 +20,8 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
 -->
 
-<xwikidoc version="1.3" reference="Maps.MapTesting.Museums.Code.DataImporter" locale="">
-  <web>Maps.MapTesting.Museums.Code</web>
+<xwikidoc version="1.3" reference="Maps.Demo.Museums.Code.DataImporter" locale="">
+  <web>Maps.Demo.Museums.Code</web>
   <name>DataImporter</name>
   <language/>
   <defaultLanguage/>
@@ -70,7 +70,7 @@ WHERE
 {{/info}}
 
 #set ($POINT_CLASS_NAME = 'Maps.Code.PointClass')
-#set ($MUSEUM_CLASS_NAME = 'Maps.MapTesting.Museums.Code.MuseumClass')
+#set ($MUSEUM_CLASS_NAME = 'Maps.Demo.Museums.Code.MuseumClass')
 
 #if ($request.action == 'import')
   #set ($dataAttachment = $doc.getAttachment('data.json'))

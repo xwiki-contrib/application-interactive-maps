@@ -736,7 +736,6 @@ require(['jquery', 'leaflet', 'leaflet-commons'], function ($, leaflet, leafletC
     </property>
     <property>
       <code>@import "$services.webjars.url('leaflet', 'leaflet.css')";
-@import "https://cdn.jsdelivr.net/npm/leaflet-search@2.9.8/src/leaflet-search.css";
 
 @box-shadow: darken(@xwiki-page-content-bg, 30%);
 /*
