@@ -27,7 +27,6 @@
     <artifactId>application-interactive-maps</artifactId>
     <version>1.0-SNAPSHOT</version>
   </parent>
-  <groupId>org.xwiki.contrib</groupId>
   <artifactId>application-interactive-maps-demo</artifactId>
   <name>Interactive Maps Application - Demo Content</name>
   <packaging>xar</packaging>
