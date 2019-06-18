@@ -77,6 +77,14 @@
 - [x] Add link to the map item page for each result
 - [x] Allow moving to the map item location from search results
 - [x] Fix long titles problem in popups
+## Day 19 (16 June 2019)
+- [ ] Holiday
+## Day 20 (17 June 2019)
+- [x] Analyze releasenotes application
+- [x] Prepare demos and tests
+## Day 21 (18 June 2019)
+- [x] Examine all POMs and new project structure
+- [x] Push the new structure and prepare for release
 ---
 # Marks the progress of the Interactive Maps Application (Old)
 ## Day 1 (18 May 2019)
