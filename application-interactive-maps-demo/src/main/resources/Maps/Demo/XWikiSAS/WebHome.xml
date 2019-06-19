@@ -142,9 +142,6 @@
       </tiles>
     </class>
     <property>
-      <apiKey/>
-    </property>
-    <property>
       <defaultLocation>XWiki SAS, France</defaultLocation>
     </property>
     <property>
