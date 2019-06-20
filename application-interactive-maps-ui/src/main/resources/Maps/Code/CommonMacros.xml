@@ -150,36 +150,13 @@
       {{/html}}
 
     #end
-    #displaySearchForm()
     #getMapResults()
     #if ($debug)
       #displaySearchDebugInfo()
     #end
     #set ($mapData = "#handleSolrResponse(${searchResponse})")
     #set ($mapData = $mapData.replaceAll("'", '\\"'))
-    #if ($text != '' &amp;&amp; $mapDataArr.size() &gt; 0)
-
-      {{html clean="false" wiki="true"}}
-        &lt;button class="btn btn-primary" id="show-map-result"&gt;$services.localization.render('intmap.search.showResults')&lt;/button&gt;
-        (% class="search-item-results" %)(((
-          #foreach ($item in $mapDataArr)
-            (% class="search-result-item %)(((
-              ==== [[$item.get('title')&gt;&gt;$item.get('doclocation')||target="_blank"]] ====
-              (% class="goto-loc" data-location="${item.get('location')}" title="$services.localization.render('intmap.search.gotoLoc')" %)(((
-                &lt;i class="fa fa-map-marker"&gt;&lt;/i&gt;
-              )))
-            )))
-          #end
-        )))
-      {{/html}}
-
-    #end
     (% class="search-results-container row" %)(((
-      #if ($facetEnabled)
-        (% class="map-filters col-xs-12" %)(((
-          #displaySearchFacets($searchResponse)
-        )))
-      #end
       (% class="map-results col-xs-12" %)
       (((
         ## $mapId, $mapObjJSON are already set before using this macro
@@ -191,6 +168,10 @@
             &lt;hr/&gt;
             (% class="popup-content" %)((()))
           )))
+          (% class="map-search-filter" %)(((
+            #displaySearchForm()
+            #displayMapSearchFilter()
+          )))
         )))
         {{/html}}
       )))
@@ -198,6 +179,89 @@
   )))
   #set($void = $services.progress.popLevel())
   #set($void = $services.progress.endStep())
+#end
+
+#macro(displaySearchForm)
+  #set($void = $services.progress.startStep('#displaySearchForm'))
+  #set($void = $services.progress.pushLevel())
+  {{html clean="false"}}
+  &lt;form class="map-search-form" action="$doc.getURL()" role="search"&gt;
+    &lt;div class="hidden"&gt;
+      &lt;input type="hidden" name="sort" value="$!escapetool.xml($sort)"/&gt;
+      &lt;input type="hidden" name="sortOrder" value="$!escapetool.xml($sortOrder)"/&gt;
+      &lt;input type="hidden" name="highlight" value="$highlightEnabled"/&gt;
+      &lt;input type="hidden" name="facet" value="$facetEnabled"/&gt;
+      ## The parameter used to determine if the request has been redirected with default search filters.
+      &lt;input type="hidden" name="r" value="$!escapetool.xml($request.r)"/&gt;
+      #if ("$!request.debug" != '')
+        &lt;input type="hidden" name="debug" value="$escapetool.xml($request.debug)"/&gt;
+      #end
+      ## Preserve the current facet values when submitting a new search query.
+      #foreach ($entry in $request.parameterMap.entrySet())
+        #if ($entry.key.startsWith('f_') || $entry.key.startsWith('l_'))
+          #foreach ($value in $entry.value)
+            &lt;input type="hidden" name="$escapetool.xml($entry.key)" value="$escapetool.xml($value)"/&gt;
+          #end
+        #end
+      #end
+    &lt;/div&gt;
+    ## $mabObj is set in MapSheet
+    &lt;div class="map-search"&gt;
+      &lt;div class="map-search-input-wrapper"&gt;
+        #if("$!mapObj.get('includeSearch')" == 'Yes')
+        &lt;div class="fa fa-ellipsis-v" id="search-type-btn"&gt;&lt;/div&gt;
+        #end
+        &lt;input type="search" name="text" class="form-control withTip useTitleAsTip map-search-input"
+          title="$services.localization.render('intmap.search.placeholder')" value="$escapetool.xml($text)"/&gt;
+        &lt;button type="submit" class="btn btn-primary map-search-btn"&gt;
+          &lt;span class="fa fa-search"&gt;&lt;/span&gt;
+        &lt;/button&gt;
+      &lt;/div&gt;
+      #if("$!mapObj.get('includeSearch')" == 'Yes')
+        &lt;div class="search-types xformInline"&gt;
+          &lt;p&gt;$services.localization.render('intmap.search.searchType'):&lt;/p&gt;
+          &lt;input type="radio" name="search-type" id="location" value="location"&gt;
+          &lt;label for="location"&gt;$services.localization.render('intmap.search.location')&lt;/label&gt;
+          &lt;input type="radio" name="search-type" id="item" value="item"&gt;
+          &lt;label for="item"&gt;$services.localization.render('intmap.search.item')&lt;/label&gt;
+        &lt;/div&gt;
+        #*&lt;select name="search-type" class="search-type form-control"&gt;
+          &lt;option disabled selected&gt;$services.localization.render('intmap.search.searchType')&lt;/option&gt;
+          &lt;option value="location"#if ("$!request.get('search_type')" == 'location') selected#end&gt;$services.localization.render('intmap.search.location')&lt;/option&gt;
+          &lt;option value="item"#if ("$!request.get('search_type')" == 'item') selected#end&gt;$services.localization.render('intmap.search.item')&lt;/option&gt;
+        &lt;/select&gt;*#
+      #end
+    &lt;/div&gt;
+  &lt;/form&gt;
+  {{/html}}
+  #set($void = $services.progress.popLevel())
+  #set($void = $services.progress.endStep())
+#end
+
+#macro (displayMapSearchFilter)
+  #if ($text != '' &amp;&amp; $mapDataArr.size() &gt; 0)
+    (% class="map-results-section" id="show-search-items" %)(((
+      $services.localization.render('intmap.search.showResults') &lt;i class="fa fa-caret-left"&gt;&lt;/i&gt;
+    )))
+    (% class="search-item-results" %)(((
+      #foreach ($item in $mapDataArr)
+      (% class="search-result-item %)(((
+        ==== [[$item.get('title')&gt;&gt;$item.get('doclocation')||target="_blank"]] ====
+        (% class="goto-loc" data-location="${item.get('location')}" title="$services.localization.render('intmap.search.gotoLoc')" %)(((
+          &lt;i class="fa fa-map-marker"&gt;&lt;/i&gt;
+        )))
+      )))
+      #end
+    )))
+  #end
+  #if ($facetEnabled)
+    (% class="map-results-section" id="show-search-facets" %)(((
+      $services.localization.render('intmap.search.refineSearch') &lt;i class="fa fa-caret-left"&gt;&lt;/i&gt;
+    )))
+    (% class="map-filters" %)(((
+      #displaySearchFacets($searchResponse)
+    )))
+  #end
 #end
 
 ##
@@ -231,50 +295,15 @@
   &lt;/div&gt;
 #end
 
-#macro(displaySearchForm)
-  #set($void = $services.progress.startStep('#displaySearchForm'))
-  #set($void = $services.progress.pushLevel())
-  {{html clean="false"}}
-  &lt;form class="map-search-form row" action="$doc.getURL()" role="search"&gt;
-    &lt;div class="hidden"&gt;
-      &lt;input type="hidden" name="sort" value="$!escapetool.xml($sort)"/&gt;
-      &lt;input type="hidden" name="sortOrder" value="$!escapetool.xml($sortOrder)"/&gt;
-      &lt;input type="hidden" name="highlight" value="$highlightEnabled"/&gt;
-      &lt;input type="hidden" name="facet" value="$facetEnabled"/&gt;
-      ## The parameter used to determine if the request has been redirected with default search filters.
-      &lt;input type="hidden" name="r" value="$!escapetool.xml($request.r)"/&gt;
-      #if ("$!request.debug" != '')
-        &lt;input type="hidden" name="debug" value="$escapetool.xml($request.debug)"/&gt;
+#macro (displaySearchFacets $searchResponse)
+  #set($void = $services.progress.startStep('#displaySearchFacets'))
+  (% class="search-facets collapsed-xs xform" %)(((
+    {{html clean="false"}}
+      #foreach ($facetField in $searchResponse.facetFields)
+        #displaySearchFacet($facetField)
       #end
-      ## Preserve the current facet values when submitting a new search query.
-      #foreach ($entry in $request.parameterMap.entrySet())
-        #if ($entry.key.startsWith('f_') || $entry.key.startsWith('l_'))
-          #foreach ($value in $entry.value)
-            &lt;input type="hidden" name="$escapetool.xml($entry.key)" value="$escapetool.xml($value)"/&gt;
-          #end
-        #end
-      #end
-    &lt;/div&gt;
-    &lt;div class="col-xs-12"&gt;
-      ## $mabObj is set in MapSheet
-      &lt;div class="map-search"&gt;
-        #if("$!mapObj.get('includeSearch')" == 'Yes')
-          &lt;select name="search-type" class="search-type form-control"&gt;
-            &lt;option disabled selected&gt;$services.localization.render('intmap.search.searchType')&lt;/option&gt;
-            &lt;option value="location"#if ("$!request.get('search_type')" == 'location') selected#end&gt;$services.localization.render('intmap.search.location')&lt;/option&gt;
-            &lt;option value="item"#if ("$!request.get('search_type')" == 'item') selected#end&gt;$services.localization.render('intmap.search.item')&lt;/option&gt;
-          &lt;/select&gt;
-        #end
-        &lt;input type="search" name="text" class="form-control withTip useTitleAsTip map-search-input"
-          title="$services.localization.render('intmap.search.placeholder')" value="$escapetool.xml($text)"/&gt;
-        &lt;button type="submit" class="btn btn-primary map-search-btn"&gt;
-          &lt;span class="fa fa-search"&gt;&lt;/span&gt;
-        &lt;/button&gt;
-      &lt;/div&gt;
-    &lt;/div&gt;
-  &lt;/form&gt;
-  {{/html}}
-  #set($void = $services.progress.popLevel())
+    {{/html}}
+  )))
   #set($void = $services.progress.endStep())
 #end
 {{/velocity}}</content>

@@ -160,9 +160,8 @@ define('leaflet-commons', ['jquery'], function ($) {
         if (options.includeCurrentLocation == 1) {
           rootScope.addNavigation(map);
         }
-        if ($('.map-search-form').find('input[name=facet]').val() == 'true') {
-          rootScope.addFilterControl(map);
-        }
+        //Adding the search control
+        rootScope.addSearch(map);
       });
       return map;
     },
@@ -234,45 +233,28 @@ define('leaflet-commons', ['jquery'], function ($) {
       (new L.Control.navigation({ position: 'topright' })).addTo(map);
     },
 
-    //Adding filter control
-    addFilterControl: function (map)
-    {
-      var rootScope = this;
-      L.Control.navigation = L.Control.extend({
-        onAdd: function (map) {
-          var container = L.DomUtil.create('div', 'leaflet-control-custom');
-          var locateIcon = L.DomUtil.create('div', 'fa fa-filter');
-          locateIcon.setAttribute('title', 'Filters');
-          locateIcon.setAttribute('aria-label', 'Filters');
-          container.appendChild(locateIcon);
-          L.DomEvent.on(container, 'click', L.DomEvent.stopPropagation)
-            .on(container, 'click', L.DomEvent.stop)
-            .on(container, 'click', this._toggleFilters, this);
-          return container;
-        },
-        _toggleFilters: function (e) {
-          e.preventDefault();
-          $('.map-filters').toggleClass('open col-sm-3');
-          $('.map-results').toggleClass('filter-active col-sm-9');
-        }
-      });
-      (new L.Control.navigation({ position: 'topright' })).addTo(map);
-    },
-
-    //Function for adding search control (deprecated)
+    //Adding search control
     addSearch: function (map)
     {
-      map.addControl(new L.Control.Search({
-        url: 'https://nominatim.openstreetmap.org/search?format=json&amp;q={s}',
-        jsonpParam: 'json_callback',
-        propertyName: 'display_name',
-        propertyLoc: ['lat', 'lon'],
-        marker: L.circleMarker([0, 0], { radius: 30 }),
-        autoCollapse: true,
-        autoType: false,
-        minLength: 2,
-        position: 'topright'
-      }));
+      var rootScope = this;
+      L.Control.search = L.Control.extend({
+        onAdd: function (map) {
+          var container = L.DomUtil.create('div', 'leaflet-control-custom');
+          var searchIcon = L.DomUtil.create('div', 'fa fa-search');
+          searchIcon.setAttribute('title', 'Search');
+          searchIcon.setAttribute('aria-label', 'Search');
+          container.appendChild(searchIcon);
+          L.DomEvent.on(container, 'click', L.DomEvent.stopPropagation)
+            .on(container, 'click', L.DomEvent.stop)
+            .on(container, 'click', this._toggleSearch, this);
+          return container;
+        },
+        _toggleSearch: function (e) {
+          e.preventDefault();
+          $('.map-search-filter').toggleClass('open');
+        }
+      });
+      (new L.Control.search({ position: 'topleft' })).addTo(map);
     },
 
     //Return latlng if location is address or a string of latlng
@@ -548,6 +530,7 @@ require(['jquery', 'leaflet', 'leaflet-commons'], function ($, leaflet, leafletC
       var i = 0;
       map.on('click', function(){
         $popupContainer.removeClass('open');
+        $('.map-search-filter').removeClass('open');
       });
       var lastClickedMarker;
       mapData.each(function (data) {
@@ -555,6 +538,7 @@ require(['jquery', 'leaflet', 'leaflet-commons'], function ($, leaflet, leafletC
           leafletCommons.getLocationCoords(data.location, function (location) {
             leafletCommons.addMarker(data.markerIcon, location, function (marker) {
               marker.on('click', function(e){
+                $('.map-search-filter').removeClass('open');
                 var title = data.title;
                 var content = data.popupContent;
                 $popupContainer.children('h2').html(title);
@@ -588,7 +572,7 @@ require(['jquery', 'leaflet', 'leaflet-commons'], function ($, leaflet, leafletC
     $('.map-search-form').submit(function (e) {
       e.preventDefault();
       var formVal = $(this).find('input[type=search]').val();
-      var searchType = $(this).find('.search-type').children('option:selected').val();
+      var searchType = $(this).find('input[name=search-type]:checked').val();
       var viewURL = window.location.href;
       if(searchType == 'location'){
         leafletCommons.getLocationCoords(formVal, function(location){
@@ -603,9 +587,23 @@ require(['jquery', 'leaflet', 'leaflet-commons'], function ($, leaflet, leafletC
       }
     });
 
-    $('#show-map-result').on('click', function(){
+    $('#show-search-items').on('click', function(){
+      $(this).toggleClass('open')
       $('.search-item-results').toggleClass('open');
     });
+
+    $('#show-search-facets').on('click', function(){
+      $(this).toggleClass('open');
+      $('.map-filters').toggleClass('open');
+    });
+
+    $('#close-map-search').on('click', function(){
+      $('.map-search-filter').removeClass('open');
+    });
+
+    $('#search-type-btn').on('click', function(){
+      $('.search-types').toggleClass('open');
+    })
 
     $('.search-item-results .goto-loc').on('click', function(){
       var loc = this.dataset.location;
@@ -769,7 +767,7 @@ require(['jquery', 'leaflet', 'leaflet-commons'], function ($, leaflet, leafletC
   margin-bottom: 10px;
 }
 .map-search{
-  margin-bottom: 15px;
+  margin-bottom: 7px;
 }
 .leaflet-popup-content-wrapper, .leaflet-popup-tip {
     background: @xwiki-page-content-bg;
@@ -854,7 +852,7 @@ require(['jquery', 'leaflet', 'leaflet-commons'], function ($, leaflet, leafletC
   color: @text-color;
 }
 .leaflet-control-container&gt;div{
-  z-index: 999;
+  z-index: 992;
 }
 .leaflet-touch .leaflet-control-layers, .leaflet-touch .leaflet-bar{
   border: none;
@@ -903,7 +901,7 @@ require(['jquery', 'leaflet', 'leaflet-commons'], function ($, leaflet, leafletC
   border-radius: 5px;
   box-shadow: 0px 0px 3px @box-shadow;
   border: 4px solid @xwiki-page-content-bg;
-  z-index: 991;
+  z-index: 993;
   transition: all 0.2s;
 }
 .map-popup.open{
@@ -943,8 +941,11 @@ require(['jquery', 'leaflet', 'leaflet-commons'], function ($, leaflet, leafletC
   position: relative;
   width: 100%;
 }
+.map-search-input-wrapper{
+  position: relative;
+}
 .map-search .map-search-input{
-  padding-right: 30px;
+  padding-right: 25px;
   width: 100%;
   background: @xwiki-page-content-bg;
   color: @text-color;
@@ -973,75 +974,86 @@ require(['jquery', 'leaflet', 'leaflet-commons'], function ($, leaflet, leafletC
 /*
  * If location search is included
 */
-.map-search .search-type{
-  display: inline;
-  width: 23%;
-  margin-right: -5px;
-  border-right: 0;
-  border-top-right-radius: 0;
-  border-bottom-right-radius: 0;
+#search-type-btn{
+  position: absolute;
+  right: 5px;
+  top: 50%;
+  color: @brand-primary;
+  font-size: 16px;
+  cursor: pointer;
+  padding: 5px;
+  transform: translateY(-50%);
+}
+#search-type-btn:hover{
+  text-shadow: 0px 0px 5px fade(@brand-primary, 50%);
+}
+.search-types{
+  max-height: 0;
+  overflow: hidden;
+  padding: 0 10px;
+  border-bottom-right-radius: 5px;
+  border-bottom-left-radius: 5px;
+  box-shadow: 0px 0px 3px @box-shadow;
   background: @xwiki-page-content-bg;
-  color: fade(@text-color, 60%);
+  transition: all 0.5s;
 }
-.map-search .search-type + .map-search-input{
-  width: 76%;
-  border-top-left-radius: 0;
-  border-bottom-left-radius: 0;
+.search-types.open{
+  max-height: 200px;
+  padding: 5px 10px;
+  transition: all 0.5s;
 }
-.map-search .search-type + .map-search-input + .map-search-btn{
-  right: 20px;
-}
-/*
- * Map filters
-*/
-.map-filters{
-  display: none;
-}
-.map-filters.open{
+.search-types .search-type{
   display: block;
+  padding: 5px 0px;
+}
+.search-types .search-type&gt;*{
+  display: inline-block;
+}
+.map-search #search-type-btn + .map-search-input{
+  padding-right: 45px;
+}
+.map-search #search-type-btn + .map-search-input + .map-search-btn{
+  right: 25px;
 }
 /*
  * Map search results
 */
-.search-item-results{
+.search-item-results, .map-filters{
   max-height: 0;
   overflow: hidden;
-  border-radius: 10px;
-  box-shadow: 0px 0px 5px @box-shadow;
-  margin-top: 10px;
-  padding: 0px 20px;
+  padding: 0px 5px;
   transition: all 0.5s;
 }
-.search-item-results.open{
-  max-height: 400px;
+.search-item-results.open, .map-filters.open{
+  max-height: 300px;
   overflow-y: auto;
-  padding: 10px 20px;
   transition: all 0.5s;
 }
 .search-item-results .search-result-item{
   padding: 5px 0;
   border-bottom: 1px solid @box-shadow;
   position: relative;
+  padding-right: 25px;
 }
 .search-item-results .search-result-item:last-child{
   border-bottom: none;
 }
 .search-item-results .search-result-item h4{
-  margin: 10px 0;
-  font-size: 18px;
+  margin: 5px 0;
+  font-size: 14px;
 }
 .search-item-results .search-result-item .goto-loc{
-  width: 35px;
-  height: 35px;
+  width: 23px;
+  height: 23px;
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  right: 10px;
-  font-size: 18px;
+  right: 0px;
+  font-size: 14px;
   cursor: pointer;
   border-radius: 50%;
   background: transparent;
-  border: 2px solid @text-color;
+  border: 1px solid @text-color;
   color: @text-color;
   transition: all 0.5s;
 }
@@ -1072,6 +1084,66 @@ require(['jquery', 'leaflet', 'leaflet-commons'], function ($, leaflet, leafletC
     transform: translate(-50%, -50%);
   }
 }
+/*
+ * Map search/filter overlay (new)
+*/
+.map-search-filter{
+  position: absolute;
+  left: 10px;
+  top: 10px;
+  width: 275px;
+  height: auto;
+  max-height: 95%;
+  overflow-y: auto;
+  background: @xwiki-page-content-bg;
+  border-radius: 7px;
+  box-shadow: 0px 0px 5px @box-shadow;
+  padding: 8px;
+  transform: translateX(-100%) scale(0.7);
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.2s;
+  z-index: 991;
+}
+.map-search-filter.open{
+  transform: translateX(0) scale(1);
+  opacity: 1;
+  visibility: visible;
+  transition: all 0.4s;
+}
+.map-results-section{
+  font-size: 14px;
+  cursor: pointer;
+  margin: 5px;
+}
+.map-results-section .fa{
+  float: right;
+  margin-top: 2px;
+  transition: all 0.3s;
+}
+.map-results-section.open .fa{
+  transform: rotateZ(-90deg);
+  margin-top: 3px;
+  transition: all 0.3s;
+}
+.map-search-filter .search-facets {
+  background-color: transparent;
+  box-shadow: none;
+  margin-bottom: 5px;
+  border-radius: 0;
+}
+.map-search-filter .search-facet {
+  padding: 5px;
+}
+#close-map-search{
+  display: none;
+  text-align: left;
+  padding-bottom: 5px;
+  font-size: 12px;
+  cursor: pointer;
+  color: fade(@text-color, 50%);
+}
+
 
 </code>
     </property>

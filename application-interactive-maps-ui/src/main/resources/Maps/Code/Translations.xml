@@ -54,9 +54,10 @@ solr.facets.hint=Filter the map item results
 intmap.search.placeholder=Search in map
 intmap.search.item=Item
 intmap.search.location=Location
-intmap.search.searchType=Select type
+intmap.search.searchType=Select search type
 intmap.search.showResults=Show result items
 intmap.search.gotoLoc=Go to location
+intmap.search.refineSearch=Refine your search
 </content>
   <object>
     <name>Maps.Code.Translations</name>
