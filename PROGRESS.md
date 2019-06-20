@@ -83,8 +83,18 @@
 - [x] Analyze releasenotes application
 - [x] Prepare demos and tests
 ## Day 21 (18 June 2019)
-- [x] Examine all POMs and new project structure
+- [x] Examine all POMs and create a new project structure
 - [x] Push the new structure and prepare for release
+## Day 22 (19 June 2019)
+- [x] Analyze code for data importer by Stephane
+- [x] Create a generalized data importer with itemLabel, lat, lon as basic fields
+- [x] Add support for custom fields by creating a class if required
+## Day 23 (20 June 2019)
+- [x] Create search control inside map
+- [x] Create an overlay panel over map for search and facets
+- [x] Move map search, search results and facets into the newly created panel
+- [x] Change search type selection layout
+- [x] Write required code in velocity, css and js 
 ---
 # Marks the progress of the Interactive Maps Application (Old)
 ## Day 1 (18 May 2019)
