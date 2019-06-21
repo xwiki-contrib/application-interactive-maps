@@ -29,8 +29,6 @@
   </parent>
   <artifactId>application-interactive-maps-test-tests</artifactId>
   <name>Interactive Maps Application - Tests - Functional Tests</name>
-  <!-- TODO: Move to use "functional-test" in the future when http://jira.codehaus.org/browse/MNG-1911 is fixed,
-       see http://jira.xwiki.org/jira/browse/XWIKI-7683 -->
   <packaging>jar</packaging>
   <description>Interactive Maps Application - Functional Tests</description>
   <properties>
@@ -46,6 +44,12 @@
       <version>${project.version}</version>
       <type>xar</type>
     </dependency>
+    <dependency>
+      <groupId>org.xwiki.contrib</groupId>
+      <artifactId>application-interactive-maps-ui</artifactId>
+      <version>${project.version}</version>
+      <type>xar</type>
+    </dependency>
     <!-- Add Panel deps (which is optional for the Release Note app) in order to test registration in the App panel -->
     <dependency>
       <groupId>org.xwiki.platform</groupId>
@@ -53,10 +57,27 @@
       <version>${platform.version}</version>
       <type>xar</type>
     </dependency>
+    <dependency>
+      <groupId>org.xwiki.platform</groupId>
+      <artifactId>xwiki-platform-icon-default</artifactId>
+      <version>${platform.version}</version>
+    </dependency>
     <!-- Test dependencies -->
     <dependency>
       <groupId>org.xwiki.platform</groupId>
       <artifactId>xwiki-platform-test-ui</artifactId>
+      <version>${platform.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.xwiki.contrib</groupId>
+      <artifactId>application-interactive-maps-test-pageobjects</artifactId>
+      <version>${project.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.xwiki.platform</groupId>
+      <artifactId>xwiki-platform-panels-test-pageobjects</artifactId>
       <version>${platform.version}</version>
       <scope>test</scope>
     </dependency>
@@ -98,4 +119,35 @@
       </plugin>
     </plugins>
   </build>
+  <profiles>
+    <profile>
+      <id>clover</id>
+      <!-- Add the Clover JAR to the WAR so that it's available at runtime when XWiki executes.
+           It's needed because instrumented jars in the WAR will call Clover APIs at runtime when they execute. -->
+      <dependencies>
+        <dependency>
+          <groupId>com.atlassian.clover</groupId>
+          <artifactId>clover</artifactId>
+        </dependency>
+      </dependencies>
+      <build>
+        <plugins>
+          <!-- Add the Clover JAR to the Packager plugin runtime classpath since the Packager plugin uses java classes
+               that have been instrumented with Clover (XWiki oldcore for example) -->
+          <plugin>
+            <groupId>org.xwiki.platform</groupId>
+            <artifactId>xwiki-platform-tool-packager-plugin</artifactId>
+            <version>${platform.version}</version>
+            <dependencies>
+              <dependency>
+                <groupId>com.atlassian.clover</groupId>
+                <artifactId>clover</artifactId>
+                <version>${clover.version}</version>
+              </dependency>
+            </dependencies>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
 </project>

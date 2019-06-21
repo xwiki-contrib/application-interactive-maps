@@ -42,7 +42,7 @@
     'type:DOCUMENT', 'class:Maps.Code.PointClass'
   ],
   'facetFields': [
-    'space', 'property.XWiki.TagClass.tags_string', 'property.Maps.Demo.MapDataImporter.MuseumTest.CountryClass.countryLabel_string'
+    'space', 'property.XWiki.TagClass.tags_string', 'property.Maps.Demo.MapDataImporter.TotallyTesting.TotallyTestingClass.countryLabel_string'
   ]
 })
 {{/velocity}}

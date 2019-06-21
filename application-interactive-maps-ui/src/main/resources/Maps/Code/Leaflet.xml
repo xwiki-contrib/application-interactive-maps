@@ -147,7 +147,7 @@ define('leaflet-commons', ['jquery'], function ($) {
           tiles = options.tiles !== '' ? options.tiles : 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
           defaultLoc = options.defaultLocation !== '' ? options.defaultLocation : '48,2',
           map = new L.Map(mapId, {zoom: zoom, center: [48, 2]});
-      map.zoomControl.setPosition('topright');
+      map.zoomControl.setPosition('bottomright');
       this.getLocationCoords(defaultLoc, function (location) {
         map.setView(location);
         //Add a tiles layer to the map (the background)
@@ -160,6 +160,8 @@ define('leaflet-commons', ['jquery'], function ($) {
         if (options.includeCurrentLocation == 1) {
           rootScope.addNavigation(map);
         }
+        //Adding the fullscreen control
+        rootScope.addFullscreen(map);
         //Adding the search control
         rootScope.addSearch(map);
       });
@@ -193,68 +195,72 @@ define('leaflet-commons', ['jquery'], function ($) {
       }
     },
 
-    //Works only if the connection is secure (https etc.)
-    locateUser: function (map)
-    {
-      var locMarker = L.circleMarker();
-      map.locate({ setView: true, maxZoom: 16, watch: false });
-      map.on('locationfound', function (e) {
-        locMarker.remove();
-        locMarker = L.circleMarker(e.latlng, {
-          color: '#146ea7',
-          fillColor: '#146ea7',
-          fillOpacity: 0.4,
-          radius: 10
-        }).bindPopup('Current location').addTo(map);
-      })
-    },
-
-    //Function for adding navigation control
+    //Function for adding navigation control. Works only if the connection is secure (https etc.)
     addNavigation: function (map)
     {
-      var rootScope = this;
-      L.Control.navigation = L.Control.extend({
-        onAdd: function (map) {
-          var container = L.DomUtil.create('div', 'leaflet-control-custom');
-          var locateIcon = L.DomUtil.create('div', 'fa fa-map-marker');
-          locateIcon.setAttribute('title', 'Current location');
-          locateIcon.setAttribute('aria-label', 'Current location');
-          container.appendChild(locateIcon);
-          L.DomEvent.on(container, 'click', L.DomEvent.stopPropagation)
-            .on(container, 'click', L.DomEvent.stop)
-            .on(container, 'click', this._locateUser, this);
-          return container;
-        },
-        _locateUser: function (e) {
-          e.preventDefault();
-          rootScope.locateUser(this._map);
-        }
+      var locMarker;
+      this.addCustomControl(map, 'fa-map-marker', 'Current location', 'bottomright', function (e) {
+        map.locate({ setView: true, maxZoom: 16, watch: false });
+        map.on('locationfound', function (e) {
+          if (locMarker) {
+            locMarker.remove();
+          }
+          locMarker = L.circleMarker(e.latlng, {
+            color: '#146ea7',
+            fillColor: '#146ea7',
+            fillOpacity: 0.4,
+            radius: 10
+          }).bindPopup('Current location').addTo(map);
+        });
       });
-      (new L.Control.navigation({ position: 'topright' })).addTo(map);
     },
 
     //Adding search control
     addSearch: function (map)
     {
+      this.addCustomControl(map, 'fa-search', 'Search', 'topright', function (e) {
+        $('.map-popup').removeClass('open');
+        $('.map-search-filter').toggleClass('open');
+      });
+    },
+
+    //Adding fullscreen control
+    addFullscreen: function (map)
+    {
+      this.addCustomControl(map, 'fa-expand', 'Fullscreen', 'topright', function (e) {
+        var mapContainer = $(e.target).parents('.map-wrapper');
+        mapContainer.toggleClass('fullscreen');
+        if (mapContainer.hasClass('fullscreen')) {
+          $('body').css('overflow', 'hidden');
+        } else {
+          $('body').css('overflow', 'auto');
+        }
+        map.invalidateSize(true);
+      });
+    },
+
+    //Universal function for adding controls
+    addCustomControl: function (map, faIcon, title, position, clickEvent)
+    {
       var rootScope = this;
-      L.Control.search = L.Control.extend({
+      L.Control.customControl = L.Control.extend({
         onAdd: function (map) {
           var container = L.DomUtil.create('div', 'leaflet-control-custom');
-          var searchIcon = L.DomUtil.create('div', 'fa fa-search');
-          searchIcon.setAttribute('title', 'Search');
-          searchIcon.setAttribute('aria-label', 'Search');
-          container.appendChild(searchIcon);
+          var icon = L.DomUtil.create('div', 'fa ' + faIcon);
+          icon.setAttribute('title', title);
+          icon.setAttribute('aria-label', title);
+          container.appendChild(icon);
           L.DomEvent.on(container, 'click', L.DomEvent.stopPropagation)
             .on(container, 'click', L.DomEvent.stop)
-            .on(container, 'click', this._toggleSearch, this);
+            .on(container, 'click', this._toggleControl, this);
           return container;
         },
-        _toggleSearch: function (e) {
+        _toggleControl: function (e) {
           e.preventDefault();
-          $('.map-search-filter').toggleClass('open');
+          clickEvent(e);
         }
       });
-      (new L.Control.search({ position: 'topleft' })).addTo(map);
+      (new L.Control.customControl({ position: position })).addTo(map);
     },
 
     //Return latlng if location is address or a string of latlng
@@ -544,10 +550,9 @@ require(['jquery', 'leaflet', 'leaflet-commons'], function ($, leaflet, leafletC
                 $popupContainer.children('h2').html(title);
                 $popupContainer.children('.popup-content').html(content);
                 //If the last marker clicked is not this then don't close the popup
-                if(lastClickedMarker == this){
+                if (lastClickedMarker == this) {
                   $popupContainer.toggleClass('open');
-                }
-                else{
+                } else {
                   $popupContainer.addClass('open');
                 }
                 lastClickedMarker = this;
@@ -762,17 +767,21 @@ require(['jquery', 'leaflet', 'leaflet-commons'], function ($, leaflet, leafletC
 .leaflet-bottom{
   bottom: 10px;
 }
-.leaflet-container .leaflet-top .leaflet-control{
-  margin: 0;
-  margin-bottom: 10px;
-}
-.map-search{
-  margin-bottom: 7px;
-}
 .leaflet-popup-content-wrapper, .leaflet-popup-tip {
     background: @xwiki-page-content-bg;
     color: @text-color;
     box-shadow: 0 3px 14px @box-shadow;
+}
+.leaflet-right .leaflet-control, .leaflet-left .leaflet-control{
+  margin: 0;
+}
+.leaflet-top .leaflet-control{
+  margin: 0;
+  margin-bottom: 10px;
+}
+.leaflet-bottom .leaflet-control{
+  margin: 0;
+  margin-top: 10px;
 }
 /*
  * Leaflet controls
@@ -859,9 +868,13 @@ require(['jquery', 'leaflet', 'leaflet-commons'], function ($, leaflet, leafletC
 }
 .leaflet-touch .leaflet-bar a:first-child{
   border-radius: 5px;
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
 }
 .leaflet-touch .leaflet-bar a:last-child{
   border-radius: 5px;
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
 }
 .leaflet-bar a:hover{
   background: darken(@xwiki-page-content-bg, 15%);
@@ -869,9 +882,6 @@ require(['jquery', 'leaflet', 'leaflet-commons'], function ($, leaflet, leafletC
 }
 .leaflet-touch .leaflet-bar a{
   line-height: 32px;
-}
-.leaflet-top .leaflet-control-custom, .leaflet-top .leaflet-control-search .search-button, .leaflet-top .leaflet-bar a, .leaflet-top .leaflet-bar a:hover, .leaflet-touch .leaflet-top .leaflet-bar a{
-  margin-bottom: 4px;
 }
 .leaflet-control-search .search-alert{
   background: @xwiki-page-content-bg;
@@ -892,6 +902,7 @@ require(['jquery', 'leaflet', 'leaflet-commons'], function ($, leaflet, leafletC
   opacity: 0;
   visibility: hidden;
   width: 250px;
+  min-width: 30%;
   height: auto;
   max-height: 95%;
   overflow-y: auto;
@@ -939,6 +950,7 @@ require(['jquery', 'leaflet', 'leaflet-commons'], function ($, leaflet, leafletC
 */
 .map-search{
   position: relative;
+  margin-bottom: 7px;
   width: 100%;
 }
 .map-search-input-wrapper{
@@ -949,6 +961,7 @@ require(['jquery', 'leaflet', 'leaflet-commons'], function ($, leaflet, leafletC
   width: 100%;
   background: @xwiki-page-content-bg;
   color: @text-color;
+  border: 1px solid fade(@text-color, 30%);
   display: inline;
 }
 .map-search .map-search-btn{
@@ -1021,8 +1034,11 @@ require(['jquery', 'leaflet', 'leaflet-commons'], function ($, leaflet, leafletC
 .search-item-results, .map-filters{
   max-height: 0;
   overflow: hidden;
-  padding: 0px 5px;
+  padding: 0px;
   transition: all 0.5s;
+}
+.search-item-results{
+  padding: 0px 7px;
 }
 .search-item-results.open, .map-filters.open{
   max-height: 300px;
@@ -1092,6 +1108,7 @@ require(['jquery', 'leaflet', 'leaflet-commons'], function ($, leaflet, leafletC
   left: 10px;
   top: 10px;
   width: 275px;
+  min-width: 30%;
   height: auto;
   max-height: 95%;
   overflow-y: auto;
@@ -1142,6 +1159,23 @@ require(['jquery', 'leaflet', 'leaflet-commons'], function ($, leaflet, leafletC
   font-size: 12px;
   cursor: pointer;
   color: fade(@text-color, 50%);
+}
+/*
+ * Fullscreen map
+*/
+.map-wrapper.fullscreen{
+  position: fixed;
+  width: 100%;
+  height: 100vh;
+  left: 0;
+  top: 0;
+  z-index: 1000000;
+}
+.map-wrapper.fullscreen .map-container{
+  height: 100%;
+  border: 0px;
+  border-radius: 0;
+  box-shadow: none;
 }
 
 

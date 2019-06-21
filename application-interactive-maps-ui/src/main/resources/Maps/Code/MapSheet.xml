@@ -48,7 +48,8 @@
       #set($class = $doc.getObject('Maps.Code.MapClass').xWikiClass)
       #foreach($prop in $class.properties)
       &lt;dt&gt;
-        &lt;label&gt;$prop.prettyName&lt;/label&gt;
+        #set ($propId = "${class.getDocumentReference().getLocalDocumentReference()}_${class.getNumber()}_${prop.name}")
+        &lt;label for="${propId}"&gt;$prop.prettyName&lt;/label&gt;
         #if($prop.hint)&lt;span class="xHint"&gt;$prop.hint&lt;/span&gt;#end
       &lt;/dt&gt;
       &lt;dd&gt;

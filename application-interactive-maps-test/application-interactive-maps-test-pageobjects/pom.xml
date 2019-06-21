@@ -24,21 +24,18 @@
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>org.xwiki.contrib</groupId>
-    <artifactId>application-interactive-maps</artifactId>
+    <artifactId>application-interactive-maps-test</artifactId>
     <version>1.0-SNAPSHOT</version>
   </parent>
-  <artifactId>application-interactive-maps-test</artifactId>
-  <name>Interactive Maps Application - Tests - Parent POM</name>
-  <packaging>pom</packaging>
-  <description>Functional tests for the Release Notes Application</description>
-  <properties>
-    <!-- Don't run Checkstyle in test modules -->
-    <xwiki.checkstyle.skip>true</xwiki.checkstyle.skip>
-    <!-- Don't run CLIRR in test modules since we don't care about backward compatibility for tests -->
-    <xwiki.clirr.skip>true</xwiki.clirr.skip>
-  </properties>
-  <modules>
-    <module>application-interactive-maps-test-pageobjects</module>
-    <module>application-interactive-maps-test-tests</module>
-  </modules>
+  <artifactId>application-interactive-maps-test-pageobjects</artifactId>
+  <name>Interactive Maps Application - Tests - Page Objects</name>
+  <packaging>jar</packaging>
+  <description>Interactive Maps Application - Tests - Page Objects</description>
+  <dependencies>
+    <dependency>
+      <groupId>org.xwiki.platform</groupId>
+      <artifactId>xwiki-platform-test-ui</artifactId>
+      <version>${platform.version}</version>
+    </dependency>
+  </dependencies>
 </project>
