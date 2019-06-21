@@ -95,6 +95,10 @@
 - [x] Move map search, search results and facets into the newly created panel
 - [x] Change search type selection layout
 - [x] Write required code in velocity, css and js 
+## Day 24 (21 June 2019)
+- [x] Add fullscreen control
+- [x] Optimize jsx code
+- [x] Fix test module POMs
 ---
 # Marks the progress of the Interactive Maps Application (Old)
 ## Day 1 (18 May 2019)
