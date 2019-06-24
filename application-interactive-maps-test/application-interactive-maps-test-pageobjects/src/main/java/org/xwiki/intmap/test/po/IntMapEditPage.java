@@ -37,13 +37,6 @@ public class IntMapEditPage extends InlinePage
     @FindBy(id = "Maps.Code.MapClass_0_defaultLocation")
     private WebElement defaultLocation;
 
-//    private WebElement defaultZoom = getDriver().findElementById("Maps.Code.MapClass_0_defaultZoom");
-//    private WebElement tiles = getDriver().findElementById("Maps.Code.MapClass_0_tiles");
-//    private WebElement locationSearch = getDriver().findElementById("Maps.Code.MapClass_0_includeSearch");
-//    private WebElement currentLocation = getDriver().findElementById("Maps.Code.MapClass_0_includeCurrentLocation");
-//    private WebElement query = getDriver().findElementById("Maps.Code.MapClass_0_query");
-//    private WebElement defaultLocation = getDriver().findElementById("Maps.Code.MapClass_0_defaultLocation");
-
     public void setValuesForMap(int defaultZoom, String tiles, boolean locationSearch, boolean currentLocation,
             String query, String defaultLocation)
     {
@@ -56,12 +49,17 @@ public class IntMapEditPage extends InlinePage
         this.defaultLocation.clear();
         this.defaultLocation.sendKeys(defaultLocation);
 
-        if (locationSearch) {
+        if (locationSearch && !this.locationSearch.isSelected()) {
+            this.locationSearch.click();
+        } else if (!locationSearch && this.locationSearch.isSelected()){
             this.locationSearch.click();
         }
 
-        if (currentLocation) {
+        if (currentLocation && !this.currentLocation.isSelected()) {
+            this.currentLocation.click();
+        } else if (!currentLocation && this.currentLocation.isSelected()){
             this.currentLocation.click();
         }
+
     }
 }

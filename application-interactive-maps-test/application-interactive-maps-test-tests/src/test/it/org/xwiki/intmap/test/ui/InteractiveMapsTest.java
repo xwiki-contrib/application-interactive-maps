@@ -22,13 +22,14 @@ package org.xwiki.intmap.test.ui;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 
 import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
 import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.xwiki.intmap.test.po.IntMapEditPage;
@@ -40,7 +41,6 @@ import org.xwiki.test.ui.AbstractTest;
 import org.xwiki.test.ui.SuperAdminAuthenticationRule;
 import org.xwiki.test.ui.po.CreatePagePage;
 import org.xwiki.test.ui.po.ViewPage;
-import org.xwiki.test.ui.po.editor.EditPage;
 
 /**
  * UI tests for the Interactive Maps Application.
@@ -56,10 +56,18 @@ public class InteractiveMapsTest extends AbstractTest
 
     private final String TEST_SPACE = "Maps.Testing";
 
-    private final String MAP_NAME = "Islamabad";
+    private final String[] TEST_SPACE_ARR = { "Maps", "Testing" };
+
+    private final String MAP_NAME = "IslamabadMap";
+
+    private final String[] MAP_SPACE = { "Maps", "Testing", MAP_NAME };
+
+    private final String POINT_NAME = "Islamabad";
+
+    private final String WIKI_NAME = "xwiki";
 
     @Test
-    public void testNewMap()
+    public void testNewMap() throws Exception
     {
         // Check for the homepage
         ApplicationsPanel applicationsPanel = ApplicationsPanel.gotoPage();
@@ -70,37 +78,49 @@ public class InteractiveMapsTest extends AbstractTest
         Assert.assertEquals(mapsHomePage.getPage(), mapsVP.getMetaDataValue("page"));
 
         // Create a point for the map
-        createPageWithPoint(POINTS_SPACE, "Islamabad", "This point is Islamabad.", "Islamabad");
+        createPageWithPoint(POINTS_SPACE, POINT_NAME, "This point is Islamabad.", POINT_NAME);
 
-        // Now that a point is created, we want to create a map
+        // Delete the map if it already exists
+        if (getUtil().pageExists(Arrays.asList(MAP_SPACE), "WebHome")) {
+            EntityReference mapReference = new DocumentReference(WIKI_NAME, Arrays.asList(MAP_SPACE), "WebHome");
+            getUtil().deletePage(mapReference);
+        }
+
+        EntityReference homeReference = new DocumentReference(WIKI_NAME, Arrays.asList("Maps"), "WebHome");
+        getUtil().gotoPage(homeReference);
+
         // Click on the create button and go to the create page
         WebElement createBtn = getDriver().findElementById("tmCreate");
         createBtn.click();
 
         // Create a page from template (MapProvider in this case)
         CreatePagePage cp = new CreatePagePage();
-        cp.createPageFromTemplate(TEST_SPACE, MAP_NAME, "Maps.Code.MapProvider");
-        cp.clickCreate();
+        cp.createPageFromTemplate(TEST_SPACE, MAP_NAME, "Maps.Code.MapProvider", true);
 
-        //PASS TILL THIS POINT
+        // Perform actions on the map edit page
+        IntMapEditPage mapEditPage = new IntMapEditPage();
+        // Set the values for the new map
+        String querySpace = String.join(".", POINTS_SPACE);
+        mapEditPage.setValuesForMap(14, "", true, true, "space:" + querySpace, "Islamabad");
 
-//        WebDriverWait webDriverWait = new WebDriverWait(getDriver(), 10);
-//
-//        WebElement body = webDriverWait.until(ExpectedConditions.elementToBeClickable(By.id("Maps.Code.MapClass_0_defaultLocation")));
-//        body.sendKeys("TESTING");
+        // Click and view the map
+        mapEditPage.clickSaveAndView();
 
-//        IntMapEditPage mapEditPage = new IntMapEditPage();
-////        // Set the values for the new map
-////        String querySpace = String.join(".", POINTS_SPACE);
-////        mapEditPage.setValuesForMap(14, "", true, true, "space:" + querySpace, "Islamabad");
-//
-//        // Finally click and view the map
-//        mapEditPage.clickSaveAndView();
+        // Check if the map exists
+        WebElement leafletMap = getDriver().findElementByClassName("leaflet-map-pane");
+        Assert.assertNotNull(leafletMap);
+
+        // Check if the point is inside the map
+//        WebDriverWait waitForMarker = new WebDriverWait(getDriver(), 20);
+//        waitForMarker
+//                .until(ExpectedConditions.visibilityOf(getDriver().findElement(By.className("leaflet-marker-icon"))));
+//        WebElement leafletMarker = getDriver().findElementByClassName("leaflet-marker-icon");
+//        Assert.assertNotNull(leafletMarker);
     }
 
     public ViewPage createPageWithPoint(String[] space, String title, String content, String location)
     {
-        EntityReference entityReference = new DocumentReference("xwiki", Arrays.asList(space), title);
+        EntityReference entityReference = new DocumentReference(WIKI_NAME, Arrays.asList(space), title);
         getUtil().deletePage(entityReference);
         ViewPage pointPage = getUtil().createPage(entityReference, content, title);
         Map<String, String> pointPageObject = new HashMap<>();
