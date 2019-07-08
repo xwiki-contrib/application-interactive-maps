@@ -99,6 +99,16 @@
 - [x] Add fullscreen control
 - [x] Optimize jsx code
 - [x] Fix test module POMs
+## Day 25 (22 June 2019)
+- [x] Add UI tests
+## Day 26-40 (23 June - 7 July 2019)
+- [ ] Final term exams
+## Day 41 (8 July 2019)
+- [x] Make attachment whose name starts with "marker" as marker icon
+- [x] Do not reload map for changes in filters
+- [x] Fix facet macros not working for MapSheet ([related forum post](https://forum.xwiki.org/t/including-code-dynamically-from-a-sheet/))
+- [x] Preserve map state after async requests reload the content
+- [x] Support for map states in URL
 ---
 # Marks the progress of the Interactive Maps Application (Old)
 ## Day 1 (18 May 2019)
