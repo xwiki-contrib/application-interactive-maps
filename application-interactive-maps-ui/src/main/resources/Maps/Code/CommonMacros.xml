@@ -42,7 +42,8 @@
     'type:DOCUMENT', 'class:Maps.Code.PointClass'
   ],
   'facetFields': [
-    'space', 'property.XWiki.TagClass.tags_string', 'property.Maps.Demo.MapDataImporter.TotallyTesting.TotallyTestingClass.countryLabel_string'
+    'space_facet', 'property.XWiki.TagClass.tags_string',
+    'property.Maps.Demo.MapDataImporter.TotallyTesting.TotallyTestingClass.countryLabel_string'
   ]
 })
 {{/velocity}}
@@ -76,12 +77,14 @@
       #set ($discard = $responseData.put('title', $title))
       #set ($discard = $responseData.put('location', $location))
       #set ($discard = $responseData.put('popupContent', $popupContent))
-      ## Get attachment URL for marker icon if attachment available
+      ## Get attachment URL for marker icon if attachment name starts with 'marker'
       #set ($targetDoc = $xwiki.getDocument($response.get('fullname')))
-      #set ($firstAttachment = $targetDoc.getAttachmentList())
-      #if (!$firstAttachment.isEmpty())
-        #set ($attachmentURL = $targetDoc.getAttachmentURL($firstAttachment.get(0).getFilename()))
-        #set ($discard = $responseData.put('markerIcon', $attachmentURL))
+      #foreach ($attachment in $targetDoc.getAttachmentList())
+        #set ($attachmentName = $attachment.getFilename())
+        #if ($attachmentName.toLowerCase().startsWith('marker'))
+          #set ($attachmentURL = $targetDoc.getAttachmentURL($attachmentName))
+          #set ($discard = $responseData.put('markerIcon', $attachmentURL))
+        #end
       #end
       ## Add the collected data into array
       #set ($discard = $mapDataArr.add($responseData))
@@ -161,14 +164,14 @@
       (((
         ## $mapId, $mapObjJSON are already set before using this macro
         {{html wiki="true" clean="false"}}
-        (% class="map-wrapper" %)(((
+        (% class="map-wrapper#if ($request.mfullscreen) fullscreen#end" %)(((
           (% class="map-container" id="map-${mapId}" data-options='${mapObjJSON}' data-mapdata='${mapData}' %)((()))
           (% class="map-popup" %)(((
             &lt;h2&gt;&lt;/h2&gt;
             &lt;hr/&gt;
             (% class="popup-content" %)((()))
           )))
-          (% class="map-search-filter" %)(((
+          (% class="map-search-filter#if ($request.msearchw) open#end" %)(((
             #displaySearchForm()
             #displayMapSearchFilter()
           )))
@@ -225,11 +228,6 @@
           &lt;input type="radio" name="search-type" id="item" value="item"&gt;
           &lt;label for="item"&gt;$services.localization.render('intmap.search.item')&lt;/label&gt;
         &lt;/div&gt;
-        #*&lt;select name="search-type" class="search-type form-control"&gt;
-          &lt;option disabled selected&gt;$services.localization.render('intmap.search.searchType')&lt;/option&gt;
-          &lt;option value="location"#if ("$!request.get('search_type')" == 'location') selected#end&gt;$services.localization.render('intmap.search.location')&lt;/option&gt;
-          &lt;option value="item"#if ("$!request.get('search_type')" == 'item') selected#end&gt;$services.localization.render('intmap.search.item')&lt;/option&gt;
-        &lt;/select&gt;*#
       #end
     &lt;/div&gt;
   &lt;/form&gt;
@@ -239,27 +237,33 @@
 #end
 
 #macro (displayMapSearchFilter)
+  #if ($facetEnabled)
+    #set ($facetSelected = false)
+    #foreach ($entry in $request.parameterMap.entrySet())
+      #if ($entry.key.startsWith('f_') || $entry.key.startsWith('l_'))
+        #set ($facetSelected = true)
+      #end
+    #end
+    (% class="map-results-section#if ($request.mfacetsection || ($request.mfacetsection &amp;&amp; $facetSelected)) open#end" id="show-search-facets" %)(((
+      $services.localization.render('intmap.search.refineSearch') &lt;i class="fa fa-caret-left"&gt;&lt;/i&gt;
+    )))
+    (% class="map-filters#if ($request.mfacetsection || ($request.mfacetsection &amp;&amp; $facetSelected)) open#end" %)(((
+      #displaySearchFacets($searchResponse)
+    )))
+  #end
   #if ($text != '' &amp;&amp; $mapDataArr.size() &gt; 0)
-    (% class="map-results-section" id="show-search-items" %)(((
+    (% class="map-results-section#if ($request.msearchitemsection) open#end" id="show-search-items" %)(((
       $services.localization.render('intmap.search.showResults') &lt;i class="fa fa-caret-left"&gt;&lt;/i&gt;
     )))
-    (% class="search-item-results" %)(((
+    (% class="search-item-results#if ($request.msearchitemsection) open#end" %)(((
       #foreach ($item in $mapDataArr)
-      (% class="search-result-item %)(((
+      (% class="search-result-item" %)(((
         ==== [[$item.get('title')&gt;&gt;$item.get('doclocation')||target="_blank"]] ====
         (% class="goto-loc" data-location="${item.get('location')}" title="$services.localization.render('intmap.search.gotoLoc')" %)(((
           &lt;i class="fa fa-map-marker"&gt;&lt;/i&gt;
         )))
       )))
       #end
-    )))
-  #end
-  #if ($facetEnabled)
-    (% class="map-results-section" id="show-search-facets" %)(((
-      $services.localization.render('intmap.search.refineSearch') &lt;i class="fa fa-caret-left"&gt;&lt;/i&gt;
-    )))
-    (% class="map-filters" %)(((
-      #displaySearchFacets($searchResponse)
     )))
   #end
 #end
@@ -278,20 +282,19 @@
       ## because most of the property types don't need a custom facet displayer.
       #set ($facetDisplayer = $solrConfig.facetDisplayersByPropertyType.get($property.classType))
     #end
-    #displaySearchFacetValues($facetValues)
+    ###displaySearchFacetValues($facetValues)
     ## Below code does not render the facets properly
-    #*
     #if ($facetDisplayer)
       #set ($facetDisplayer = $xwiki.getDocument($facetDisplayer))
       #if ("$!facetDisplayer.content" != '')
-        $!facetDisplayer.getRenderedContent(false)
+        #set ($script = $!facetDisplayer.content.replaceAll('\{\{(.+?)\}\}', '')) ## Remove all macros
+        #evaluate($script)
       #else
         #displaySearchFacetValues($facetValues)
       #end
     #else
       #displaySearchFacetValues($facetValues)
     #end
-    *#
   &lt;/div&gt;
 #end
 

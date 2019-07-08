@@ -400,6 +400,22 @@ define('leaflet-commons', ['jquery'], function ($) {
       });
     },
 
+    removeParameter: function (url, parameter) {
+      var urlparts = url.split('?');
+      if (urlparts.length &gt;= 2) {
+        var prefix = encodeURIComponent(parameter) + '=';
+        var pars = urlparts[1].split(/[&amp;;]/g);
+        for (var i = pars.length; i-- &gt; 0;) {
+          if (pars[i].lastIndexOf(prefix, 0) !== -1) {
+            pars.splice(i, 1);
+          }
+        }
+        return urlparts[0] + (pars.length &gt; 0 ? '?' + pars.join('&amp;') : '');
+      }
+      return url;
+    },
+
+    //Replace a parameter in the url and return the new url
     replaceParameter: function (url, param, value)
     {
         var re = new RegExp("[\\?&amp;]" + param + "=([^&amp;#]*)"),
@@ -415,6 +431,35 @@ define('leaflet-commons', ['jquery'], function ($) {
             newString = url.replace(re, delimiter + param + "=" + value);
         }
         return newString;
+    },
+
+    //Check state of the element if it has a given class
+    checkState: function (element, className)
+    {
+      if (element.hasClass(className)) {
+        return true;
+      } else {
+        return false;
+      }
+    },
+
+    //Update url for the given map elements state
+    updateURLWithMapState: function (viewURL)
+    {
+      var newURL = viewURL;
+      //Get all elements with enabled state
+      var states = {};
+      states.mfullscreen = this.checkState($('.map-wrapper'), 'fullscreen');
+      states.msearchw = this.checkState($('.map-search-filter'), 'open');
+      states.mfacetsection = this.checkState($('#show-search-facets'), 'open');
+      states.msearchitemsection = this.checkState($('#show-search-items'), 'open');
+      for (var state in states) {
+        newURL = this.removeParameter(newURL, state);
+        if (states[state]) {
+          newURL = this.replaceParameter(newURL, state, states[state]);
+        }
+      }
+      return newURL;
     }
 
   }
@@ -586,29 +631,22 @@ require(['jquery', 'leaflet', 'leaflet-commons'], function ($, leaflet, leafletC
           }
         });
       } else {
+        searchType = searchType !== undefined ? searchType : 'item';
         viewURL = leafletCommons.replaceParameter(viewURL, 'text', formVal);
         viewURL = leafletCommons.replaceParameter(viewURL, 'search_type', searchType);
+        viewURL = leafletCommons.updateURLWithMapState(viewURL);
         $(document).trigger('xwiki:search:update', viewURL);
       }
     });
 
-    $('#show-search-items').on('click', function(){
-      $(this).toggleClass('open')
-      $('.search-item-results').toggleClass('open');
-    });
-
-    $('#show-search-facets').on('click', function(){
+    $('.map-results-section').on('click', function(){
       $(this).toggleClass('open');
-      $('.map-filters').toggleClass('open');
-    });
-
-    $('#close-map-search').on('click', function(){
-      $('.map-search-filter').removeClass('open');
+      $(this).next().toggleClass('open');
     });
 
     $('#search-type-btn').on('click', function(){
       $('.search-types').toggleClass('open');
-    })
+    });
 
     $('.search-item-results .goto-loc').on('click', function(){
       var loc = this.dataset.location;
@@ -619,7 +657,7 @@ require(['jquery', 'leaflet', 'leaflet-commons'], function ($, leaflet, leafletC
           }
         });
       }
-    })
+    });
 
   }
 
@@ -1177,7 +1215,9 @@ require(['jquery', 'leaflet', 'leaflet-commons'], function ($, leaflet, leafletC
   border-radius: 0;
   box-shadow: none;
 }
-
+/*
+ * Override css
+*/
 
 </code>
     </property>
