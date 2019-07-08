@@ -11,7 +11,7 @@ Create interactive maps easily, share locations and associate structured data wi
 * License: LGPL 2.1+
 * Translations: N/A 
 * Sonar Dashboard: N/A 
-* Continuous Integration Status: N/A
+* Continuous Integration Status: [![Build Status](http://ci.xwiki.org/job/XWiki%20Contrib/job/application-interactive-maps/job/master/badge/icon)](http://ci.xwiki.org/job/XWiki%20Contrib/job/application-interactive-maps/job/master/)
 
 ## This application is under development
 The progress is documented in [PROGRESS.md](https://github.com/xwiki-contrib/application-map/blob/master/PROGRESS.md)
