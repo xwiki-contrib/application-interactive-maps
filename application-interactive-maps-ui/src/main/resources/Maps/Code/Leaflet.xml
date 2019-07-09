@@ -570,7 +570,7 @@ require(['jquery', 'leaflet', 'leaflet-commons'], function ($, leaflet, leafletC
 
     var map;
 
-    //Create map
+    //Render the map
     $$('.map-container').each(function (element) {
       var options = JSON.parse(element.dataset.options);
       map = leafletCommons.createEmptyMap(options);
@@ -619,6 +619,7 @@ require(['jquery', 'leaflet', 'leaflet-commons'], function ($, leaflet, leafletC
       });
     });
 
+    //Handle map item and location search
     $('.map-search-form').submit(function (e) {
       e.preventDefault();
       var formVal = $(this).find('input[type=search]').val();
@@ -661,7 +662,7 @@ require(['jquery', 'leaflet', 'leaflet-commons'], function ($, leaflet, leafletC
 
   }
 
-  //Run the init() function when dom is loaded
+  //Run the init() function when dom is loaded or updated
   (XWiki &amp;&amp; XWiki.domIsLoaded &amp;&amp; init()) || document.observe("xwiki:dom:loaded", init);
   (XWiki &amp;&amp; XWiki.domIsUpdated &amp;&amp; init()) || document.observe("xwiki:dom:updated", init);
 
@@ -858,8 +859,8 @@ require(['jquery', 'leaflet', 'leaflet-commons'], function ($, leaflet, leafletC
   font-size: 17px;
   margin-top: -2px;
 }
-.leaflet-container .leaflet-control-custom:hover, .leaflet-container .leaflet-control-search .search-button:hover{
-  background: darken(@xwiki-page-content-bg, 15%);
+.leaflet-container .leaflet-control-custom:hover, .leaflet-container .leaflet-control-search .search-button:hover, .leaflet-bar a:hover{
+  background: darken(@xwiki-page-content-bg, 8%);
   transition: background 0.3s;
   text-decoration: none;
 }
@@ -913,10 +914,6 @@ require(['jquery', 'leaflet', 'leaflet-commons'], function ($, leaflet, leafletC
   border-radius: 5px;
   border-top-left-radius: 0;
   border-top-right-radius: 0;
-}
-.leaflet-bar a:hover{
-  background: darken(@xwiki-page-content-bg, 15%);
-  transition: background 0.3s;
 }
 .leaflet-touch .leaflet-bar a{
   line-height: 32px;
@@ -1218,6 +1215,12 @@ require(['jquery', 'leaflet', 'leaflet-commons'], function ($, leaflet, leafletC
 /*
  * Override css
 */
+@media (max-width: 768px){
+  .map-filters .search-facets.collapsed-xs .search-facets-header .xHint, .map-filters .search-facets.collapsed-xs .search-facets-actions, .map-filters .search-facets.collapsed-xs .search-facet {
+    display: block;
+  }
+}
+
 
 </code>
     </property>
