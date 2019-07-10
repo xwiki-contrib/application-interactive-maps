@@ -171,7 +171,16 @@
             &lt;hr/&gt;
             (% class="popup-content" %)((()))
           )))
-          (% class="map-search-filter#if ($request.msearchw) open#end" %)(((
+          ## Check to see if a facet is selected. If so, show the search widget and refine search area
+          #set ($facetSelected = false)
+          #if ($facetEnabled)
+            #foreach ($entry in $request.parameterMap.entrySet())
+              #if ($entry.key.startsWith('f_') || $entry.key.startsWith('l_'))
+                #set ($facetSelected = true)
+              #end
+            #end
+          #end
+          (% class="map-search-filter#if ($request.msearchw || $facetSelected) open#end" %)(((
             #displaySearchForm()
             #displayMapSearchFilter()
           )))
@@ -223,10 +232,10 @@
       #if("$!mapObj.get('includeSearch')" == 'Yes')
         &lt;div class="search-types xformInline"&gt;
           &lt;p&gt;$services.localization.render('intmap.search.searchType'):&lt;/p&gt;
+          &lt;input type="radio" name="search-type" id="item" value="item" checked&gt;
+          &lt;label for="item"&gt;$services.localization.render('intmap.search.item')&lt;/label&gt;
           &lt;input type="radio" name="search-type" id="location" value="location"&gt;
           &lt;label for="location"&gt;$services.localization.render('intmap.search.location')&lt;/label&gt;
-          &lt;input type="radio" name="search-type" id="item" value="item"&gt;
-          &lt;label for="item"&gt;$services.localization.render('intmap.search.item')&lt;/label&gt;
         &lt;/div&gt;
       #end
     &lt;/div&gt;
@@ -238,16 +247,10 @@
 
 #macro (displayMapSearchFilter)
   #if ($facetEnabled)
-    #set ($facetSelected = false)
-    #foreach ($entry in $request.parameterMap.entrySet())
-      #if ($entry.key.startsWith('f_') || $entry.key.startsWith('l_'))
-        #set ($facetSelected = true)
-      #end
-    #end
-    (% class="map-results-section#if ($request.mfacetsection || ($request.mfacetsection &amp;&amp; $facetSelected)) open#end" id="show-search-facets" %)(((
+    (% class="map-results-section#if ($request.mfacetsection || $facetSelected) open#end" id="show-search-facets" %)(((
       $services.localization.render('intmap.search.refineSearch') &lt;i class="fa fa-caret-left"&gt;&lt;/i&gt;
     )))
-    (% class="map-filters#if ($request.mfacetsection || ($request.mfacetsection &amp;&amp; $facetSelected)) open#end" %)(((
+    (% class="map-filters#if ($request.mfacetsection || $facetSelected) open#end" %)(((
       #displaySearchFacets($searchResponse)
     )))
   #end
