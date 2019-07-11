@@ -141,13 +141,20 @@ define('leaflet-commons', ['jquery'], function ($) {
     createEmptyMap: function (options)
     {
       //Create the map
-      var rootScope = this,
-          mapId = 'map-' + options.id,
+      var mapId = 'map-' + options.id,
           zoom = options.defaultZoom !== null ? options.defaultZoom : 12,
           tiles = options.tiles !== '' ? options.tiles : 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
           defaultLoc = options.defaultLocation !== '' ? options.defaultLocation : '48,2',
           map = new L.Map(mapId, {zoom: zoom, center: [48, 2]});
       map.zoomControl.setPosition('bottomright');
+      //Adding the navigation control
+      if (options.includeCurrentLocation == 1) {
+        this.addNavigation(map);
+      }
+      //Adding the fullscreen control
+      this.addFullscreen(map);
+      //Adding the search control
+      this.addSearch(map);
       this.getLocationCoords(defaultLoc, function (location) {
         map.setView(location);
         //Add a tiles layer to the map (the background)
@@ -156,14 +163,6 @@ define('leaflet-commons', ['jquery'], function ($) {
           maxZoom: 17,
           id: 'mapbox.streets'
         }).addTo(map);
-        //Adding the navigation control
-        if (options.includeCurrentLocation == 1) {
-          rootScope.addNavigation(map);
-        }
-        //Adding the fullscreen control
-        rootScope.addFullscreen(map);
-        //Adding the search control
-        rootScope.addSearch(map);
       });
       return map;
     },
@@ -227,6 +226,7 @@ define('leaflet-commons', ['jquery'], function ($) {
     //Adding fullscreen control
     addFullscreen: function (map)
     {
+      var rootScope = this;
       this.addCustomControl(map, 'fa-expand', 'Fullscreen', 'topright', function (e) {
         var mapContainer = $(e.target).parents('.map-wrapper');
         mapContainer.toggleClass('fullscreen');
@@ -236,6 +236,7 @@ define('leaflet-commons', ['jquery'], function ($) {
           $('body').css('overflow', 'auto');
         }
         map.invalidateSize(true);
+        rootScope.updateURLWithMapState();
       });
     },
 
@@ -443,10 +444,34 @@ define('leaflet-commons', ['jquery'], function ($) {
       }
     },
 
-    //Update url for the given map elements state
-    updateURLWithMapState: function (viewURL)
+    //Update url of facets with the given map elements state
+    updateFacetsURLWithMapState: function (states)
     {
-      var newURL = viewURL;
+      var rootScope = this;
+      var $facets = $([
+        '.search-results-sort a.sort-item',
+        '.search-options a.options-item',
+        '.pagination a',
+        '.controlPagination a',
+        'a.search-facets-action-reset',
+        '.search-facet a.itemName',
+        '.search-facet-body a.more',
+        '.search-facet-body .selectedLocation a'
+      ].join(','));
+      for (var state in states) {
+        $facets.each(function(el){
+          $(this).attr('href', rootScope.removeParameter($(this).attr('href'), state));
+          if (states[state]) {
+            $(this).attr('href', rootScope.replaceParameter($(this).attr('href'), state, states[state]));
+          }
+        });
+      }
+    },
+
+    //Update url for the given map elements state
+    updateURLWithMapState: function ()
+    {
+      var viewURL = window.location.href;
       //Get all elements with enabled state
       var states = {};
       states.mfullscreen = this.checkState($('.map-wrapper'), 'fullscreen');
@@ -454,12 +479,14 @@ define('leaflet-commons', ['jquery'], function ($) {
       states.mfacetsection = this.checkState($('#show-search-facets'), 'open');
       states.msearchitemsection = this.checkState($('#show-search-items'), 'open');
       for (var state in states) {
-        newURL = this.removeParameter(newURL, state);
+        viewURL = this.removeParameter(viewURL, state);
         if (states[state]) {
-          newURL = this.replaceParameter(newURL, state, states[state]);
+          viewURL = this.replaceParameter(viewURL, state, states[state]);
         }
       }
-      return newURL;
+      this.updateFacetsURLWithMapState(states);
+      window.history.pushState(null, document.title, viewURL);
+      return viewURL;
     }
 
   }
@@ -624,7 +651,7 @@ require(['jquery', 'leaflet', 'leaflet-commons'], function ($, leaflet, leafletC
       e.preventDefault();
       var formVal = $(this).find('input[type=search]').val();
       var searchType = $(this).find('input[name=search-type]:checked').val();
-      var viewURL = window.location.href;
+      var viewURL = leafletCommons.updateURLWithMapState();
       if(searchType == 'location'){
         leafletCommons.getLocationCoords(formVal, function(location){
           if(location &amp;&amp; map){
@@ -635,7 +662,6 @@ require(['jquery', 'leaflet', 'leaflet-commons'], function ($, leaflet, leafletC
         searchType = searchType !== undefined ? searchType : 'item';
         viewURL = leafletCommons.replaceParameter(viewURL, 'text', formVal);
         viewURL = leafletCommons.replaceParameter(viewURL, 'search_type', searchType);
-        viewURL = leafletCommons.updateURLWithMapState(viewURL);
         $(document).trigger('xwiki:search:update', viewURL);
       }
     });
@@ -643,10 +669,12 @@ require(['jquery', 'leaflet', 'leaflet-commons'], function ($, leaflet, leafletC
     $('.map-results-section').on('click', function(){
       $(this).toggleClass('open');
       $(this).next().toggleClass('open');
+      leafletCommons.updateURLWithMapState();
     });
 
     $('#search-type-btn').on('click', function(){
       $('.search-types').toggleClass('open');
+      leafletCommons.updateURLWithMapState();
     });
 
     $('.search-item-results .goto-loc').on('click', function(){

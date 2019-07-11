@@ -247,14 +247,14 @@
 
 #macro (displayMapSearchFilter)
   #if ($facetEnabled)
-    (% class="map-results-section#if ($request.mfacetsection || $facetSelected) open#end" id="show-search-facets" %)(((
+    (% class="map-results-section#if ($request.mfacetsection || ($request.mfacetsection &amp;&amp; $facetSelected)) open#end" id="show-search-facets" %)(((
       $services.localization.render('intmap.search.refineSearch') &lt;i class="fa fa-caret-left"&gt;&lt;/i&gt;
     )))
-    (% class="map-filters#if ($request.mfacetsection || $facetSelected) open#end" %)(((
+    (% class="map-filters#if ($request.mfacetsection || ($request.mfacetsection &amp;&amp; $facetSelected)) open#end" %)(((
       #displaySearchFacets($searchResponse)
     )))
   #end
-  #if ($text != '' &amp;&amp; $mapDataArr.size() &gt; 0)
+  #if ($mapDataArr.size() &gt; 0)
     (% class="map-results-section#if ($request.msearchitemsection) open#end" id="show-search-items" %)(((
       $services.localization.render('intmap.search.showResults') &lt;i class="fa fa-caret-left"&gt;&lt;/i&gt;
     )))
