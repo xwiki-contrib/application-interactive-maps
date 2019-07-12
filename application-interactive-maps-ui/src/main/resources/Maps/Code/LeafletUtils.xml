@@ -20,28 +20,28 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
 -->
 
-<xwikidoc version="1.3" reference="Maps.Code.Leaflet" locale="">
+<xwikidoc version="1.3" reference="Maps.Code.LeafletUtils" locale="">
   <web>Maps.Code</web>
-  <name>Leaflet</name>
+  <name>LeafletUtils</name>
   <language/>
   <defaultLanguage/>
   <translation>0</translation>
   <creator>xwiki:XWiki.Admin</creator>
-  <parent>xwiki:Maps.Code.MapClass</parent>
+  <parent>WebHome</parent>
   <author>xwiki:XWiki.Admin</author>
   <contentAuthor>xwiki:XWiki.Admin</contentAuthor>
   <version>1.1</version>
-  <title>Leaflet</title>
+  <title>LeafletUtils</title>
   <comment/>
   <minorEdit>false</minorEdit>
   <syntaxId>xwiki/2.1</syntaxId>
   <hidden>true</hidden>
   <content/>
   <object>
-    <name>Maps.Code.Leaflet</name>
+    <name>Maps.Code.LeafletUtils</name>
     <number>0</number>
     <className>XWiki.JavaScriptExtension</className>
-    <guid>ebfce277-8371-4473-802b-f91065f1aa63</guid>
+    <guid>cbe8cbbf-5255-4dfd-8eb7-1065c93786d7</guid>
     <class>
       <name>XWiki.JavaScriptExtension</name>
       <customClass/>
@@ -151,18 +151,22 @@ define('leaflet-commons', ['jquery'], function ($) {
       if (options.includeCurrentLocation == 1) {
         this.addNavigation(map);
       }
+      //Adding the map scale control
+      if (options.includeMapScale == 1) {
+        L.control.scale({position: 'bottomleft'}).addTo(map);
+      }
       //Adding the fullscreen control
       this.addFullscreen(map);
       //Adding the search control
       this.addSearch(map);
+      //Add a tiles layer to the map (the background)
+      L.tileLayer(tiles, {
+        attribution: options.attribution,
+        maxZoom: 17,
+        id: 'mapbox.streets'
+      }).addTo(map);
       this.getLocationCoords(defaultLoc, function (location) {
         map.setView(location);
-        //Add a tiles layer to the map (the background)
-        L.tileLayer(tiles, {
-          attribution: '&amp;copy; &lt;a href="https://www.openstreetmap.org/"&gt;OpenStreetMap&lt;/a&gt; | &lt;a href="https://www.xwiki.org"&gt;XWiki&lt;/a&gt;',
-          maxZoom: 17,
-          id: 'mapbox.streets'
-        }).addTo(map);
       });
       return map;
     },
@@ -175,7 +179,7 @@ define('leaflet-commons', ['jquery'], function ($) {
         //Get image size for fixing marker offset
         var markerImg = new Image();
         markerImg.src = iconUrl;
-        markerImg.on('load', function (){
+        markerImg.on('load', function () {
           var height = 41;
           var aspectRatio = this.width/this.height;
           var width = aspectRatio * height;
@@ -199,7 +203,10 @@ define('leaflet-commons', ['jquery'], function ($) {
     {
       var locMarker;
       this.addCustomControl(map, 'fa-map-marker', 'Current location', 'bottomright', function (e) {
-        map.locate({ setView: true, maxZoom: 16, watch: false });
+        var locate = map.locate({ setView: true, maxZoom: 16, watch: false });
+        map.on('locationerror', function (e) {
+          new XWiki.widgets.Notification('Cannot get location in an insecure context (HTTP). Secure context (HTTPS) required.', 'error');
+        });
         map.on('locationfound', function (e) {
           if (locMarker) {
             locMarker.remove();
@@ -227,7 +234,7 @@ define('leaflet-commons', ['jquery'], function ($) {
     addFullscreen: function (map)
     {
       var rootScope = this;
-      this.addCustomControl(map, 'fa-expand', 'Fullscreen', 'topright', function (e) {
+      this.addCustomControl(map, 'fa-expand leaflet-control-fullscreen', 'Fullscreen', 'topright', function (e) {
         var mapContainer = $(e.target).parents('.map-wrapper');
         mapContainer.toggleClass('fullscreen');
         if (mapContainer.hasClass('fullscreen')) {
@@ -247,9 +254,9 @@ define('leaflet-commons', ['jquery'], function ($) {
       L.Control.customControl = L.Control.extend({
         onAdd: function (map) {
           var container = L.DomUtil.create('div', 'leaflet-control-custom');
+          container.setAttribute('title', title);
+          container.setAttribute('aria-label', title);
           var icon = L.DomUtil.create('div', 'fa ' + faIcon);
-          icon.setAttribute('title', title);
-          icon.setAttribute('aria-label', title);
           container.appendChild(icon);
           L.DomEvent.on(container, 'click', L.DomEvent.stopPropagation)
             .on(container, 'click', L.DomEvent.stop)
@@ -459,7 +466,7 @@ define('leaflet-commons', ['jquery'], function ($) {
         '.search-facet-body .selectedLocation a'
       ].join(','));
       for (var state in states) {
-        $facets.each(function(el){
+        $facets.each(function (el) {
           $(this).attr('href', rootScope.removeParameter($(this).attr('href'), state));
           if (states[state]) {
             $(this).attr('href', rootScope.replaceParameter($(this).attr('href'), state, states[state]));
@@ -503,10 +510,10 @@ define('leaflet-commons', ['jquery'], function ($) {
     </property>
   </object>
   <object>
-    <name>Maps.Code.Leaflet</name>
+    <name>Maps.Code.LeafletUtils</name>
     <number>1</number>
     <className>XWiki.JavaScriptExtension</className>
-    <guid>b67d32b1-3adb-4cc1-83a4-d20befaa80cf</guid>
+    <guid>be85f2cd-352e-43c2-a8f9-c7479e91a4ae</guid>
     <class>
       <name>XWiki.JavaScriptExtension</name>
       <customClass/>
@@ -631,7 +638,7 @@ require(['jquery', 'leaflet', 'leaflet-commons'], function ($, leaflet, leafletC
               });
               allLayers.addLayer(marker);
             });
-            if(dataLength == i){
+            if (dataLength == i) {
               //Using timeout function to delay fitting of bounds because of async behavior
               setTimeout(function(){
                 allLayers.addTo(map);
@@ -652,9 +659,9 @@ require(['jquery', 'leaflet', 'leaflet-commons'], function ($, leaflet, leafletC
       var formVal = $(this).find('input[type=search]').val();
       var searchType = $(this).find('input[name=search-type]:checked').val();
       var viewURL = leafletCommons.updateURLWithMapState();
-      if(searchType == 'location'){
+      if (searchType == 'location') {
         leafletCommons.getLocationCoords(formVal, function(location){
-          if(location &amp;&amp; map){
+          if (location &amp;&amp; map) {
             map.setView(L.latLng(location), 14);
           }
         });
@@ -666,25 +673,35 @@ require(['jquery', 'leaflet', 'leaflet-commons'], function ($, leaflet, leafletC
       }
     });
 
-    $('.map-results-section').on('click', function(){
+    //Toggle refine your search and result items sections
+    $('.map-results-section').on('click', function () {
       $(this).toggleClass('open');
       $(this).next().toggleClass('open');
       leafletCommons.updateURLWithMapState();
     });
 
-    $('#search-type-btn').on('click', function(){
+    //Open/close dropdown for selecting search type location/item
+    $('#search-type-btn').on('click', function () {
       $('.search-types').toggleClass('open');
-      leafletCommons.updateURLWithMapState();
     });
 
-    $('.search-item-results .goto-loc').on('click', function(){
+    //Go to location of the result item
+    $('.search-item-results .goto-loc').on('click', function () {
       var loc = this.dataset.location;
       if (loc) {
         leafletCommons.getLocationCoords(loc, function(location){
-          if(location &amp;&amp; map){
+          if (location &amp;&amp; map) {
             map.setView(L.latLng(location), 14);
           }
         });
+      }
+    });
+
+    $(document).on('keyup', function (e) {
+      if (e.keyCode == 27) {
+        if ($('.map-wrapper').hasClass('fullscreen')) {
+          $('.leaflet-control-fullscreen').click();
+        }
       }
     });
 
@@ -707,10 +724,10 @@ require(['jquery', 'leaflet', 'leaflet-commons'], function ($, leaflet, leafletC
     </property>
   </object>
   <object>
-    <name>Maps.Code.Leaflet</name>
+    <name>Maps.Code.LeafletUtils</name>
     <number>0</number>
     <className>XWiki.StyleSheetExtension</className>
-    <guid>57be6a87-fcec-494d-b91d-aa24d9abfa0b</guid>
+    <guid>22dabf89-449d-47e6-b9de-657d732279b7</guid>
     <class>
       <name>XWiki.StyleSheetExtension</name>
       <customClass/>
@@ -816,6 +833,7 @@ require(['jquery', 'leaflet', 'leaflet-commons'], function ($, leaflet, leafletC
 }
 .map-container{
   width: 100%;
+  max-width: 100%;
   height: 400px;
   border: 4px solid @xwiki-page-content-bg;
   border-radius: 5px;
@@ -1235,10 +1253,11 @@ require(['jquery', 'leaflet', 'leaflet-commons'], function ($, leaflet, leafletC
   z-index: 1000000;
 }
 .map-wrapper.fullscreen .map-container{
-  height: 100%;
-  border: 0px;
-  border-radius: 0;
-  box-shadow: none;
+  height: 100% !important;
+  width: 100% !important;
+  border: 0px !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
 }
 /*
  * Override css

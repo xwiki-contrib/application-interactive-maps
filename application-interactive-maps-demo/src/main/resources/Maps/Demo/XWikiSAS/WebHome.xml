@@ -51,12 +51,26 @@
       <defaultWeb/>
       <nameField/>
       <validationScript/>
+      <attribution>
+        <customDisplay/>
+        <disabled>0</disabled>
+        <hint>Attribution of the map that appears in the bottom right corner</hint>
+        <name>attribution</name>
+        <number>9</number>
+        <picker>0</picker>
+        <prettyName>Attribution</prettyName>
+        <size/>
+        <unmodifiable>0</unmodifiable>
+        <validationMessage/>
+        <validationRegExp/>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </attribution>
       <defaultLocation>
         <customDisplay/>
         <disabled>0</disabled>
         <hint>Location to which the map will open to</hint>
         <name>defaultLocation</name>
-        <number>7</number>
+        <number>8</number>
         <picker>0</picker>
         <prettyName>Default Location</prettyName>
         <size>30</size>
@@ -70,7 +84,7 @@
         <disabled>0</disabled>
         <hint>The zoom which the map will open to</hint>
         <name>defaultZoom</name>
-        <number>1</number>
+        <number>4</number>
         <numberType>integer</numberType>
         <prettyName>Default Zoom</prettyName>
         <size>30</size>
@@ -87,13 +101,28 @@
         <displayType/>
         <hint/>
         <name>includeCurrentLocation</name>
-        <number>5</number>
-        <prettyName>Include Current Location</prettyName>
+        <number>2</number>
+        <prettyName>Include Current Location Button</prettyName>
         <unmodifiable>0</unmodifiable>
         <validationMessage/>
         <validationRegExp/>
         <classType>com.xpn.xwiki.objects.classes.BooleanClass</classType>
       </includeCurrentLocation>
+      <includeMapScale>
+        <customDisplay/>
+        <defaultValue>1</defaultValue>
+        <disabled>0</disabled>
+        <displayFormType>checkbox</displayFormType>
+        <displayType/>
+        <hint>Show scale of distance on the map</hint>
+        <name>includeMapScale</name>
+        <number>3</number>
+        <prettyName>Include Map Scale</prettyName>
+        <unmodifiable>0</unmodifiable>
+        <validationMessage/>
+        <validationRegExp/>
+        <classType>com.xpn.xwiki.objects.classes.BooleanClass</classType>
+      </includeMapScale>
       <includeSearch>
         <customDisplay/>
         <defaultValue/>
@@ -102,13 +131,27 @@
         <displayType/>
         <hint/>
         <name>includeSearch</name>
-        <number>4</number>
+        <number>1</number>
         <prettyName>Include Location Search</prettyName>
         <unmodifiable>0</unmodifiable>
         <validationMessage/>
         <validationRegExp/>
         <classType>com.xpn.xwiki.objects.classes.BooleanClass</classType>
       </includeSearch>
+      <mapSize>
+        <customDisplay/>
+        <disabled>0</disabled>
+        <hint>Width and height of the map separated by comma (width, height)</hint>
+        <name>mapSize</name>
+        <number>7</number>
+        <picker>0</picker>
+        <prettyName>Map Size</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <validationMessage>Please enter valid width and height (% or px)</validationMessage>
+        <validationRegExp>((\d*)(px|%)?), ?((\d*)(px|%)?)</validationRegExp>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </mapSize>
       <query>
         <contenttype>PureText</contenttype>
         <customDisplay/>
@@ -116,7 +159,7 @@
         <editor>Text</editor>
         <hint>Solr query to get data for the map</hint>
         <name>query</name>
-        <number>6</number>
+        <number>5</number>
         <picker>0</picker>
         <prettyName>Query</prettyName>
         <rows>5</rows>
@@ -131,7 +174,7 @@
         <disabled>0</disabled>
         <hint>The background tiles</hint>
         <name>tiles</name>
-        <number>2</number>
+        <number>6</number>
         <picker>0</picker>
         <prettyName>Tiles</prettyName>
         <size>30</size>
@@ -142,6 +185,9 @@
       </tiles>
     </class>
     <property>
+      <attribution>&amp;copy; &lt;a href="https://www.openstreetmap.org/"&gt;OpenStreetMap&lt;/a&gt; | &lt;a href="https://www.xwiki.org"&gt;XWiki&lt;/a&gt;</attribution>
+    </property>
+    <property>
       <defaultLocation>XWiki SAS, France</defaultLocation>
     </property>
     <property>
@@ -151,7 +197,13 @@
       <includeCurrentLocation>0</includeCurrentLocation>
     </property>
     <property>
+      <includeMapScale>1</includeMapScale>
+    </property>
+    <property>
       <includeSearch>1</includeSearch>
+    </property>
+    <property>
+      <mapSize>100%, 600px</mapSize>
     </property>
     <property>
       <query>space:Maps.Demo.XWikiSAS</query>

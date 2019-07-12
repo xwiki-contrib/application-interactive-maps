@@ -27,7 +27,7 @@
   <defaultLanguage/>
   <translation>0</translation>
   <creator>xwiki:XWiki.Admin</creator>
-  <parent>Maps.Code.Leaflet</parent>
+  <parent>xwiki:Maps.WebHome</parent>
   <author>xwiki:XWiki.Admin</author>
   <contentAuthor>xwiki:XWiki.Admin</contentAuthor>
   <version>1.1</version>
@@ -165,7 +165,7 @@
         ## $mapId, $mapObjJSON are already set before using this macro
         {{html wiki="true" clean="false"}}
         (% class="map-wrapper#if ($request.mfullscreen) fullscreen#end" %)(((
-          (% class="map-container" id="map-${mapId}" data-options='${mapObjJSON}' data-mapdata='${mapData}' %)((()))
+          (% class="map-container" id="map-${mapId}" data-options='${mapObjJSON}' data-mapdata='${mapData}' style="width: $mapSize[0]; height: $mapSize[1];" %)((()))
           (% class="map-popup" %)(((
             &lt;h2&gt;&lt;/h2&gt;
             &lt;hr/&gt;

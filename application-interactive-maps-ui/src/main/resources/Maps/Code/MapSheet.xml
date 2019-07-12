@@ -63,8 +63,8 @@
   ## Do nothing
 #else
   ## Get the css and js for the map
-  #set ($discard = $xwiki.ssx.use('Maps.Code.Leaflet'))
-  #set ($discard = $xwiki.jsx.use('Maps.Code.Leaflet'))
+  #set ($discard = $xwiki.ssx.use('Maps.Code.LeafletUtils'))
+  #set ($discard = $xwiki.jsx.use('Maps.Code.LeafletUtils'))
   ## Get all the map data
   #set ($mapObj = $doc.getObject('Maps.Code.MapClass'))
   ## Create a map of all the properties of object
@@ -80,6 +80,11 @@
 
   ## Get all the data to be displayed inside the map
   #set ($queryStatement = $mapObjMapping.get('query'))
+  #if (!$mapObjMapping.get('mapSize').matches('((\d*)(px|%)?), ?((\d*)(px|%)?)'))
+    #set ($mapSize = ['100%', '500px'])
+  #else
+    #set ($mapSize = $mapObjMapping.get('mapSize').split(','))
+  #end
 
   #displayMapUI()
 
