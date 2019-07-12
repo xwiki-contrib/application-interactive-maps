@@ -109,6 +109,25 @@
 - [x] Fix facet macros not working for MapSheet ([related forum post](https://forum.xwiki.org/t/including-code-dynamically-from-a-sheet/))
 - [x] Preserve map state after async requests reload the content
 - [x] Support for map states in URL
+## Day 42 (9 July 2019)
+- [x] Minor updates and fixes
+## Day 43 (10 July 2019)
+- [x] Fix facets for preserving map state
+- [x] Fix js errors for bad variable name
+## Day 44 (11 July 2019)
+- [x] Make leaflet controls load faster
+- [x] Dynamically updating URL with map state for each necessary action
+- [x] Fix facets not keeping the map state
+- [x] Update facets URL with map state
+- [x] Always show map item results
+## Day 45 (12 July 2019)
+- [x] Escape fullscreen mode with the escape key
+- [x] Add map scale
+- [x] Make map size (width and height) configurable
+- [x] Support for custom attribution
+- [x] Show current location error for insecure context
+- [x] Change current location label
+- [x] Other improvements and fixes
 ---
 # Marks the progress of the Interactive Maps Application (Old)
 ## Day 1 (18 May 2019)
