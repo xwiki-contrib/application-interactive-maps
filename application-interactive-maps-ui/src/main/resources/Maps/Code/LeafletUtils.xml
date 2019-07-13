@@ -608,39 +608,33 @@ require(['jquery', 'leaflet', 'leaflet-commons'], function ($, leaflet, leafletC
     $$('.map-container').each(function (element) {
       var options = JSON.parse(element.dataset.options);
       map = leafletCommons.createEmptyMap(options);
-      var $popupContainer = $('.map-popup');
       var mapData = JSON.parse(element.dataset.mapdata);
       var allLayers = L.featureGroup();
       var dataLength = mapData.length - 1;
       var i = 0;
-      map.on('click', function(){
-        $popupContainer.removeClass('open');
-        $('.map-search-filter').removeClass('open');
+      map.on('click', function () {
+        if ($(".leaflet-popup-pane").html() == '') {
+          $('.map-search-filter').removeClass('open');
+        }
       });
       var lastClickedMarker;
       mapData.each(function (data) {
         if (data.location != null &amp;&amp; data.type == 'point') {
           leafletCommons.getLocationCoords(data.location, function (location) {
             leafletCommons.addMarker(data.markerIcon, location, function (marker) {
-              marker.on('click', function(e){
-                $('.map-search-filter').removeClass('open');
-                var title = data.title;
-                var content = data.popupContent;
-                $popupContainer.children('h2').html(title);
-                $popupContainer.children('.popup-content').html(content);
-                //If the last marker clicked is not this then don't close the popup
-                if (lastClickedMarker == this) {
-                  $popupContainer.toggleClass('open');
-                } else {
-                  $popupContainer.addClass('open');
-                }
-                lastClickedMarker = this;
-              });
+              var popupData = '';
+              //If there is excessive popup data, overflow it with scrolling capability
+              if (data.popupContent.length &gt; 500) {
+                popupData = '&lt;h2&gt;' + data.title + '&lt;/h2&gt;&lt;hr/&gt;' + '&lt;div style="height: 150px; overflow: auto;"&gt;' + data.popupContent + '&lt;/div&gt;';
+              } else {
+                popupData = '&lt;h2&gt;' + data.title + '&lt;/h2&gt;&lt;hr/&gt;' + '&lt;div&gt;' + data.popupContent + '&lt;/div&gt;';
+              }
+              marker.bindPopup(popupData);
               allLayers.addLayer(marker);
             });
             if (dataLength == i) {
               //Using timeout function to delay fitting of bounds because of async behavior
-              setTimeout(function(){
+              setTimeout(function () {
                 allLayers.addTo(map);
                 map.fitBounds(allLayers.getBounds());
               }, 200);
@@ -973,7 +967,7 @@ require(['jquery', 'leaflet', 'leaflet-commons'], function ($, leaflet, leafletC
   box-shadow: 0px 1px 4px 0px @box-shadow;
 }
 /*
- * Leaflet popup
+ * Leaflet popup (dedicated - old)
 */
 .map-popup{
   position: absolute;
@@ -1258,6 +1252,21 @@ require(['jquery', 'leaflet', 'leaflet-commons'], function ($, leaflet, leafletC
   border: 0px !important;
   border-radius: 0 !important;
   box-shadow: none !important;
+}
+/*
+ * Small popup css
+*/
+.leaflet-popup-content-wrapper{
+  border-radius: 7px;
+}
+.leaflet-popup-content{
+  margin: 13px 15px;
+}
+.leaflet-popup-content &gt; h2{
+  margin: 7px 0;
+}
+.leaflet-popup-content &gt; hr{
+  margin: 7px 0;
 }
 /*
  * Override css

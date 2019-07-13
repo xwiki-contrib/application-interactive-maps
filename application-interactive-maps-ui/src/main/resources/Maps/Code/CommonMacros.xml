@@ -27,7 +27,7 @@
   <defaultLanguage/>
   <translation>0</translation>
   <creator>xwiki:XWiki.Admin</creator>
-  <parent>xwiki:Maps.WebHome</parent>
+  <parent>xwiki:Maps.Code.LeafletUtils</parent>
   <author>xwiki:XWiki.Admin</author>
   <contentAuthor>xwiki:XWiki.Admin</contentAuthor>
   <version>1.1</version>
@@ -166,11 +166,6 @@
         {{html wiki="true" clean="false"}}
         (% class="map-wrapper#if ($request.mfullscreen) fullscreen#end" %)(((
           (% class="map-container" id="map-${mapId}" data-options='${mapObjJSON}' data-mapdata='${mapData}' style="width: $mapSize[0]; height: $mapSize[1];" %)((()))
-          (% class="map-popup" %)(((
-            &lt;h2&gt;&lt;/h2&gt;
-            &lt;hr/&gt;
-            (% class="popup-content" %)((()))
-          )))
           ## Check to see if a facet is selected. If so, show the search widget and refine search area
           #set ($facetSelected = false)
           #if ($facetEnabled)
@@ -180,7 +175,7 @@
               #end
             #end
           #end
-          (% class="map-search-filter#if ($request.msearchw || $facetSelected) open#end" %)(((
+          (% class="map-search-filter#if ($request.msearchw || ($request.msearchw &amp;&amp; $facetSelected)) open#end" %)(((
             #displaySearchForm()
             #displayMapSearchFilter()
           )))
