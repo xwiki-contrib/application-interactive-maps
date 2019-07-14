@@ -179,6 +179,7 @@
             #displaySearchForm()
             #displayMapSearchFilter()
           )))
+          &lt;div id="map-search-close"&gt;&lt;i class="fa fa-arrow-left"&gt;&lt;/i&gt;&lt;/div&gt;
         )))
         {{/html}}
       )))

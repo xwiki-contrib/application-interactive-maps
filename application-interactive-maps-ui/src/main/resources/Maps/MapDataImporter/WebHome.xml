@@ -93,15 +93,24 @@
 
 {{info}}
 Import map data from https://query.wikidata.org/ as JSON and add it to a map.
+
+(% class=" wikigeneratedheader" %)
 ==== Required fields ====
+
 **itemLabel, lon, lat**
+
+(% class=" wikigeneratedheader" %)
 ==== How does it work? ====
+
 * The JSON must include itemLabel, lon and lat for each map item. (SELECT ?itemLabel ?lon ?lat)
 * Include all other custom fields by the end of the fields required.
 * A class will be created for the custom fields and its objects will be attached to each map item page.
+
+(% class=" wikigeneratedheader" %)
 ==== Steps involved ====
+
 * Step 1: Head to https://query.wikidata.org/ and enter your SPARQL query.
-* Step 2: Download the result as a file and attach that file to this page.
+* Step 2: Download the result as a JSON file and attach that file to this page.
 * Step 3: Specify the name of the file attached that is to be imported.
 * Step 4: Specify the space you want the new class and map items to be included inside.
 * Step 5: Specify the name you want for the class to be created. (If the JSON has custom fields)
