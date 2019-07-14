@@ -202,7 +202,7 @@ define('leaflet-commons', ['jquery'], function ($) {
     addNavigation: function (map)
     {
       var locMarker;
-      this.addCustomControl(map, 'fa-map-marker', 'Current location', 'bottomright', function (e) {
+      this.addCustomControl(map, 'fa-location-arrow', 'Current location', 'bottomright', function (e) {
         var locate = map.locate({ setView: true, maxZoom: 16, watch: false });
         map.on('locationerror', function (e) {
           new XWiki.widgets.Notification('Cannot get location in an insecure context (HTTP). Secure context (HTTPS) required.', 'error');
