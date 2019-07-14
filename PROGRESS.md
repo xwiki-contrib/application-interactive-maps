@@ -128,6 +128,15 @@
 - [x] Show current location error for insecure context
 - [x] Change current location label
 - [x] Other improvements and fixes
+## Day 46 (13 July 2019)
+- [x] Remove dedicated popup area
+- [x] Use improved leaflet default small popups for displaying point data
+- [x] Other minor fixes
+## Day 47 (14 July 2019)
+- [x] Shift search control to top left side corner of the map
+- [x] Add close button to map search and filter
+- [x] Change icon of current location control
+- [x] Prepare full application documentation for release
 ---
 # Marks the progress of the Interactive Maps Application (Old)
 ## Day 1 (18 May 2019)
