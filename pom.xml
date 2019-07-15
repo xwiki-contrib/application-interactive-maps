@@ -43,6 +43,10 @@
       <id>9inpachi</id>
       <name>Fawad Ali</name>
     </developer>
+    <developer>
+      <id>slauriere</id>
+      <name>Stéphane Laurière</name>
+    </developer>
   </developers>
   <modules>
     <module>application-interactive-maps-demo</module>
@@ -54,6 +58,7 @@
   </issueManagement>
   <properties>
     <xwiki.issueManagement.jira.id>INTMAP</xwiki.issueManagement.jira.id>
+    <xwiki.release.jira.skip>false</xwiki.release.jira.skip>
   </properties>
   <profiles>
     <profile>
