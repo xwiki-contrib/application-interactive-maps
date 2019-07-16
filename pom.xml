@@ -29,7 +29,7 @@
   </parent>
   <groupId>org.xwiki.contrib</groupId>
   <artifactId>application-interactive-maps</artifactId>
-  <version>1.0-SNAPSHOT</version>
+  <version>1.0</version>
   <name>Interactive Maps Application - Parent POM</name>
   <packaging>pom</packaging>
   <description>Create interactive maps easily, share locations and associate structured data with areas</description>
@@ -37,6 +37,7 @@
     <connection>scm:git:git://github.com/xwiki-contrib/application-interactive-maps.git</connection>
     <developerConnection>scm:git:git@github.com:xwiki-contrib/application-interactive-maps.git</developerConnection>
     <url>https://github.com/xwiki-contrib/application-interactive-maps</url>
+    <tag>application-interactive-maps-1.0</tag>
   </scm>
   <developers>
     <developer>
