@@ -137,6 +137,19 @@
 - [x] Add close button to map search and filter
 - [x] Change icon of current location control
 - [x] Prepare full application documentation for release
+## Day 48 (15 July 2019)
+- [x] Try to release the application
+- [x] Try fixing git error in release
+## Day 49 (16 July 2019)
+- [x] Try to release the application
+- [x] Fix git error (thanks to Thomas)
+- [x] Release again because of accidently releasing two versions
+- [x] Import the application on https://extensions.xwiki.org
+- [x] Announce the release on XWiki forum and dev mailing list
+## Day 50 (17 July 2019)
+- [x] Use image macro in documentation
+- [x] Add tooltips to leaflet controls
+- [x] Separate advanced map options
 ---
 # Marks the progress of the Interactive Maps Application (Old)
 ## Day 1 (18 May 2019)
