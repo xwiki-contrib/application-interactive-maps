@@ -47,6 +47,7 @@ intmap.mapclass.includeSearch=Include Location Search
 intmap.mapclass.includeCurrentLocation=Include Current Location
 intmap.mapclass.query=Query
 intmap.mapclass.defaultLocation=Default Location
+intmap.mapclass.advancedOptions=Advanced Options
 
 ## Solr translations override
 solr.facets.title=Filter the map

@@ -111,7 +111,7 @@
     </includeCurrentLocation>
     <includeMapScale>
       <customDisplay/>
-      <defaultValue>1</defaultValue>
+      <defaultValue>0</defaultValue>
       <disabled>0</disabled>
       <displayFormType>checkbox</displayFormType>
       <displayType/>

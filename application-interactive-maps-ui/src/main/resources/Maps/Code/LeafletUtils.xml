@@ -256,6 +256,13 @@ define('leaflet-commons', ['jquery'], function ($) {
           var container = L.DomUtil.create('div', 'leaflet-control-custom');
           container.setAttribute('title', title);
           container.setAttribute('aria-label', title);
+          //Add a tooltip according to position of control
+          if (position == 'topleft' || position == 'bottomleft') {
+            container.setAttribute('data-placement', 'right');
+          } else if(position == 'topright' || position == 'bottomright') {
+            container.setAttribute('data-placement', 'left');
+          }
+          $(container).tooltip();
           var icon = L.DomUtil.create('div', 'fa ' + faIcon);
           container.appendChild(icon);
           L.DomEvent.on(container, 'click', L.DomEvent.stopPropagation)
@@ -597,7 +604,7 @@ define('leaflet-commons', ['jquery'], function ($) {
     'leaflet': ['$services.webjars.url("leaflet", "leaflet.js")']
   }
 });
-require(['jquery', 'leaflet', 'leaflet-commons'], function ($, leaflet, leafletCommons) {
+require(['jquery', 'leaflet', 'leaflet-commons', 'bootstrap'], function ($, leaflet, leafletCommons) {
   'use strict';
   function init()
   {

@@ -41,21 +41,40 @@
 {{velocity}}
 ## If the document is being edited then display the edit form
 #if ($xcontext.action == 'edit')
+  #set ($advancedFieldsNames = ['includeMapScale', 'defaultZoom', 'tiles', 'mapSize', 'defaultLocation', 'attribution'])
+  #set ($advancedFields = [])
+  #set($class = $doc.getObject('Maps.Code.MapClass').xWikiClass)
+  #macro (processField $prop)
+    &lt;dt&gt;
+      #set ($propId = "${class.getDocumentReference().getLocalDocumentReference()}_${class.getNumber()}_${prop.name}")
+      &lt;label for="${propId}"&gt;$prop.prettyName&lt;/label&gt;
+      #if($prop.hint)&lt;span class="xHint"&gt;$prop.hint&lt;/span&gt;#end
+    &lt;/dt&gt;
+    &lt;dd&gt;
+      $doc.display($prop.name)
+    &lt;/dd&gt;
+  #end
   {{html wiki="true" clean="false"}}
   {{info}}Leave a field empty for its default value{{/info}}
   (% class="xform" %)(((
     &lt;dl&gt;
-      #set($class = $doc.getObject('Maps.Code.MapClass').xWikiClass)
       #foreach($prop in $class.properties)
-      &lt;dt&gt;
-        #set ($propId = "${class.getDocumentReference().getLocalDocumentReference()}_${class.getNumber()}_${prop.name}")
-        &lt;label for="${propId}"&gt;$prop.prettyName&lt;/label&gt;
-        #if($prop.hint)&lt;span class="xHint"&gt;$prop.hint&lt;/span&gt;#end
-      &lt;/dt&gt;
-      &lt;dd&gt;
-        $doc.display($prop.name)
-      &lt;/dd&gt;
+        #if (!$advancedFieldsNames.contains($prop.name))
+          #processField($prop)
+        #else
+          #set ($discard = $advancedFields.add($prop))
+        #end
       #end
+      &lt;p&gt;
+      (% id="advanced-options-btn" class="btn btn-primary" onclick="toggleClass(document.getElementsByClassName('advanced-options')[0], 'hidden')" %)(((
+        $services.localization.render('intmap.mapclass.advancedOptions')
+      )))
+      &lt;/p&gt;
+      (% class="advanced-options hidden" %)(((
+      #foreach ($prop in $advancedFields)
+        #processField($prop)
+      #end
+      )))
     &lt;/dl&gt;
   )))
   {{/html}}
