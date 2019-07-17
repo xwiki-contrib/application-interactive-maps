@@ -19,12 +19,9 @@
  */
 package org.xwiki.intmap.test.po;
 
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
-import org.openqa.selenium.support.PageFactory;
 import org.xwiki.test.ui.po.InlinePage;
-import org.xwiki.test.ui.po.editor.EditPage;
 
 /**
  * Edit page for map edit and creation
@@ -38,12 +35,6 @@ public class IntMapEditPage extends InlinePage
      *
      * @version $Id$
      */
-    @FindBy(id = "Maps.Code.MapClass_0_defaultZoom")
-    private WebElement defaultZoom;
-
-    @FindBy(id = "Maps.Code.MapClass_0_tiles")
-    private WebElement tiles;
-
     @FindBy(id = "Maps.Code.MapClass_0_includeSearch")
     private WebElement locationSearch;
 
@@ -53,32 +44,54 @@ public class IntMapEditPage extends InlinePage
     @FindBy(id = "Maps.Code.MapClass_0_query")
     private WebElement query;
 
+    @FindBy(id = "advanced-options-btn")
+    private WebElement advancedOptions;
+
+    @FindBy(id = "Maps.Code.MapClass_0_includeMapScale")
+    private WebElement mapScale;
+
+    @FindBy(id = "Maps.Code.MapClass_0_defaultZoom")
+    private WebElement defaultZoom;
+
+    @FindBy(id = "Maps.Code.MapClass_0_tiles")
+    private WebElement tiles;
+
+    @FindBy(id = "Maps.Code.MapClass_0_mapSize")
+    private WebElement mapSize;
+
     @FindBy(id = "Maps.Code.MapClass_0_defaultLocation")
     private WebElement defaultLocation;
 
-    public void setValuesForMap(int defaultZoom, String tiles, boolean locationSearch, boolean currentLocation,
-            String query, String defaultLocation)
+    @FindBy(id = "Maps.Code.MapClass_0_attribution")
+    private WebElement attribution;
+
+    public void setValuesForMap(boolean locationSearch, boolean currentLocation, String query, boolean mapScale,
+            int defaultZoom, String tiles, String mapSize, String defaultLocation, String attribution)
     {
+        handleCheckBox(this.locationSearch, locationSearch);
+        handleCheckBox(this.currentLocation, currentLocation);
+        this.query.clear();
+        this.query.sendKeys(query);
+        advancedOptions.click();
+        handleCheckBox(this.mapScale, mapScale);
         this.defaultZoom.clear();
         this.defaultZoom.sendKeys(String.valueOf(defaultZoom));
         this.tiles.clear();
         this.tiles.sendKeys(tiles);
-        this.query.clear();
-        this.query.sendKeys(query);
+        this.mapSize.clear();
+        this.mapSize.sendKeys(mapSize);
         this.defaultLocation.clear();
         this.defaultLocation.sendKeys(defaultLocation);
+        this.attribution.clear();
+        this.attribution.sendKeys(attribution);
+    }
 
-        if (locationSearch && !this.locationSearch.isSelected()) {
-            this.locationSearch.click();
-        } else if (!locationSearch && this.locationSearch.isSelected()){
-            this.locationSearch.click();
+    private void handleCheckBox(WebElement element, boolean value)
+    {
+        if (value && !element.isSelected()) {
+            element.click();
+        } else if (!value && element.isSelected()) {
+            element.click();
         }
-
-        if (currentLocation && !this.currentLocation.isSelected()) {
-            this.currentLocation.click();
-        } else if (!currentLocation && this.currentLocation.isSelected()){
-            this.currentLocation.click();
-        }
-
     }
 }

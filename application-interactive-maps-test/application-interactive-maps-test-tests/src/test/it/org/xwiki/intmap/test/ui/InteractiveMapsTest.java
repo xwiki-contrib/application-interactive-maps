@@ -22,16 +22,11 @@ package org.xwiki.intmap.test.ui;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 import org.junit.Assert;
 import org.junit.Rule;
 import org.junit.Test;
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 import org.xwiki.intmap.test.po.IntMapEditPage;
 import org.xwiki.intmap.test.po.IntMapHomePage;
 import org.xwiki.model.reference.DocumentReference;
@@ -101,7 +96,7 @@ public class InteractiveMapsTest extends AbstractTest
         IntMapEditPage mapEditPage = new IntMapEditPage();
         // Set the values for the new map
         String querySpace = String.join(".", POINTS_SPACE);
-        mapEditPage.setValuesForMap(14, "", true, true, "space:" + querySpace, "Islamabad");
+        mapEditPage.setValuesForMap(true, true, "space:" + querySpace, true, 14, "", "", "Islamabad", "Test");
 
         // Click and view the map
         mapEditPage.clickSaveAndView();
