@@ -256,7 +256,7 @@ define('leaflet-commons', ['jquery'], function ($) {
           var container = L.DomUtil.create('div', 'leaflet-control-custom');
           container.setAttribute('title', title);
           container.setAttribute('aria-label', title);
-          //Add a tooltip according to position of control
+          //Add a tooltip to the control according to its position
           if (position == 'topleft' || position == 'bottomleft') {
             container.setAttribute('data-placement', 'right');
           } else if(position == 'topright' || position == 'bottomright') {
@@ -510,7 +510,7 @@ define('leaflet-commons', ['jquery'], function ($) {
       <name>leaflet-commons</name>
     </property>
     <property>
-      <parse>1</parse>
+      <parse>0</parse>
     </property>
     <property>
       <use>onDemand</use>

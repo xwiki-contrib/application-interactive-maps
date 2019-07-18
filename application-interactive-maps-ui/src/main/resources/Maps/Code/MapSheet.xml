@@ -41,7 +41,7 @@
 {{velocity}}
 ## If the document is being edited then display the edit form
 #if ($xcontext.action == 'edit')
-  #set ($advancedFieldsNames = ['includeMapScale', 'defaultZoom', 'tiles', 'mapSize', 'defaultLocation', 'attribution'])
+  #set ($advancedFieldsNames = ['includeMapScale', 'defaultZoom', 'tiles', 'mapSize', 'defaultLocation', 'attribution', 'customLocationProperties'])
   #set ($advancedFields = [])
   #set($class = $doc.getObject('Maps.Code.MapClass').xWikiClass)
   #macro (processField $prop)
@@ -65,11 +65,9 @@
           #set ($discard = $advancedFields.add($prop))
         #end
       #end
-      &lt;p&gt;
-      (% id="advanced-options-btn" class="btn btn-primary" onclick="toggleClass(document.getElementsByClassName('advanced-options')[0], 'hidden')" %)(((
+      &lt;p&gt;&lt;button type="button" id="advanced-options-btn" class="btn btn-primary" onclick="toggleClass(document.getElementsByClassName('advanced-options')[0], 'hidden')"&gt;
         $services.localization.render('intmap.mapclass.advancedOptions')
-      )))
-      &lt;/p&gt;
+      &lt;/button&gt;&lt;/p&gt;
       (% class="advanced-options hidden" %)(((
       #foreach ($prop in $advancedFields)
         #processField($prop)
@@ -96,7 +94,6 @@
   ## Get all the properties as JSON so that we can supply these options to the map
   #set ($mapObjJSON = $jsontool.serialize($mapObjMapping))
   #set ($mapObjJSON = $mapObjJSON.replaceAll("'", '\\"'))
-
   ## Get all the data to be displayed inside the map
   #set ($queryStatement = $mapObjMapping.get('query'))
   #if (!$mapObjMapping.get('mapSize').matches('((\d*)(px|%)?), ?((\d*)(px|%)?)'))
@@ -104,9 +101,15 @@
   #else
     #set ($mapSize = $mapObjMapping.get('mapSize').split(','))
   #end
-
+  ## Get all custom location properties
+  #if ("$!mapObjMapping.get('customLocationProperties')" != '')
+    #set ($customLocationProperties = [])
+    #foreach ($customProp in $mapObjMapping.get('customLocationProperties').split(','))
+      #set ($customProp = $customProp.trim())
+      #set ($discard = $customLocationProperties.add($customProp.trim()))
+    #end
+  #end
   #displayMapUI()
-
 #end
 {{/velocity}}</content>
 </xwikidoc>

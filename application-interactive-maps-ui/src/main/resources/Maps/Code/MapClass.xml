@@ -66,6 +66,20 @@
       <validationRegExp/>
       <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
     </attribution>
+    <customLocationProperties>
+      <customDisplay/>
+      <disabled>0</disabled>
+      <hint>Property of classes to look into for location data. Separated by comma.</hint>
+      <name>customLocationProperties</name>
+      <number>10</number>
+      <picker>0</picker>
+      <prettyName>Custom Location Properties</prettyName>
+      <size>30</size>
+      <unmodifiable>0</unmodifiable>
+      <validationMessage/>
+      <validationRegExp/>
+      <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+    </customLocationProperties>
     <defaultLocation>
       <customDisplay/>
       <disabled>0</disabled>

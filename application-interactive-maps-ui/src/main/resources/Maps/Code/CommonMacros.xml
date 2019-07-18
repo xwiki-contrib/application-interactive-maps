@@ -58,36 +58,46 @@
   #set ($xdom = $services.rendering.parse($xwiki, "xwiki/2.1"))
   $services.rendering.render($xdom, "xhtml/1.0")
 #end
+## Process property data
+#macro (processLocationProperty $property)
+  ## Check if the page contains the object property
+  #if ("$!response.get(${property})" != '')
+    #set ($responseData = {})
+    #set ($discard = $responseData.put('type', 'point'))
+    #set ($discard = $responseData.put('doclocation', $response.get('fullname')))
+    ## Get document title
+    #set ($title = $response.get('title_'))
+    ## Get document content as html
+    #set ($popupContent = "#getHtml($response.get('doccontentraw_'))")
+    ## Get the location
+    #set ($location = $response.get($property)[0])
+    ## Set the collected information
+    #set ($discard = $responseData.put('title', $title))
+    #set ($discard = $responseData.put('location', $location))
+    #set ($discard = $responseData.put('popupContent', $popupContent))
+    ## Get attachment URL for marker icon if attachment name starts with 'marker'
+    #set ($targetDoc = $xwiki.getDocument($response.get('fullname')))
+    #foreach ($attachment in $targetDoc.getAttachmentList())
+      #set ($attachmentName = $attachment.getFilename())
+      #if ($attachmentName.toLowerCase().startsWith('marker'))
+        #set ($attachmentURL = $targetDoc.getAttachmentURL($attachmentName))
+        #set ($discard = $responseData.put('markerIcon', $attachmentURL))
+      #end
+    #end
+    ## Add the collected data into array
+    #set ($discard = $mapDataArr.add($responseData))
+  #end
+#end
 ## Handle the response of solr query
 #macro (handleSolrResponse $searchResponse)
   #set ($mapDataArr = [])
   #foreach ($response in $searchResponse.getResults())
-    ## Check if the page contains a Point object
-    #if ("$!response.get('property.Maps.Code.PointClass.location_string')" != '')
-      #set ($responseData = {})
-      #set ($discard = $responseData.put('type', 'point'))
-      #set ($discard = $responseData.put('doclocation', $response.get('fullname')))
-      ## Get document title
-      #set ($title = $response.get('title_'))
-      ## Get document content as html
-      #set ($popupContent = "#getHtml($response.get('doccontentraw_'))")
-      ## Get the location
-      #set ($location = $response.get('property.Maps.Code.PointClass.location_string')[0])
-      ## Set the collected information
-      #set ($discard = $responseData.put('title', $title))
-      #set ($discard = $responseData.put('location', $location))
-      #set ($discard = $responseData.put('popupContent', $popupContent))
-      ## Get attachment URL for marker icon if attachment name starts with 'marker'
-      #set ($targetDoc = $xwiki.getDocument($response.get('fullname')))
-      #foreach ($attachment in $targetDoc.getAttachmentList())
-        #set ($attachmentName = $attachment.getFilename())
-        #if ($attachmentName.toLowerCase().startsWith('marker'))
-          #set ($attachmentURL = $targetDoc.getAttachmentURL($attachmentName))
-          #set ($discard = $responseData.put('markerIcon', $attachmentURL))
-        #end
+    #processLocationProperty('property.Maps.Code.PointClass.location_string')
+    ## Check for custom location properties
+    #if (!$customLocationProperties.isEmpty())
+      #foreach ($customProp in $customLocationProperties)
+        #processLocationProperty($customProp)
       #end
-      ## Add the collected data into array
-      #set ($discard = $mapDataArr.add($responseData))
     #end
   #end
   $jsontool.serialize($mapDataArr)
@@ -122,7 +132,7 @@
   #set ($discard = $query.bindValue('sort', "${sort} ${sortOrder}"))
   #set ($discard = $query.bindValue('tie', $solrConfig.tieBreaker))
   #set ($discard = $query.bindValue('mm', $solrConfig.minShouldMatch))
-  #set ($discard = $query.bindValue('fq', 'type:DOCUMENT AND (object:Maps.Code.PointClass)'))
+  #set ($discard = $query.bindValue('fq', 'type:DOCUMENT'))
   #setQueryFields($query)
   #setPhraseFields($query)
   #setFacetFields($query)
@@ -151,7 +161,10 @@
       ## files automatically (we want to fetch only the new JavaScript files).
       &lt;noscript class="hidden skin-extension-imports"&gt;#skinExtensionHooks&lt;/noscript&gt;
       {{/html}}
-
+    #end
+    ## Filter the results according to object properties to look for
+    #foreach ($customProp in $customLocationProperties)
+      #set ($solrConfig.filterQuery[1] = "${solrConfig.filterQuery[1]} OR ${customProp}:*")
     #end
     #getMapResults()
     #if ($debug)

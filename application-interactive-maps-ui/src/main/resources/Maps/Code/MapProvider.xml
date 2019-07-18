@@ -241,13 +241,15 @@
       <action>edit</action>
     </property>
     <property>
-      <creationRestrictions/>
+      <creationRestrictions>
+        <value>Maps</value>
+      </creationRestrictions>
     </property>
     <property>
-      <creationRestrictionsAreSuggestions>0</creationRestrictionsAreSuggestions>
+      <creationRestrictionsAreSuggestions>1</creationRestrictionsAreSuggestions>
     </property>
     <property>
-      <description/>
+      <description>Interactive map page</description>
     </property>
     <property>
       <icon>map</icon>
