@@ -41,10 +41,7 @@
   'filterQuery': [
     'type:DOCUMENT', 'class:Maps.Code.PointClass'
   ],
-  'facetFields': [
-    'space_facet', 'property.XWiki.TagClass.tags_string',
-    'property.Maps.Demo.MapDataImporter.TotallyTesting.TotallyTestingClass.countryLabel_string'
-  ]
+  'facetFields': []
 })
 {{/velocity}}
 
@@ -95,8 +92,8 @@
     #processLocationProperty('property.Maps.Code.PointClass.location_string')
     ## Check for custom location properties
     #if (!$customLocationProperties.isEmpty())
-      #foreach ($customProp in $customLocationProperties)
-        #processLocationProperty($customProp)
+      #foreach ($customProp in $mapObjMapping.get('customLocationProperties'))
+        #processLocationProperty($customProp.trim())
       #end
     #end
   #end
@@ -162,10 +159,23 @@
       &lt;noscript class="hidden skin-extension-imports"&gt;#skinExtensionHooks&lt;/noscript&gt;
       {{/html}}
     #end
-    ## Filter the results according to object properties to look for
-    #foreach ($customProp in $customLocationProperties)
+    ## Get all custom location field properties. Filter the results according to object properties to look for
+    #foreach ($customProp in $mapObjMapping.get('customLocationProperties'))
+      #set ($customProp = $customProp.trim())
       #set ($solrConfig.filterQuery[1] = "${solrConfig.filterQuery[1]} OR ${customProp}:*")
     #end
+    ## Check if facets are enabled by the user
+    #if ($mapObjMapping.get('includeFacets') == 0)
+      #set ($facetEnabled = false)
+    #end
+    ## Add custom facet fields specified by the user to solr config
+    #if ($facetEnabled)
+      #foreach ($facetField in $mapObjMapping.get('facetFields'))
+        #set ($facetField = $facetField.trim())
+        #set ($discard = $solrConfig.facetFields.add($facetField))
+      #end
+    #end
+    ## Execute the query to get map results
     #getMapResults()
     #if ($debug)
       #displaySearchDebugInfo()

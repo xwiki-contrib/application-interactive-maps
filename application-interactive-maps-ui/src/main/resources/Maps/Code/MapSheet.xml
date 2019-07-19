@@ -41,7 +41,7 @@
 {{velocity}}
 ## If the document is being edited then display the edit form
 #if ($xcontext.action == 'edit')
-  #set ($advancedFieldsNames = ['includeMapScale', 'defaultZoom', 'tiles', 'mapSize', 'defaultLocation', 'attribution', 'customLocationProperties'])
+  #set ($advancedFieldsNames = ['includeMapScale', 'defaultZoom', 'defaultLocation', 'tiles', 'mapSize', 'includeFacets', 'facetFields', 'attribution', 'customLocationProperties'])
   #set ($advancedFields = [])
   #set($class = $doc.getObject('Maps.Code.MapClass').xWikiClass)
   #macro (processField $prop)
@@ -100,14 +100,6 @@
     #set ($mapSize = ['100%', '500px'])
   #else
     #set ($mapSize = $mapObjMapping.get('mapSize').split(','))
-  #end
-  ## Get all custom location properties
-  #if ("$!mapObjMapping.get('customLocationProperties')" != '')
-    #set ($customLocationProperties = [])
-    #foreach ($customProp in $mapObjMapping.get('customLocationProperties').split(','))
-      #set ($customProp = $customProp.trim())
-      #set ($discard = $customLocationProperties.add($customProp.trim()))
-    #end
   #end
   #displayMapUI()
 #end

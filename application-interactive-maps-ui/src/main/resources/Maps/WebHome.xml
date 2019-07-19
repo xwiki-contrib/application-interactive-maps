@@ -42,14 +42,14 @@
 #set ($displayDocExtra = false)
 #set($columns = ["doc.title", "doc.creationDate", "_actions"])
 #set($columnsProperties = {
-    "doc.title" : { "type" : "text", "link" : "view", "html" : "true", "sortable":true },
-    "_actions" : {"actions": ["edit","delete"]}
+  "doc.title" : { "type" : "text", "link" : "view", "html" : "true", "sortable":true },
+  "_actions" : {"actions": ["edit","delete"]}
 })
 #set($options = {
-   "className":"Maps.Code.MapClass",
-   "translationPrefix" : "maps.livetable.",
-   "tagCloud" : true,
-   "rowCount": 10
+ "className":"Maps.Code.MapClass",
+ "translationPrefix" : "maps.livetable.",
+ "tagCloud" : true,
+ "rowCount": 10
 })
 #livetable("mapTable" $columns $columnsProperties $options)
 {{/velocity}}</content>
