@@ -150,6 +150,17 @@
 - [x] Use image macro in documentation
 - [x] Add tooltips to leaflet controls
 - [x] Separate advanced map options
+## Day 51 (18 July 2019)
+- [x] Update tests to support new MapSheet
+- [x] Add new field in MapClass for custom location properties
+- [x] Code for processing custom location property of any class
+- [x] Remove doc extra from Maps.WebHome
+- [x] Preselect MapTemplate for pages in Maps space
+- [x] Remove demo data importer
+## Day 52 (19 July 2019)
+- [x] Allow options in map configuration for including and configuring facet fields
+- [x] Code for custom facet fields
+- [x] Use static list for MapClass properties which accept multiple values (customLocationProperties, facetFields)
 ---
 # Marks the progress of the Interactive Maps Application (Old)
 ## Day 1 (18 May 2019)
