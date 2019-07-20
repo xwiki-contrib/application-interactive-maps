@@ -39,7 +39,7 @@
   <content>{{velocity output="false"}}
 #set ($solrConfig = {
   'filterQuery': [
-    'type:DOCUMENT', 'class:Maps.Code.PointClass'
+    'type:DOCUMENT', 'class:Maps.Code.PointClass OR class:Maps.Code.PathClass'
   ],
   'facetFields': []
 })
@@ -55,7 +55,19 @@
   #set ($xdom = $services.rendering.parse($xwiki, "xwiki/2.1"))
   $services.rendering.render($xdom, "xhtml/1.0")
 #end
-## Process property data
+## Check marker icon
+#macro (checkMarkerIcon $pageName $variable)
+  ## Get attachment URL for marker icon if attachment name starts with 'marker'
+  #set ($targetDoc = $xwiki.getDocument(${pageName}))
+  #foreach ($attachment in $targetDoc.getAttachmentList())
+    #set ($attachmentName = $attachment.getFilename())
+    #if ($attachmentName.toLowerCase().startsWith('marker'))
+      #set ($attachmentURL = $targetDoc.getAttachmentURL($attachmentName))
+      #set ($discard = $variable.put('markerIcon', $attachmentURL))
+    #end
+  #end
+#end
+## Process location property data
 #macro (processLocationProperty $property)
   ## Check if the page contains the object property
   #if ("$!response.get(${property})" != '')
@@ -72,15 +84,8 @@
     #set ($discard = $responseData.put('title', $title))
     #set ($discard = $responseData.put('location', $location))
     #set ($discard = $responseData.put('popupContent', $popupContent))
-    ## Get attachment URL for marker icon if attachment name starts with 'marker'
-    #set ($targetDoc = $xwiki.getDocument($response.get('fullname')))
-    #foreach ($attachment in $targetDoc.getAttachmentList())
-      #set ($attachmentName = $attachment.getFilename())
-      #if ($attachmentName.toLowerCase().startsWith('marker'))
-        #set ($attachmentURL = $targetDoc.getAttachmentURL($attachmentName))
-        #set ($discard = $responseData.put('markerIcon', $attachmentURL))
-      #end
-    #end
+    ## Check for custom marker icon
+    #checkMarkerIcon($response.get('fullname') $responseData)
     ## Add the collected data into array
     #set ($discard = $mapDataArr.add($responseData))
   #end
@@ -89,12 +94,45 @@
 #macro (handleSolrResponse $searchResponse)
   #set ($mapDataArr = [])
   #foreach ($response in $searchResponse.getResults())
+    ## Check for PointClass
     #processLocationProperty('property.Maps.Code.PointClass.location_string')
     ## Check for custom location properties
     #if (!$customLocationProperties.isEmpty())
       #foreach ($customProp in $mapObjMapping.get('customLocationProperties'))
         #processLocationProperty($customProp.trim())
       #end
+    #end
+    ## Check for PathClass and process path
+    #if ($response.get('class').contains('Maps.Code.PathClass'))
+      #set ($responseData = {})
+      #set ($discard = $responseData.put('type', 'path'))
+      ## Get all the required path data and path page data
+      #set ($includePopup = $response.get('property.Maps.Code.PathClass.addPopup_boolean')[0])
+      #set ($discard = $responseData.put('addPopup', $includePopup))
+      #set ($title = $response.get('title_'))
+      #set ($popupContent = "#getHtml($response.get('doccontentraw_'))")
+      #set ($discard = $responseData.put('title', $title))
+      #set ($discard = $responseData.put('popupContent', $popupContent))
+      #set ($discard = $responseData.put('doclocation', $response.get('fullname')))
+      ## Get data of each point
+      ## Process and convert source data to JSON
+      #set ($sourcePage = $response.get('property.Maps.Code.PathClass.sourcePointPage_string')[0])
+      #set ($sourcePageDoc = $xwiki.getDocument(${sourcePage}))
+      #set ($sourceData = {})
+      #set ($discard = $sourceData.put('location', $sourcePageDoc.get('location')))
+      #set ($discard = $sourceData.put('title', $sourcePageDoc.getTitle()))
+      #set ($discard = $sourceData.put('popupContent', "#getHtml(${sourcePageDoc.getContent()})"))
+      #set ($discard = $responseData.put('source', $jsontool.serialize(${sourceData})))
+      ## Process and convert destination data to JSON
+      #set ($destinationPage = $response.get('property.Maps.Code.PathClass.destinationPointPage_string')[0])
+      #set ($destPageDoc = $xwiki.getDocument(${destinationPage}))
+      #set ($destData = {})
+      #set ($discard = $destData.put('location', $destPageDoc.get('location')))
+      #set ($discard = $destData.put('title', $destPageDoc.getTitle()))
+      #set ($discard = $destData.put('popupContent', "#getHtml(${destPageDoc.getContent()})"))
+      #set ($discard = $responseData.put('destination', $jsontool.serialize(${destData})))
+      ## Add the path data to the main map data array
+      #set ($discard = $mapDataArr.add($responseData))
     #end
   #end
   $jsontool.serialize($mapDataArr)
@@ -281,9 +319,17 @@
       #foreach ($item in $mapDataArr)
       (% class="search-result-item" %)(((
         ==== [[$item.get('title')&gt;&gt;$item.get('doclocation')||target="_blank"]] ====
-        (% class="goto-loc" data-location="${item.get('location')}" title="$services.localization.render('intmap.search.gotoLoc')" %)(((
-          &lt;i class="fa fa-map-marker"&gt;&lt;/i&gt;
-        )))
+        #if ($item.get('type') == 'point')
+          (% class="goto-loc goto-loc-point" data-location="${item.get('location')}" title="$services.localization.render('intmap.search.gotoLoc')" %)(((
+            &lt;i class="fa fa-map-marker"&gt;&lt;/i&gt;
+          )))
+        #elseif ($item.get('type') == 'path')
+          #set ($source = $item.source.replaceAll('"', "'"))
+          #set ($destination = $item.destination.replaceAll('"', "'"))
+          (% class="goto-loc goto-loc-path" data-location="{source: ${source}, destination: ${destination}}" title="$services.localization.render('intmap.search.gotoLoc')" %)(((
+            &lt;i class="fa fa-map-marker"&gt;&lt;/i&gt;
+          )))
+        #end
       )))
       #end
     )))

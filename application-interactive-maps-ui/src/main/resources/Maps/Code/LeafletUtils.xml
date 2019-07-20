@@ -617,14 +617,16 @@ require(['jquery', 'leaflet', 'leaflet-commons', 'bootstrap'], function ($, leaf
       map = leafletCommons.createEmptyMap(options);
       var mapData = JSON.parse(element.dataset.mapdata);
       var allLayers = L.featureGroup();
-      var dataLength = mapData.length - 1;
+      var onlyPoints = mapData.filter((item) =&gt; {
+        return item.type == 'point';
+      });
+      var noOfPoints = onlyPoints.length - 1;
       var i = 0;
       map.on('click', function () {
         if ($(".leaflet-popup-pane").html() == '') {
           $('.map-search-filter').removeClass('open');
         }
       });
-      var lastClickedMarker;
       mapData.each(function (data) {
         if (data.location != null &amp;&amp; data.type == 'point') {
           leafletCommons.getLocationCoords(data.location, function (location) {
@@ -639,7 +641,7 @@ require(['jquery', 'leaflet', 'leaflet-commons', 'bootstrap'], function ($, leaf
               marker.bindPopup(popupData);
               allLayers.addLayer(marker);
             });
-            if (dataLength == i) {
+            if (noOfPoints == i) {
               //Using timeout function to delay fitting of bounds because of async behavior
               setTimeout(function () {
                 allLayers.addTo(map);
@@ -648,6 +650,8 @@ require(['jquery', 'leaflet', 'leaflet-commons', 'bootstrap'], function ($, leaf
             }
             i++;
           });
+        } else if (data.type == 'path') {
+          
         } else {
           new XWiki.widgets.Notification('Error while adding items to the map. Make sure the query is correct.', 'error');
         }
@@ -687,7 +691,7 @@ require(['jquery', 'leaflet', 'leaflet-commons', 'bootstrap'], function ($, leaf
     });
 
     //Go to location of the result item
-    $('.search-item-results .goto-loc').on('click', function () {
+    $('.search-item-results .goto-loc-point').on('click', function () {
       var loc = this.dataset.location;
       if (loc) {
         leafletCommons.getLocationCoords(loc, function(location){
