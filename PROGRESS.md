@@ -161,6 +161,9 @@
 - [x] Allow options in map configuration for including and configuring facet fields
 - [x] Code for custom facet fields
 - [x] Use static list for MapClass properties which accept multiple values (customLocationProperties, facetFields)
+## Day 53 (20 July 2019)
+- [x] Create PathClass for path maps
+- [x] Velocity and jsx code for processing paths
 ---
 # Marks the progress of the Interactive Maps Application (Old)
 ## Day 1 (18 May 2019)
