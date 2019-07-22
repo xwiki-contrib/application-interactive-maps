@@ -107,8 +107,8 @@
       #set ($responseData = {})
       #set ($discard = $responseData.put('type', 'path'))
       ## Get all the required path data and path page data
-      #set ($includePopup = $response.get('property.Maps.Code.PathClass.addPopup_boolean')[0])
-      #set ($discard = $responseData.put('addPopup', $includePopup))
+      #set ($includePopup = $response.get('property.Maps.Code.PathClass.includePopup_boolean')[0])
+      #set ($discard = $responseData.put('includePopup', $includePopup))
       #set ($title = $response.get('title_'))
       #set ($popupContent = "#getHtml($response.get('doccontentraw_'))")
       #set ($discard = $responseData.put('title', $title))
@@ -122,6 +122,7 @@
       #set ($discard = $sourceData.put('location', $sourcePageDoc.get('location')))
       #set ($discard = $sourceData.put('title', $sourcePageDoc.getTitle()))
       #set ($discard = $sourceData.put('popupContent', "#getHtml(${sourcePageDoc.getContent()})"))
+      #checkMarkerIcon($sourcePageDoc.getDocumentReference().getLocalDocumentReference() $sourceData)
       #set ($discard = $responseData.put('source', $jsontool.serialize(${sourceData})))
       ## Process and convert destination data to JSON
       #set ($destinationPage = $response.get('property.Maps.Code.PathClass.destinationPointPage_string')[0])
@@ -130,6 +131,7 @@
       #set ($discard = $destData.put('location', $destPageDoc.get('location')))
       #set ($discard = $destData.put('title', $destPageDoc.getTitle()))
       #set ($discard = $destData.put('popupContent', "#getHtml(${destPageDoc.getContent()})"))
+      #checkMarkerIcon($destPageDoc.getDocumentReference().getLocalDocumentReference() $destData)
       #set ($discard = $responseData.put('destination', $jsontool.serialize(${destData})))
       ## Add the path data to the main map data array
       #set ($discard = $mapDataArr.add($responseData))
@@ -324,9 +326,11 @@
             &lt;i class="fa fa-map-marker"&gt;&lt;/i&gt;
           )))
         #elseif ($item.get('type') == 'path')
-          #set ($source = $item.source.replaceAll('"', "'"))
-          #set ($destination = $item.destination.replaceAll('"', "'"))
-          (% class="goto-loc goto-loc-path" data-location="{source: ${source}, destination: ${destination}}" title="$services.localization.render('intmap.search.gotoLoc')" %)(((
+          #set ($source = $jsontool.parse($item.source))
+          #set ($sourceLoc = $source.location.replaceAll("'", '"'))
+          #set ($destination = $jsontool.parse($item.destination))
+          #set ($destLoc = $destination.location.replaceAll("'", '"'))
+          (% class="goto-loc goto-loc-path" data-location='{"source": "${sourceLoc}", "destination": "${destLoc}"}' title="$services.localization.render('intmap.search.gotoLoc')" %)(((
             &lt;i class="fa fa-map-marker"&gt;&lt;/i&gt;
           )))
         #end

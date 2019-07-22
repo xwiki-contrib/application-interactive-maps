@@ -283,9 +283,6 @@
       <query/>
     </property>
     <property>
-      <testField>[]</testField>
-    </property>
-    <property>
       <tiles>https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png</tiles>
     </property>
   </object>

@@ -35,7 +35,7 @@
   <comment/>
   <minorEdit>false</minorEdit>
   <syntaxId>xwiki/2.1</syntaxId>
-  <hidden>false</hidden>
+  <hidden>true</hidden>
   <content>{{velocity}}
 ## Replace the default space with the space where you want your documents to be created.
 ## Replace the default parent with the one of your choice and save the document.
@@ -52,21 +52,6 @@
     <defaultWeb/>
     <nameField/>
     <validationScript/>
-    <addPopup>
-      <customDisplay/>
-      <defaultValue>1</defaultValue>
-      <disabled>0</disabled>
-      <displayFormType>checkbox</displayFormType>
-      <displayType/>
-      <hint/>
-      <name>addPopup</name>
-      <number>3</number>
-      <prettyName>Add Popup to Path</prettyName>
-      <unmodifiable>0</unmodifiable>
-      <validationMessage/>
-      <validationRegExp/>
-      <classType>com.xpn.xwiki.objects.classes.BooleanClass</classType>
-    </addPopup>
     <destinationPointPage>
       <cache>0</cache>
       <classname/>
@@ -94,6 +79,21 @@
       <valueField/>
       <classType>com.xpn.xwiki.objects.classes.PageClass</classType>
     </destinationPointPage>
+    <includePopup>
+      <customDisplay/>
+      <defaultValue>0</defaultValue>
+      <disabled>0</disabled>
+      <displayFormType>checkbox</displayFormType>
+      <displayType/>
+      <hint>Include popup that display route information</hint>
+      <name>includePopup</name>
+      <number>3</number>
+      <prettyName>Add Popup to Path</prettyName>
+      <unmodifiable>0</unmodifiable>
+      <validationMessage/>
+      <validationRegExp/>
+      <classType>com.xpn.xwiki.objects.classes.BooleanClass</classType>
+    </includePopup>
     <sourcePointPage>
       <cache>0</cache>
       <classname/>
