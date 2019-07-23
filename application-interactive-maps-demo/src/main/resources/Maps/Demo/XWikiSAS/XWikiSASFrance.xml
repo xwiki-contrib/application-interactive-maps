@@ -52,23 +52,40 @@ This is their office in France.</content>
       <defaultWeb/>
       <nameField/>
       <validationScript/>
-      <location>
+      <latitude>
         <customDisplay/>
         <disabled>0</disabled>
-        <hint>Location in coordinates or place name</hint>
-        <name>location</name>
-        <number>1</number>
+        <hint/>
+        <name>latitude</name>
+        <number>2</number>
         <picker>0</picker>
-        <prettyName>Location</prettyName>
+        <prettyName>Latitude</prettyName>
         <size>30</size>
         <unmodifiable>0</unmodifiable>
         <validationMessage/>
         <validationRegExp/>
         <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
-      </location>
+      </latitude>
+      <longitude>
+        <customDisplay/>
+        <disabled>0</disabled>
+        <hint/>
+        <name>longitude</name>
+        <number>3</number>
+        <picker>0</picker>
+        <prettyName>Longitude</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <validationMessage/>
+        <validationRegExp/>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </longitude>
     </class>
     <property>
-      <location>XWiki SAS, France</location>
+      <latitude>48.8620428</latitude>
+    </property>
+    <property>
+      <longitude>2.3533665</longitude>
     </property>
   </object>
 </xwikidoc>

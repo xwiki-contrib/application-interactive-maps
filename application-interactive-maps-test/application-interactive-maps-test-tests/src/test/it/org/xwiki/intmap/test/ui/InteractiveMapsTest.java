@@ -73,7 +73,8 @@ public class InteractiveMapsTest extends AbstractTest
         Assert.assertEquals(mapsHomePage.getPage(), mapsVP.getMetaDataValue("page"));
 
         // Create a point for the map
-        createPageWithPoint(POINTS_SPACE, POINT_NAME, "This point is Islamabad.", POINT_NAME);
+        String[] locationIslamabad  = new String[]{"33.6844", "73.0479"};
+        createPageWithPoint(POINTS_SPACE, POINT_NAME, "This point is Islamabad.", locationIslamabad);
 
         // Delete the map if it already exists
         if (getUtil().pageExists(Arrays.asList(MAP_SPACE), "WebHome")) {
@@ -113,13 +114,14 @@ public class InteractiveMapsTest extends AbstractTest
         //  Assert.assertNotNull(leafletMarker);
     }
 
-    public ViewPage createPageWithPoint(String[] space, String title, String content, String location)
+    public ViewPage createPageWithPoint(String[] space, String title, String content, String[] location)
     {
         EntityReference entityReference = new DocumentReference(WIKI_NAME, Arrays.asList(space), title);
         getUtil().deletePage(entityReference);
         ViewPage pointPage = getUtil().createPage(entityReference, content, title);
         Map<String, String> pointPageObject = new HashMap<>();
-        pointPageObject.put("location", location);
+        pointPageObject.put("latitude", location[0]);
+        pointPageObject.put("longitude", location[1]);
         getUtil().addObject(entityReference, "Maps.Code.PointClass", pointPageObject);
         getUtil().gotoPage(entityReference);
         return pointPage;

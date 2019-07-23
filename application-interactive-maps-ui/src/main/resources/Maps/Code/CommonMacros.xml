@@ -55,6 +55,7 @@
   #set ($xdom = $services.rendering.parse($xwiki, "xwiki/2.1"))
   $services.rendering.render($xdom, "xhtml/1.0")
 #end
+
 ## Check marker icon
 #macro (checkMarkerIcon $pageName $variable)
   ## Get attachment URL for marker icon if attachment name starts with 'marker'
@@ -67,6 +68,7 @@
     #end
   #end
 #end
+
 ## Process location property data
 #macro (processLocationProperty $property)
   ## Check if the page contains the object property
@@ -79,7 +81,13 @@
     ## Get document content as html
     #set ($popupContent = "#getHtml($response.get('doccontentraw_'))")
     ## Get the location
-    #set ($location = $response.get($property)[0])
+    #if ($property.equals('property.Maps.Code.PointClass.latitude_string'))
+      #set ($location = [])
+      #set ($discard = $location.add($response.get(${property})[0]))
+      #set ($discard = $location.add($response.get('property.Maps.Code.PointClass.longitude_string')[0]))
+    #else
+      #set ($location = $response.get($property)[0])
+    #end
     ## Set the collected information
     #set ($discard = $responseData.put('title', $title))
     #set ($discard = $responseData.put('location', $location))
@@ -90,12 +98,28 @@
     #set ($discard = $mapDataArr.add($responseData))
   #end
 #end
+
+## Process source and destination points
+#macro (getPathPointJSON $pointName)
+  #set ($pointPage = $response.get("property.Maps.Code.PathClass.${pointName}PointPage_string")[0])
+  #set ($pointPageDoc = $xwiki.getDocument(${pointPage}))
+  #set ($pointData = {})
+  #set ($location = [])
+  #set ($discard = $location.add($pointPageDoc.get('latitude')))
+  #set ($discard = $location.add($pointPageDoc.get('longitude')))
+  #set ($discard = $pointData.put('location', $location))
+  #set ($discard = $pointData.put('title', $pointPageDoc.getTitle()))
+  #set ($discard = $pointData.put('popupContent', "#getHtml(${pointPageDoc.getContent()})"))
+  #checkMarkerIcon($pointPageDoc.getDocumentReference().getLocalDocumentReference() $pointData)
+  $jsontool.serialize(${pointData})
+#end
+
 ## Handle the response of solr query
 #macro (handleSolrResponse $searchResponse)
   #set ($mapDataArr = [])
   #foreach ($response in $searchResponse.getResults())
     ## Check for PointClass
-    #processLocationProperty('property.Maps.Code.PointClass.location_string')
+    #processLocationProperty('property.Maps.Code.PointClass.latitude_string')
     ## Check for custom location properties
     #if (!$customLocationProperties.isEmpty())
       #foreach ($customProp in $mapObjMapping.get('customLocationProperties'))
@@ -116,29 +140,16 @@
       #set ($discard = $responseData.put('doclocation', $response.get('fullname')))
       ## Get data of each point
       ## Process and convert source data to JSON
-      #set ($sourcePage = $response.get('property.Maps.Code.PathClass.sourcePointPage_string')[0])
-      #set ($sourcePageDoc = $xwiki.getDocument(${sourcePage}))
-      #set ($sourceData = {})
-      #set ($discard = $sourceData.put('location', $sourcePageDoc.get('location')))
-      #set ($discard = $sourceData.put('title', $sourcePageDoc.getTitle()))
-      #set ($discard = $sourceData.put('popupContent', "#getHtml(${sourcePageDoc.getContent()})"))
-      #checkMarkerIcon($sourcePageDoc.getDocumentReference().getLocalDocumentReference() $sourceData)
-      #set ($discard = $responseData.put('source', $jsontool.serialize(${sourceData})))
+      #set ($discard = $responseData.put('source', "#getPathPointJSON('source')"))
       ## Process and convert destination data to JSON
-      #set ($destinationPage = $response.get('property.Maps.Code.PathClass.destinationPointPage_string')[0])
-      #set ($destPageDoc = $xwiki.getDocument(${destinationPage}))
-      #set ($destData = {})
-      #set ($discard = $destData.put('location', $destPageDoc.get('location')))
-      #set ($discard = $destData.put('title', $destPageDoc.getTitle()))
-      #set ($discard = $destData.put('popupContent', "#getHtml(${destPageDoc.getContent()})"))
-      #checkMarkerIcon($destPageDoc.getDocumentReference().getLocalDocumentReference() $destData)
-      #set ($discard = $responseData.put('destination', $jsontool.serialize(${destData})))
+      #set ($discard = $responseData.put('destination', "#getPathPointJSON('destination')"))
       ## Add the path data to the main map data array
       #set ($discard = $mapDataArr.add($responseData))
     #end
   #end
   $jsontool.serialize($mapDataArr)
 #end
+
 ## Run the solr query and get data for map in json
 #macro (handleMapQuery $queryStatement)
   #set ($query = $services.query.createQuery($queryStatement, 'solr'))
@@ -182,6 +193,8 @@
   ## Execute the query.
   #set ($searchResponse = $query.execute()[0])
 #end
+
+## Main macro for combining all macros and displaying map ui
 #macro (displayMapUI)
   #set($void = $services.progress.startStep('#displaySearchUI'))
   #set($void = $services.progress.pushLevel())
@@ -252,6 +265,7 @@
   #set($void = $services.progress.endStep())
 #end
 
+## Displaying map search form
 #macro(displaySearchForm)
   #set($void = $services.progress.startStep('#displaySearchForm'))
   #set($void = $services.progress.pushLevel())
@@ -304,16 +318,17 @@
   #set($void = $services.progress.endStep())
 #end
 
+## Map facets and search results
 #macro (displayMapSearchFilter)
-  #if ($facetEnabled)
-    (% class="map-results-section#if ($request.mfacetsection || ($request.mfacetsection &amp;&amp; $facetSelected)) open#end" id="show-search-facets" %)(((
-      $services.localization.render('intmap.search.refineSearch') &lt;i class="fa fa-caret-left"&gt;&lt;/i&gt;
-    )))
-    (% class="map-filters#if ($request.mfacetsection || ($request.mfacetsection &amp;&amp; $facetSelected)) open#end" %)(((
-      #displaySearchFacets($searchResponse)
-    )))
-  #end
   #if ($mapDataArr.size() &gt; 0)
+    #if ($facetEnabled)
+      (% class="map-results-section#if ($request.mfacetsection || ($request.mfacetsection &amp;&amp; $facetSelected)) open#end" id="show-search-facets" %)(((
+        $services.localization.render('intmap.search.refineSearch') &lt;i class="fa fa-caret-left"&gt;&lt;/i&gt;
+      )))
+      (% class="map-filters#if ($request.mfacetsection || ($request.mfacetsection &amp;&amp; $facetSelected)) open#end" %)(((
+        #displaySearchFacets($searchResponse)
+      )))
+    #end
     (% class="map-results-section#if ($request.msearchitemsection) open#end" id="show-search-items" %)(((
       $services.localization.render('intmap.search.showResults') &lt;i class="fa fa-caret-left"&gt;&lt;/i&gt;
     )))
@@ -327,10 +342,10 @@
           )))
         #elseif ($item.get('type') == 'path')
           #set ($source = $jsontool.parse($item.source))
-          #set ($sourceLoc = $source.location.replaceAll("'", '"'))
+          #set ($sourceLoc = $source.location)
           #set ($destination = $jsontool.parse($item.destination))
-          #set ($destLoc = $destination.location.replaceAll("'", '"'))
-          (% class="goto-loc goto-loc-path" data-location='{"source": "${sourceLoc}", "destination": "${destLoc}"}' title="$services.localization.render('intmap.search.gotoLoc')" %)(((
+          #set ($destLoc = $destination.location)
+          (% class="goto-loc goto-loc-path" data-location='{"source": ${sourceLoc}, "destination": ${destLoc}}' title="$services.localization.render('intmap.search.gotoLoc')" %)(((
             &lt;i class="fa fa-map-marker"&gt;&lt;/i&gt;
           )))
         #end

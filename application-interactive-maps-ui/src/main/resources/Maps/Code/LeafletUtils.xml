@@ -281,10 +281,17 @@ define('leaflet-commons', ['jquery'], function ($) {
       //Check if the location type is an address or coordinates
       var locType = 'address';
       if (location) {
-        var checkLoc = location.split(',');
-        //Location type is coordinates if there are two values and each is a number
-        if (checkLoc.length == 2 &amp;&amp; !isNaN(checkLoc[0].trim()) &amp;&amp; !isNaN(checkLoc[1].trim())) {
-          locType = 'latLng';
+        //If location is already an array
+        if (Array.isArray(location) &amp;&amp; location.length === 2) {
+          locType = 'latLngArr';
+          callback(location);
+          return;
+        } else {
+          var checkLoc = location.split(',');
+          //Location type is coordinates if there are two values and each is a number
+          if (checkLoc.length == 2 &amp;&amp; !isNaN(checkLoc[0].trim()) &amp;&amp; !isNaN(checkLoc[1].trim())) {
+            locType = 'latLng';
+          }
         }
       }
       if (locType == 'latLng') {
@@ -703,6 +710,7 @@ require(['jquery', 'leaflet', 'leaflet-commons', 'bootstrap'], function ($, leaf
         leafletCommons.getLocationCoords(formVal, function(location){
           if (location &amp;&amp; map) {
             map.setView(L.latLng(location), 14);
+            console.log(location);
           }
         });
       } else {
@@ -727,7 +735,7 @@ require(['jquery', 'leaflet', 'leaflet-commons', 'bootstrap'], function ($, leaf
 
     //Go to location of the result item
     $('.search-item-results .goto-loc-point').on('click', function () {
-      var loc = this.dataset.location;
+      var loc = JSON.parse(this.dataset.location);
       if (loc) {
         leafletCommons.getLocationCoords(loc, function(location){
           if (location &amp;&amp; map) {
@@ -745,7 +753,7 @@ require(['jquery', 'leaflet', 'leaflet-commons', 'bootstrap'], function ($, leaf
         var dest = loc.destination;
         leafletCommons.getLocationCoords(source, function(sourceLoc){
           leafletCommons.getLocationCoords(dest, function(destLoc){
-            if (location &amp;&amp; map) {
+            if (loc &amp;&amp; map) {
               map.fitBounds([sourceLoc, destLoc]);
             }
           });
@@ -1311,10 +1319,6 @@ require(['jquery', 'leaflet', 'leaflet-commons', 'bootstrap'], function ($, leaf
 }
 .leaflet-popup-content &gt; hr{
   margin: 7px 0;
-}
-.leaflet-popup-content .popup-body{
-  max-height: 150px;
-  overflow: auto;
 }
 /*
  * Override css
