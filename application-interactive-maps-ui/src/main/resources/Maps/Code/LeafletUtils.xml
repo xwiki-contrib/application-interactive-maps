@@ -142,7 +142,7 @@ define('leaflet-commons', ['jquery'], function ($) {
     {
       //Create the map
       var mapId = 'map-' + options.id,
-          zoom = options.defaultZoom !== null ? options.defaultZoom : 12,
+          zoom = options.defaultZoom !== (null || undefined) ? options.defaultZoom : 12,
           tiles = options.tiles !== '' ? options.tiles : 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
           map = new L.Map(mapId, {zoom: zoom, center: [48, 2]});
       options.defaultLocation = options.defaultLocation !== '' ? options.defaultLocation : '48,2';
