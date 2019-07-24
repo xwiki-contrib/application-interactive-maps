@@ -163,7 +163,21 @@
 - [x] Use static list for MapClass properties which accept multiple values (customLocationProperties, facetFields)
 ## Day 53 (20 July 2019)
 - [x] Create PathClass for path maps
-- [x] Velocity and jsx code for processing paths
+- [x] Code for processing paths
+## Day 54 (21 July 2019)
+- [ ] Break
+## Day 55 (22 July 2019)
+- [x] Update leaflet version to 1.5.1
+- [x] Further code for path maps
+- [x] Code for processing source and destination to create paths
+## Day 56 (23 July 2019)
+- [x] Change PointClass to support separate latitude and longitude values
+- [x] Change all code the uses PointClass to follow the new structure
+- [x] Change all points and maps to use the new PointClass structure
+## Day 57 (24 July 2019)
+- [ ] Try to implement LocationDescriptionClass to update PointClass using an event listener (dropped because event listener requires programming rights)
+- [x] Create Point Editor for creating points using addresses
+- [x] Set up preview map for Point Editor
 ---
 # Marks the progress of the Interactive Maps Application (Old)
 ## Day 1 (18 May 2019)
