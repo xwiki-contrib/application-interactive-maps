@@ -72,14 +72,19 @@
 #if ('$!pointDocLocation' != '' &amp;&amp; $xwiki.exists($pointDocLocation))
 {{warning}}The target document already exists. Please choose a different name, or [[view the existing document&gt;&gt;$pointDocLocation]]{{/warning}}
 #end
-{{html wiki='true'}}
+{{html wiki="true" clean="false"}}
 (% class="row" %)(((
   (% class="col-sm-6" %)(((
   ## Preview of the map
   &lt;p class="xform"&gt;&lt;span class="xHint"&gt;$services.localization.render('intmap.pointEditor.hint')&lt;/span&gt;&lt;/p&gt;
-  (% class="point-editor-map-preview" id="map-${util.generateRandomString(5)}" style="width: 100%; height: 300px;" %)((()))
-  (% class="map-search-filter" %)(((
-    #displaySearchForm()
+  (% class="map-wrapper" %)(((
+    (% class="map-preview point-editor-map-preview" id="map-${util.generateRandomString(5)}" style="width: 100%; height: 300px;" %)((()))
+    (% class="map-search-filter" %)(((
+      #displayLocationSearchForm()
+    )))
+    (% id="map-search-close" %)(((
+    &lt;i class="fa fa-arrow-left"&gt;&lt;/i&gt;
+    )))
   )))
   )))
   (% class="col-sm-6" %)(((
@@ -209,12 +214,39 @@ require(['jquery', 'leaflet', 'leaflet-commons', 'bootstrap'], function ($, leaf
 
     //Render the map
     $$('.point-editor-map-preview').each(function (element) {
-      var mapId = $(element).attr('id');
+      var mapId = $(element).attr('id').replace('map-', '');
       var options = {
-        id: mapId
+        'id': mapId,
+        'addFullscreen': 0,
+        'includeCurrentLocation': 1
       };
-      options.id = options.id.replace('map-', '');
       map = leafletCommons.createEmptyMap(options);
+      map.on('click', function (e) {
+        if ($(".leaflet-popup-pane").html() == '') {
+          $('.map-search-filter').removeClass('open');
+        }
+      });
+      var locationInput = $('#markerLocation');
+      var location = locationInput.val().split(',');
+      map.setView(location, 14);
+      leafletCommons.addSinglePointSelection(map, location, function (marker) {
+        var newLocation = marker.getLatLng();
+        location = [newLocation.lat, newLocation.lng];
+        locationInput.val(location.join(','));
+      });
+    });
+
+    //Point editor place search
+    $('.map-search-form').submit(function (e) {
+      e.preventDefault();
+      var formVal = $(this).find('input[type=search]').val();
+      if (formVal !== '') {
+        leafletCommons.getLocationCoords(formVal, function (location) {
+          if (map &amp;&amp; location) {
+            map.setView(L.latLng(location), 14);
+          }
+        });
+      }
     });
 
   }

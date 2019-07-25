@@ -59,6 +59,13 @@ intmap.search.searchType=Select search type
 intmap.search.showResults=Result items
 intmap.search.gotoLoc=Go to location
 intmap.search.refineSearch=Refine your search
+
+## PointEditor
+intmap.pointEditor.pointName=Point Name
+intmap.pointEditor.pointSpace=Point Space
+intmap.pointEditor.customMarker=Custom Marker Image
+intmap.pointEditor.pointSubmit=Create Point
+intmap.pointEditor.hint=Select a location on the map and create a point
 </content>
   <object>
     <name>Maps.Code.Translations</name>

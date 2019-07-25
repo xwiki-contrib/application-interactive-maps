@@ -142,8 +142,9 @@ define('leaflet-commons', ['jquery'], function ($) {
     {
       //Create the map
       var mapId = 'map-' + options.id,
-          zoom = options.defaultZoom !== (null || undefined) ? options.defaultZoom : 12,
-          tiles = options.tiles !== '' ? options.tiles : 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+          zoom = options.defaultZoom !== null ? (options.defaultZoom !== undefined ? options.defaultZoom : 12) : 12,
+          tiles = options.tiles !== '' ? (options.tiles !== undefined ? options.tiles : 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png') : 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+          attribution = options.attribution !== undefined ? options.attribution : '',
           map = new L.Map(mapId, {zoom: zoom, center: [48, 2]});
       options.defaultLocation = options.defaultLocation !== '' ? options.defaultLocation : '48,2';
       map.zoomControl.setPosition('bottomright');
@@ -156,12 +157,14 @@ define('leaflet-commons', ['jquery'], function ($) {
         L.control.scale({position: 'bottomleft'}).addTo(map);
       }
       //Adding the fullscreen control
-      this.addFullscreen(map);
+      if (options.addFullscreen == 1) {
+        this.addFullscreen(map);
+      }
       //Adding the search control
       this.addSearch(map);
       //Add a tiles layer to the map (the background)
       L.tileLayer(tiles, {
-        attribution: options.attribution,
+        attribution: attribution,
         maxZoom: 17,
         id: 'mapbox.streets'
       }).addTo(map);
@@ -508,6 +511,22 @@ define('leaflet-commons', ['jquery'], function ($) {
       this.updateFacetsURLWithMapState(states);
       window.history.pushState(null, document.title, viewURL);
       return viewURL;
+    },
+
+    //Select a place on the map
+    addSinglePointSelection: function (map, defaultLocation, callback)
+    {
+      var marker = L.marker(defaultLocation).addTo(map);
+      map.on('click', function (e) {
+        if ($(".leaflet-popup-pane").html() == '') {
+          if ($('.map-search-filter') &amp;&amp; !$('.map-search-filter').hasClass('open')) {
+            marker.remove();
+            marker = null;
+            marker = L.marker(e.latlng).addTo(map);
+            callback(marker);
+          }
+        }
+      });
     }
 
   }
@@ -634,6 +653,7 @@ require(['jquery', 'leaflet', 'leaflet-commons', 'bootstrap'], function ($, leaf
     //Render the map
     $$('.map-container').each(function (element) {
       var options = JSON.parse(element.dataset.options);
+      options.addFullscreen = 1;
       map = leafletCommons.createEmptyMap(options);
       var mapData = JSON.parse(element.dataset.mapdata);
       if (mapData.length === 0) {
@@ -710,7 +730,6 @@ require(['jquery', 'leaflet', 'leaflet-commons', 'bootstrap'], function ($, leaf
         leafletCommons.getLocationCoords(formVal, function(location){
           if (location &amp;&amp; map) {
             map.setView(L.latLng(location), 14);
-            console.log(location);
           }
         });
       } else {
@@ -899,7 +918,7 @@ require(['jquery', 'leaflet', 'leaflet-commons', 'bootstrap'], function ($, leaf
 .map-wrapper{
   position: relative;
 }
-.map-container{
+.map-container, .map-preview{
   width: 100%;
   max-width: 100%;
   height: 400px;
@@ -1014,7 +1033,7 @@ require(['jquery', 'leaflet', 'leaflet-commons', 'bootstrap'], function ($, leaf
   color: @text-color;
 }
 .leaflet-control-container&gt;div{
-  z-index: 992;
+  z-index: 991;
 }
 .leaflet-touch .leaflet-control-layers, .leaflet-touch .leaflet-bar{
   border: none;
@@ -1215,7 +1234,7 @@ require(['jquery', 'leaflet', 'leaflet-commons', 'bootstrap'], function ($, leaf
   opacity: 0;
   visibility: hidden;
   transition: all 0.2s;
-  z-index: 991;
+  z-index: 992;
 }
 .map-search-filter.open{
   transform: translateX(0) scale(1);
@@ -1260,7 +1279,7 @@ require(['jquery', 'leaflet', 'leaflet-commons', 'bootstrap'], function ($, leaf
   color: @text-color;
   box-shadow: 0px 0px 5px @box-shadow;
   cursor: pointer;
-  z-index: 991;
+  z-index: 992;
   opacity: 0;
   transform: translateX(-100%);
   visibility: hidden;
@@ -1278,6 +1297,13 @@ require(['jquery', 'leaflet', 'leaflet-commons', 'bootstrap'], function ($, leaf
   visibility: visible;
   transition: all 0.2s;
   transition-delay: 0.4s;
+}
+.map-preview ~ .map-search-filter{
+  width: 50%;
+  max-width: 50%;
+}
+.map-preview ~ #map-search-close{
+  left: 51%;
 }
 @media (max-width: 768px){
   .map-search-filter{

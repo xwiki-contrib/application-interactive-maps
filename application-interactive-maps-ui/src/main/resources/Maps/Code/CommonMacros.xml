@@ -355,6 +355,23 @@
   #end
 #end
 
+## Simple search form for only location search
+#macro(displayLocationSearchForm)
+  {{html clean="false"}}
+  &lt;form class="map-search-form" role="search"&gt;
+    &lt;div class="map-search"&gt;
+      &lt;div class="map-search-input-wrapper"&gt;
+        &lt;input type="search" name="text" class="form-control withTip useTitleAsTip map-search-input"
+          title="$services.localization.render('intmap.search.placeholder')" value=""/&gt;
+        &lt;button type="submit" class="btn btn-primary map-search-btn"&gt;
+          &lt;span class="fa fa-search"&gt;&lt;/span&gt;
+        &lt;/button&gt;
+      &lt;/div&gt;
+    &lt;/div&gt;
+  &lt;/form&gt;
+  {{/html}}
+#end
+
 ##
 ## Facet macros
 ##
