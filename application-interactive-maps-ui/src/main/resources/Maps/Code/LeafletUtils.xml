@@ -376,8 +376,10 @@ define('leaflet-commons', ['jquery'], function ($) {
       var rootScope = this;
       //Get the path as polyline from osm open source routing machine (osrm)
       //OSRM takes coords as [longitude,latitude] not [latitude,longitude]
-      var sourceDestForOSRM = data.source.reverse().join() + ';' + data.destination.reverse().join();
-      var queryURL = 'http://router.project-osrm.org/route/v1/car/' + sourceDestForOSRM;
+      var pointsForOSRM = data.points.map((point) =&gt; {
+        return point.reverse().join();
+      }).join(';');
+      var queryURL = 'http://router.project-osrm.org/route/v1/car/' + pointsForOSRM;
       $.getJSON(queryURL, { 'alternatives': 'true', 'steps': 'true', 'geometries': 'polyline6', 'overview': 'simplified' }).done(function (osrmObject) {
         if (osrmObject.code == 'Ok') {
           //Layers/features hierarchy: routesFeatureGroup -&gt; polylineFeatureGroup -&gt; polyline ('-&gt;' means 'contains')
@@ -388,13 +390,15 @@ define('leaflet-commons', ['jquery'], function ($) {
           for (var i = routes.length - 1; i &gt;= 0; i--) {
             var latlngs = [];
             var polylineFeatureGroup = L.featureGroup();
-            var steps = routes[i].legs[0].steps;
-            var polyline;
-            for (var j = 0; j &lt; steps.length; j++) {
-              //Polyline is decoded from the osrm response using mapbox/polyline decode method
-              polyline = L.polyline(rootScope.decodePolyline(steps[j].geometry, 6), { color: routeColors[i], weight: 7, stroke: 'white', lineCap: 'round' });
-              polylineFeatureGroup.addLayer(polyline);
-            }
+            routes[i].legs.forEach (function (leg) {
+              var steps = leg.steps;
+              var polyline;
+              for (var j = 0; j &lt; steps.length; j++) {
+                //Polyline is decoded from the osrm response using mapbox/polyline decode method
+                polyline = L.polyline(rootScope.decodePolyline(steps[j].geometry, 6), { color: routeColors[i], weight: 7, stroke: 'white', lineCap: 'round' });
+                polylineFeatureGroup.addLayer(polyline);
+              }
+            });
             //Processing data for popup
             if (data.includePopup) {
               //Calculating the distance of the route
@@ -682,24 +686,21 @@ require(['jquery', 'leaflet', 'leaflet-commons', 'bootstrap'], function ($, leaf
             i++;
           });
         } else if (data.type == 'path') {
-          var source = JSON.parse(data.source);
-          var destination = JSON.parse(data.destination);
-          leafletCommons.getLocationCoords(source.location, function (sourceLocation) {
-            leafletCommons.getLocationCoords(destination.location, function (destLocation) {
-              leafletCommons.addMarker(source.markerIcon, sourceLocation, function (sourceMarker) {
-                leafletCommons.addMarker(destination.markerIcon, destLocation, function (destMarker) {
-                  //Putting source point data in a single object
-                  source.location = sourceLocation;
-                  source.marker = sourceMarker;
-                  //Putting destination point data in a single object
-                  destination.location = destLocation;
-                  destination.marker = destMarker;
-                  [source, destination].forEach(function (item) {
-                    processPoint(item, item.marker, allLayers);
-                  });
+          var points = JSON.parse(data.points);
+          var noOfPoints = points.length - 1;
+          var j = 0;
+          var allPoints = [];
+          points.forEach(function (point) {
+            allPoints.push(point.location);
+            leafletCommons.getLocationCoords(point.location, function (pointLocation) {
+              leafletCommons.addMarker(point.markerIcon, pointLocation, function (pointMarker) {
+                //Putting point data in a single object
+                point.location = pointLocation;
+                point.marker = pointMarker;
+                processPoint(point, point.marker, allLayers);
+                if (noOfPoints == j) {
                   var pathData = {
-                    source: source.location,
-                    destination: destination.location,
+                    points: allPoints,
                     includePopup: data.includePopup
                   };
                   leafletCommons.generatePath(pathData, function (path) {
@@ -710,7 +711,8 @@ require(['jquery', 'leaflet', 'leaflet-commons', 'bootstrap'], function ($, leaf
                     map.fitBounds(allLayers.getBounds());
                   }
                   i++;
-                });
+                }
+                j++;
               });
             });
           });

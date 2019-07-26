@@ -99,19 +99,23 @@
   #end
 #end
 
-## Process source and destination points
-#macro (getPathPointJSON $pointName)
-  #set ($pointPage = $response.get("property.Maps.Code.PathClass.${pointName}PointPage_string")[0])
-  #set ($pointPageDoc = $xwiki.getDocument(${pointPage}))
-  #set ($pointData = {})
-  #set ($location = [])
-  #set ($discard = $location.add($pointPageDoc.get('latitude')))
-  #set ($discard = $location.add($pointPageDoc.get('longitude')))
-  #set ($discard = $pointData.put('location', $location))
-  #set ($discard = $pointData.put('title', $pointPageDoc.getTitle()))
-  #set ($discard = $pointData.put('popupContent', "#getHtml(${pointPageDoc.getContent()})"))
-  #checkMarkerIcon($pointPageDoc.getDocumentReference().getLocalDocumentReference() $pointData)
-  $jsontool.serialize(${pointData})
+## Process all path points
+#macro (getPathPointsJSON)
+  #set ($pointPages = $response.get("property.Maps.Code.PathClass.pointsPages_string"))
+  #set ($pointPagesArr = [])
+  #foreach ($pointPage in $pointPages)
+    #set ($pointPageDoc = $xwiki.getDocument(${pointPage}))
+    #set ($pointData = {})
+    #set ($location = [])
+    #set ($discard = $location.add($pointPageDoc.get('latitude')))
+    #set ($discard = $location.add($pointPageDoc.get('longitude')))
+    #set ($discard = $pointData.put('location', $location))
+    #set ($discard = $pointData.put('title', $pointPageDoc.getTitle()))
+    #set ($discard = $pointData.put('popupContent', "#getHtml(${pointPageDoc.getContent()})"))
+    #checkMarkerIcon($pointPageDoc.getDocumentReference().getLocalDocumentReference() $pointData)
+    #set ($disard = $pointPagesArr.add(${pointData}))
+  #end
+  $jsontool.serialize($pointPagesArr)
 #end
 
 ## Handle the response of solr query
@@ -139,10 +143,8 @@
       #set ($discard = $responseData.put('popupContent', $popupContent))
       #set ($discard = $responseData.put('doclocation', $response.get('fullname')))
       ## Get data of each point
-      ## Process and convert source data to JSON
-      #set ($discard = $responseData.put('source', "#getPathPointJSON('source')"))
-      ## Process and convert destination data to JSON
-      #set ($discard = $responseData.put('destination', "#getPathPointJSON('destination')"))
+      ## Process and convert points data to JSON
+      #set ($discard = $responseData.put('points', "#getPathPointsJSON"))
       ## Add the path data to the main map data array
       #set ($discard = $mapDataArr.add($responseData))
     #end
@@ -341,11 +343,12 @@
             &lt;i class="fa fa-map-marker"&gt;&lt;/i&gt;
           )))
         #elseif ($item.get('type') == 'path')
-          #set ($source = $jsontool.parse($item.source))
-          #set ($sourceLoc = $source.location)
-          #set ($destination = $jsontool.parse($item.destination))
-          #set ($destLoc = $destination.location)
-          (% class="goto-loc goto-loc-path" data-location='{"source": ${sourceLoc}, "destination": ${destLoc}}' title="$services.localization.render('intmap.search.gotoLoc')" %)(((
+          #set ($allPointsLocation = [])
+          #foreach ($point in $jsontool.parse($item.points))
+            #set ($discard = $allPointsLocation.add(${point.location}))
+          #end
+          #set ($allPointsLocation = $jsontool.serialize($allPointsLocation))
+          (% class="goto-loc goto-loc-path" data-location='{"points": ${allPointsLocation} }' title="$services.localization.render('intmap.search.gotoLoc')" %)(((
             &lt;i class="fa fa-map-marker"&gt;&lt;/i&gt;
           )))
         #end

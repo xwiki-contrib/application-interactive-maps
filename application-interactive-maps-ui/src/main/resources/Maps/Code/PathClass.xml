@@ -52,33 +52,6 @@
     <defaultWeb/>
     <nameField/>
     <validationScript/>
-    <destinationPointPage>
-      <cache>0</cache>
-      <classname/>
-      <customDisplay/>
-      <defaultValue/>
-      <disabled>0</disabled>
-      <displayType>input</displayType>
-      <freeText>allowed</freeText>
-      <hint>Page with destination point object</hint>
-      <idField/>
-      <multiSelect>0</multiSelect>
-      <name>destinationPointPage</name>
-      <number>2</number>
-      <picker>1</picker>
-      <prettyName>Destination Point Page</prettyName>
-      <relationalStorage>0</relationalStorage>
-      <separator> </separator>
-      <separators/>
-      <size>1</size>
-      <sort/>
-      <sql/>
-      <unmodifiable>0</unmodifiable>
-      <validationMessage/>
-      <validationRegExp/>
-      <valueField/>
-      <classType>com.xpn.xwiki.objects.classes.PageClass</classType>
-    </destinationPointPage>
     <includePopup>
       <customDisplay/>
       <defaultValue>0</defaultValue>
@@ -87,40 +60,40 @@
       <displayType/>
       <hint>Include popup that display route information</hint>
       <name>includePopup</name>
-      <number>3</number>
+      <number>2</number>
       <prettyName>Add Popup to Path</prettyName>
       <unmodifiable>0</unmodifiable>
       <validationMessage/>
       <validationRegExp/>
       <classType>com.xpn.xwiki.objects.classes.BooleanClass</classType>
     </includePopup>
-    <sourcePointPage>
+    <pointsPages>
       <cache>0</cache>
       <classname/>
       <customDisplay/>
       <defaultValue/>
       <disabled>0</disabled>
       <displayType>input</displayType>
-      <freeText>allowed</freeText>
-      <hint>Page with source point object</hint>
+      <freeText>discouraged</freeText>
+      <hint>Points using which a path will be generated</hint>
       <idField/>
-      <multiSelect>0</multiSelect>
-      <name>sourcePointPage</name>
+      <multiSelect>1</multiSelect>
+      <name>pointsPages</name>
       <number>1</number>
       <picker>1</picker>
-      <prettyName>Source Point Page</prettyName>
+      <prettyName>Points Pages</prettyName>
       <relationalStorage>0</relationalStorage>
-      <separator> </separator>
-      <separators/>
+      <separator> |</separator>
+      <separators>|,</separators>
       <size>1</size>
-      <sort/>
+      <sort>id</sort>
       <sql/>
       <unmodifiable>0</unmodifiable>
       <validationMessage/>
       <validationRegExp/>
       <valueField/>
       <classType>com.xpn.xwiki.objects.classes.PageClass</classType>
-    </sourcePointPage>
+    </pointsPages>
   </class>
   <object>
     <name>Maps.Code.PathClass</name>
