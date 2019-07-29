@@ -224,9 +224,11 @@ define('leaflet-commons', ['jquery'], function ($) {
     //Adding search control
     addSearch: function (map)
     {
+      var rootScope = this;
       this.addCustomControl(map, 'fa-search', 'Search', 'topleft', function (e) {
         $('.map-popup').removeClass('open');
         $('.map-search-filter').toggleClass('open');
+        rootScope.updateURLWithMapState();
       });
     },
 
@@ -671,6 +673,7 @@ require(['jquery', 'leaflet', 'leaflet-commons', 'bootstrap'], function ($, leaf
       map.on('click', function () {
         if ($(".leaflet-popup-pane").html() == '') {
           $('.map-search-filter').removeClass('open');
+          leafletCommons.updateURLWithMapState();
         }
       });
       mapData.each(function (data) {
@@ -770,13 +773,17 @@ require(['jquery', 'leaflet', 'leaflet-commons', 'bootstrap'], function ($, leaf
     $('.search-item-results .goto-loc-path').on('click', function () {
       var loc = JSON.parse(this.dataset.location);
       if (loc) {
-        var source = loc.source;
-        var dest = loc.destination;
-        leafletCommons.getLocationCoords(source, function(sourceLoc){
-          leafletCommons.getLocationCoords(dest, function(destLoc){
-            if (loc &amp;&amp; map) {
-              map.fitBounds([sourceLoc, destLoc]);
+        var allPoints = loc.points;
+        var noOfPoints = allPoints.length - 1;
+        var processedPoints = [];
+        var i = 0;
+        allPoints.each(function (point) {
+          leafletCommons.getLocationCoords(point, function(pointLoc){
+            processedPoints.push(pointLoc);
+            if (noOfPoints === i) {
+              map.fitBounds(processedPoints);
             }
+            i++;
           });
         });
       }
@@ -792,6 +799,7 @@ require(['jquery', 'leaflet', 'leaflet-commons', 'bootstrap'], function ($, leaf
 
     $('#map-search-close').on('click', function () {
       $('.map-search-filter').removeClass('open');
+      leafletCommons.updateURLWithMapState();
     });
 
   }
