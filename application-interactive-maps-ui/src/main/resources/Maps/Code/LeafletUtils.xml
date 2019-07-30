@@ -533,6 +533,22 @@ define('leaflet-commons', ['jquery'], function ($) {
           }
         }
       });
+    },
+
+    //Process item's popup and add it to master map layer
+    processPopupAndAdd: function (data, bindElement, allLayers)
+    {
+      if (data.includePopup === undefined || data.includePopup) {
+        var popupData = '';
+        //If there is excessive popup data, allow it to be scrolled
+        if (data.popupContent.length &gt; 500) {
+          popupData = '&lt;h2&gt;' + data.title + '&lt;/h2&gt;&lt;hr/&gt;' + '&lt;div style="height: 150px; overflow: auto;"&gt;' + data.popupContent + '&lt;/div&gt;';
+        } else {
+          popupData = '&lt;h2&gt;' + data.title + '&lt;/h2&gt;&lt;hr/&gt;' + '&lt;div&gt;' + data.popupContent + '&lt;/div&gt;';
+        }
+        bindElement.bindPopup(popupData);
+      }
+      allLayers.addLayer(bindElement);
     }
 
   }
@@ -643,19 +659,6 @@ require(['jquery', 'leaflet', 'leaflet-commons', 'bootstrap'], function ($, leaf
 
     var map;
 
-    function processPoint (data, marker, allLayers)
-    {
-      var popupData = '';
-      //If there is excessive popup data, allow it to be scrolled
-      if (data.popupContent.length &gt; 500) {
-        popupData = '&lt;h2&gt;' + data.title + '&lt;/h2&gt;&lt;hr/&gt;' + '&lt;div style="height: 150px; overflow: auto;"&gt;' + data.popupContent + '&lt;/div&gt;';
-      } else {
-        popupData = '&lt;h2&gt;' + data.title + '&lt;/h2&gt;&lt;hr/&gt;' + '&lt;div&gt;' + data.popupContent + '&lt;/div&gt;';
-      }
-      marker.bindPopup(popupData);
-      allLayers.addLayer(marker);
-    }
-
     //Render the map
     $$('.map-container').each(function (element) {
       var options = JSON.parse(element.dataset.options);
@@ -680,7 +683,7 @@ require(['jquery', 'leaflet', 'leaflet-commons', 'bootstrap'], function ($, leaf
         if (data.location != null &amp;&amp; data.type == 'point') {
           leafletCommons.getLocationCoords(data.location, function (location) {
             leafletCommons.addMarker(data.markerIcon, location, function (marker) {
-              processPoint(data, marker, allLayers);
+              leafletCommons.processPopupAndAdd(data, marker, allLayers);
             });
             if (dataLength == i) {
               allLayers.addTo(map);
@@ -700,7 +703,7 @@ require(['jquery', 'leaflet', 'leaflet-commons', 'bootstrap'], function ($, leaf
                 //Putting point data in a single object
                 point.location = pointLocation;
                 point.marker = pointMarker;
-                processPoint(point, point.marker, allLayers);
+                leafletCommons.processPopupAndAdd(point, point.marker, allLayers);
                 if (noOfPoints == j) {
                   var pathData = {
                     points: allPoints,
@@ -719,6 +722,18 @@ require(['jquery', 'leaflet', 'leaflet-commons', 'bootstrap'], function ($, leaf
               });
             });
           });
+        } else if (data.type === 'shape') {
+          var shapeType = data.shapeType;
+          var options = JSON.parse(data.options);
+          if (data.shapeType === 'Polyline') {
+            var polyline = L.polyline(data.points, options);
+            leafletCommons.processPopupAndAdd(data, polyline, allLayers);
+          }
+          if (dataLength == i) {
+            allLayers.addTo(map);
+            map.fitBounds(allLayers.getBounds());
+          }
+          i++;
         } else {
           new XWiki.widgets.Notification('Error while adding items to the map. Make sure the query is correct.', 'error');
         }

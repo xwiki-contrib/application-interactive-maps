@@ -39,7 +39,7 @@
   <content>{{velocity output="false"}}
 #set ($solrConfig = {
   'filterQuery': [
-    'type:DOCUMENT', 'class:Maps.Code.PointClass OR class:Maps.Code.PathClass'
+    'type:DOCUMENT', 'class:Maps.Code.PointClass OR class:Maps.Code.PathClass OR class:Maps.Code.ShapeClass'
   ],
   'facetFields': []
 })
@@ -76,10 +76,9 @@
     #set ($responseData = {})
     #set ($discard = $responseData.put('type', 'point'))
     #set ($discard = $responseData.put('doclocation', $response.get('fullname')))
-    ## Get document title
+    ## Get document title and content
     #set ($title = $response.get('title_'))
-    ## Get document content as html
-    #set ($popupContent = "#getHtml($response.get('doccontentraw_'))")
+    #set ($popupContent = $response.get('doccontentraw_'))
     ## Get the location
     #if ($property.equals('property.Maps.Code.PointClass.latitude_string'))
       #set ($location = [])
@@ -89,9 +88,8 @@
       #set ($location = $response.get($property)[0])
     #end
     ## Set the collected information
-    #set ($discard = $responseData.put('title', $title))
     #set ($discard = $responseData.put('location', $location))
-    #set ($discard = $responseData.put('popupContent', $popupContent))
+    #setPopupData($responseData false $title $popupContent)
     ## Check for custom marker icon
     #checkMarkerIcon($response.get('fullname') $responseData)
     ## Add the collected data into array
@@ -110,12 +108,23 @@
     #set ($discard = $location.add($pointPageDoc.get('latitude')))
     #set ($discard = $location.add($pointPageDoc.get('longitude')))
     #set ($discard = $pointData.put('location', $location))
-    #set ($discard = $pointData.put('title', $pointPageDoc.getTitle()))
-    #set ($discard = $pointData.put('popupContent', "#getHtml(${pointPageDoc.getContent()})"))
+    #setPopupData($pointData false $pointPageDoc.getTitle() $pointPageDoc.getContent())
     #checkMarkerIcon($pointPageDoc.getDocumentReference().getLocalDocumentReference() $pointData)
     #set ($disard = $pointPagesArr.add(${pointData}))
   #end
   $jsontool.serialize($pointPagesArr)
+#end
+
+## Set values for popup
+#macro (setPopupData $dataMap $includePopup $title $rawPopupContent)
+  ## Get and set all the required popup data
+  #if ($includePopup)
+    #set ($discard = $dataMap.put('includePopup', $includePopup))
+  #end
+  ## Get document content as html
+  #set ($popupContent = "#getHtml(${rawPopupContent})")
+  #set ($discard = $dataMap.put('title', $title))
+  #set ($discard = $dataMap.put('popupContent', $popupContent))
 #end
 
 ## Handle the response of solr query
@@ -136,18 +145,37 @@
       #set ($discard = $responseData.put('type', 'path'))
       ## Get all the required path data and path page data
       #set ($includePopup = $response.get('property.Maps.Code.PathClass.includePopup_boolean')[0])
-      #set ($discard = $responseData.put('includePopup', $includePopup))
-      #set ($title = $response.get('title_'))
-      #set ($popupContent = "#getHtml($response.get('doccontentraw_'))")
-      #set ($discard = $responseData.put('title', $title))
-      #set ($discard = $responseData.put('popupContent', $popupContent))
       #set ($discard = $responseData.put('doclocation', $response.get('fullname')))
+      #set ($title = $response.get('title_'))
+      #set ($popupContent = $response.get('doccontentraw_'))
+      #setPopupData($responseData $includePopup $title $popupContent)
       ## Get data of each point
       ## Process and convert points data to JSON
       #set ($discard = $responseData.put('points', "#getPathPointsJSON"))
       ## Add the path data to the main map data array
       #set ($discard = $mapDataArr.add($responseData))
     #end
+    ## Check for shape and process it
+    #if ($response.get('class').contains('Maps.Code.ShapeClass'))
+      #set ($responseData = {})
+      #set ($discard = $responseData.put('type', 'shape'))
+      #set ($discard = $responseData.put('index', $response.get('property.Maps.Code.ShapeClass.index_int')[0]))
+      #set ($discard = $responseData.put('shapeType', $response.get('property.Maps.Code.ShapeClass.type_string')[0]))
+      #set ($points = $response.get('property.Maps.Code.ShapeClass.points_string'))
+      #set ($pointsArr = [])
+      #foreach ($point in $points)
+        #set ($discard = $pointsArr.add($point.split(',')))
+      #end
+      #set ($discard = $responseData.put('points', $pointsArr))
+      #set ($discard = $responseData.put('options', $response.get('property.Maps.Code.ShapeClass.options_en')[0]))
+      ## Set information for the popup
+      #set ($includePopup = $response.get('property.Maps.Code.ShapeClass.includePopup_boolean')[0])
+      #set ($title = $response.get('title_'))
+      #set ($popupContent = $response.get('doccontentraw_'))
+      #setPopupData($responseData $includePopup $title $popupContent)
+      #set ($discard = $mapDataArr.add($responseData))
+    #end
+    ## Shapes END
   #end
   $jsontool.serialize($mapDataArr)
 #end
