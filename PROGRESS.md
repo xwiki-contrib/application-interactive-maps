@@ -178,6 +178,23 @@
 - [ ] Try to implement LocationDescriptionClass to update PointClass using an event listener (dropped because event listener requires programming rights)
 - [x] Create Point Editor for creating points using addresses
 - [x] Set up preview map for Point Editor
+## Day 58 (25 July 2019)
+- [x] Set up location search form for Point Editor
+- [x] Click anywhere on the map preview to select a location
+- [x] Create a point using Point Editor
+## Day 59 (26 July 2019)
+- [x] Change PointClass to include an array of points rather than just source and destination
+- [x] Update code to support a path between a number of points
+## Day 60-61 (27-28 July 2019)
+- [ ] Weekend
+## Day 62 (29 July 2019)
+- [x] Update map state for changes in search widget
+- [x] Fix go to path's location on map item results
+- [x] Ask which approach to user for the ShapeClass options property
+## Day 63 (30 July 2019)
+- [x] Create a macro for repeating setting popup data and common map item options
+- [x] Create ShapeClass
+- [x] Implement polyline shape type
 ---
 # Marks the progress of the Interactive Maps Application (Old)
 ## Day 1 (18 May 2019)
