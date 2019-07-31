@@ -724,11 +724,26 @@ require(['jquery', 'leaflet', 'leaflet-commons', 'bootstrap'], function ($, leaf
           });
         } else if (data.type === 'shape') {
           var shapeType = data.shapeType;
-          var options = JSON.parse(data.options);
-          if (data.shapeType === 'Polyline') {
-            var polyline = L.polyline(data.points, options);
-            leafletCommons.processPopupAndAdd(data, polyline, allLayers);
+          data.points = JSON.parse(data.points);
+          var options = {};
+          try {
+            var options = JSON.parse(data.options);
+          } catch (err) {
+            new XWiki.widgets.Notification('The shape options are invaled. ' + err, 'error');
           }
+          var shape;
+          if (data.shapeType === 'Polyline') {
+            shape = L.polyline(data.points, options);
+          } else if (data.shapeType === 'Polygon') {
+            shape = L.polygon(data.points, options);
+          } else if (data.shapeType === 'Rectangle') {
+            shape = L.rectangle(data.points, options);
+          } else if (data.shapeType === 'Circle') {
+            shape = L.circle(data.points[0], options);
+          } else if (data.shapeType === 'CircleMarker') {
+            shape = L.circleMarker(data.points[0], options);
+          }
+          leafletCommons.processPopupAndAdd(data, shape, allLayers);
           if (dataLength == i) {
             allLayers.addTo(map);
             map.fitBounds(allLayers.getBounds());
@@ -785,7 +800,7 @@ require(['jquery', 'leaflet', 'leaflet-commons', 'bootstrap'], function ($, leaf
     });
 
     //Go to location of the path result item
-    $('.search-item-results .goto-loc-path').on('click', function () {
+    $('.search-item-results .goto-loc-points').on('click', function () {
       var loc = JSON.parse(this.dataset.location);
       if (loc) {
         var allPoints = loc.points;

@@ -75,7 +75,6 @@
   #if ("$!response.get(${property})" != '')
     #set ($responseData = {})
     #set ($discard = $responseData.put('type', 'point'))
-    #set ($discard = $responseData.put('doclocation', $response.get('fullname')))
     ## Get document title and content
     #set ($title = $response.get('title_'))
     #set ($popupContent = $response.get('doccontentraw_'))
@@ -89,7 +88,7 @@
     #end
     ## Set the collected information
     #set ($discard = $responseData.put('location', $location))
-    #setPopupData($responseData false $title $popupContent)
+    #setDataFromDoc($responseData false $title $popupContent $response.get('fullname'))
     ## Check for custom marker icon
     #checkMarkerIcon($response.get('fullname') $responseData)
     ## Add the collected data into array
@@ -108,7 +107,7 @@
     #set ($discard = $location.add($pointPageDoc.get('latitude')))
     #set ($discard = $location.add($pointPageDoc.get('longitude')))
     #set ($discard = $pointData.put('location', $location))
-    #setPopupData($pointData false $pointPageDoc.getTitle() $pointPageDoc.getContent())
+    #setDataFromDoc($pointData false $pointPageDoc.getTitle() $pointPageDoc.getContent())
     #checkMarkerIcon($pointPageDoc.getDocumentReference().getLocalDocumentReference() $pointData)
     #set ($disard = $pointPagesArr.add(${pointData}))
   #end
@@ -116,7 +115,7 @@
 #end
 
 ## Set values for popup
-#macro (setPopupData $dataMap $includePopup $title $rawPopupContent)
+#macro (setDataFromDoc $dataMap $includePopup $title $rawPopupContent $docFullname)
   ## Get and set all the required popup data
   #if ($includePopup)
     #set ($discard = $dataMap.put('includePopup', $includePopup))
@@ -125,6 +124,9 @@
   #set ($popupContent = "#getHtml(${rawPopupContent})")
   #set ($discard = $dataMap.put('title', $title))
   #set ($discard = $dataMap.put('popupContent', $popupContent))
+  #if ($docFullname)
+    #set ($discard = $dataMap.put('doclocation', $docFullname))
+  #end
 #end
 
 ## Handle the response of solr query
@@ -145,10 +147,9 @@
       #set ($discard = $responseData.put('type', 'path'))
       ## Get all the required path data and path page data
       #set ($includePopup = $response.get('property.Maps.Code.PathClass.includePopup_boolean')[0])
-      #set ($discard = $responseData.put('doclocation', $response.get('fullname')))
       #set ($title = $response.get('title_'))
       #set ($popupContent = $response.get('doccontentraw_'))
-      #setPopupData($responseData $includePopup $title $popupContent)
+      #setDataFromDoc($responseData $includePopup $title $popupContent $response.get('fullname'))
       ## Get data of each point
       ## Process and convert points data to JSON
       #set ($discard = $responseData.put('points', "#getPathPointsJSON"))
@@ -166,13 +167,13 @@
       #foreach ($point in $points)
         #set ($discard = $pointsArr.add($point.split(',')))
       #end
-      #set ($discard = $responseData.put('points', $pointsArr))
+      #set ($discard = $responseData.put('points', $jsontool.serialize($pointsArr)))
       #set ($discard = $responseData.put('options', $response.get('property.Maps.Code.ShapeClass.options_en')[0]))
       ## Set information for the popup
       #set ($includePopup = $response.get('property.Maps.Code.ShapeClass.includePopup_boolean')[0])
       #set ($title = $response.get('title_'))
       #set ($popupContent = $response.get('doccontentraw_'))
-      #setPopupData($responseData $includePopup $title $popupContent)
+      #setDataFromDoc($responseData $includePopup $title $popupContent $response.get('fullname'))
       #set ($discard = $mapDataArr.add($responseData))
     #end
     ## Shapes END
@@ -376,7 +377,11 @@
             #set ($discard = $allPointsLocation.add(${point.location}))
           #end
           #set ($allPointsLocation = $jsontool.serialize($allPointsLocation))
-          (% class="goto-loc goto-loc-path" data-location='{"points": ${allPointsLocation} }' title="$services.localization.render('intmap.search.gotoLoc')" %)(((
+          (% class="goto-loc goto-loc-points" data-location='{"points": ${allPointsLocation} }' title="$services.localization.render('intmap.search.gotoLoc')" %)(((
+            &lt;i class="fa fa-map-marker"&gt;&lt;/i&gt;
+          )))
+        #elseif ($item.get('type') == 'shape')
+          (% class="goto-loc goto-loc-points" data-location='{"points": $item.get('points') }' title="$services.localization.render('intmap.search.gotoLoc')" %)(((
             &lt;i class="fa fa-map-marker"&gt;&lt;/i&gt;
           )))
         #end
