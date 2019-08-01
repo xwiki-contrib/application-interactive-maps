@@ -1,0 +1,371 @@
+<?xml version="1.1" encoding="UTF-8"?>
+
+<!--
+ * See the NOTICE file distributed with this work for additional
+ * information regarding copyright ownership.
+ *
+ * This is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation; either version 2.1 of
+ * the License, or (at your option) any later version.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this software; if not, write to the Free
+ * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+-->
+
+<xwikidoc version="1.3" reference="Maps.Editors.ShapeEditor" locale="">
+  <web>Maps.Editors</web>
+  <name>ShapeEditor</name>
+  <language/>
+  <defaultLanguage/>
+  <translation>0</translation>
+  <creator>xwiki:XWiki.Admin</creator>
+  <parent>Maps.MapTesting.Maps.TestMap</parent>
+  <author>xwiki:XWiki.Admin</author>
+  <contentAuthor>xwiki:XWiki.Admin</contentAuthor>
+  <version>1.1</version>
+  <title>Shape Editor</title>
+  <comment/>
+  <minorEdit>false</minorEdit>
+  <syntaxId>xwiki/2.1</syntaxId>
+  <hidden>false</hidden>
+  <content>{{include reference="Maps.Code.CommonMacros" /}}
+
+{{velocity}}
+## TODO: Process post request here
+{{html wiki="true" clean="false"}}
+(% class="row" %)(((
+  (% class="col-sm-6" %)(((
+  ## Preview of the map
+  &lt;p class="xform"&gt;&lt;span class="xHint"&gt;$services.localization.render('intmap.pointEditor.hint')&lt;/span&gt;&lt;/p&gt;
+  (% class="map-wrapper" %)(((
+    (% class="map-preview shape-editor-map-preview" id="map-${util.generateRandomString(5)}" style="width: 100%; height: 300px;" %)((()))
+    (% class="map-search-filter" %)(((
+      #displayLocationSearchForm()
+    )))
+    (% id="map-search-close" %)(((
+    &lt;i class="fa fa-arrow-left"&gt;&lt;/i&gt;
+    )))
+  )))
+  )))
+  (% class="col-sm-6" %)(((
+  ## Form for creating the map
+  &lt;form class="xform" action="" method="post" enctype="multipart/form-data"&gt;
+    &lt;input type="hidden" id="markerLocation" name="markerLocation" value="48.8566,2.3522" required /&gt;
+    &lt;dl&gt;
+      &lt;dt&gt;
+        &lt;label&gt;Select shape type&lt;/label&gt;
+      &lt;/dt&gt;
+      &lt;dd&gt;
+        (% class="shape-types" %)(((
+          &lt;button class="shape-type" type="button"&gt;Polyline&lt;/button&gt;
+          &lt;button class="shape-type" type="button"&gt;Polygon&lt;/button&gt;
+          &lt;button class="shape-type" type="button"&gt;Rectangle&lt;/button&gt;
+          &lt;button class="shape-type" type="button"&gt;Circle&lt;/button&gt;
+          &lt;button class="shape-type" type="button"&gt;CircleMarker&lt;/button&gt;
+        )))
+      &lt;/dd&gt;
+      &lt;dt&gt;
+        &lt;label for="shapeName"&gt;$services.localization.render('intmap.shapeEditor.shapeName') &lt;span class="xRequired"&gt;(Required)&lt;/span&gt;&lt;/label&gt;
+      &lt;/dt&gt;
+      &lt;dd&gt;
+        &lt;input type="text" id="shapeName" name="shapeName" value="" required /&gt;
+      &lt;/dd&gt;
+      &lt;dt&gt;
+        &lt;label for="shapeSpace"&gt;$services.localization.render('intmap.shapeEditor.shapeSpace') &lt;span class="xRequired"&gt;(Required)&lt;/span&gt;&lt;/label&gt;
+      &lt;/dt&gt;
+      &lt;dd&gt;
+        &lt;input type="text" id="shapeSpace" name="shapeSpace" value="" required /&gt;
+      &lt;/dd&gt;
+    &lt;/dl&gt;
+    &lt;p&gt;&lt;input type="submit" class="btn btn-primary" name="pointSubmit" value="$services.localization.render('intmap.pointEditor.pointSubmit')" /&gt;&lt;/p&gt;
+  &lt;/form&gt;
+  )))
+)))
+{{/html}}
+{{/velocity}}</content>
+  <object>
+    <name>Maps.Editors.ShapeEditor</name>
+    <number>0</number>
+    <className>XWiki.JavaScriptExtension</className>
+    <guid>8662d072-7203-45dc-9ddd-af4bacf1e51e</guid>
+    <class>
+      <name>XWiki.JavaScriptExtension</name>
+      <customClass/>
+      <customMapping/>
+      <defaultViewSheet/>
+      <defaultEditSheet/>
+      <defaultWeb/>
+      <nameField/>
+      <validationScript/>
+      <cache>
+        <cache>0</cache>
+        <defaultValue>long</defaultValue>
+        <disabled>0</disabled>
+        <displayType>select</displayType>
+        <multiSelect>0</multiSelect>
+        <name>cache</name>
+        <number>5</number>
+        <prettyName>Caching policy</prettyName>
+        <relationalStorage>0</relationalStorage>
+        <separator> </separator>
+        <separators>|, </separators>
+        <size>1</size>
+        <unmodifiable>0</unmodifiable>
+        <values>long|short|default|forbid</values>
+        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
+      </cache>
+      <code>
+        <contenttype>PureText</contenttype>
+        <disabled>0</disabled>
+        <editor>PureText</editor>
+        <name>code</name>
+        <number>2</number>
+        <prettyName>Code</prettyName>
+        <rows>20</rows>
+        <size>50</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
+      </code>
+      <name>
+        <disabled>0</disabled>
+        <name>name</name>
+        <number>1</number>
+        <prettyName>Name</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </name>
+      <parse>
+        <disabled>0</disabled>
+        <displayFormType>select</displayFormType>
+        <displayType>yesno</displayType>
+        <name>parse</name>
+        <number>4</number>
+        <prettyName>Parse content</prettyName>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.BooleanClass</classType>
+      </parse>
+      <use>
+        <cache>0</cache>
+        <disabled>0</disabled>
+        <displayType>select</displayType>
+        <multiSelect>0</multiSelect>
+        <name>use</name>
+        <number>3</number>
+        <prettyName>Use this extension</prettyName>
+        <relationalStorage>0</relationalStorage>
+        <separator> </separator>
+        <separators>|, </separators>
+        <size>1</size>
+        <unmodifiable>0</unmodifiable>
+        <values>currentPage|onDemand|always</values>
+        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
+      </use>
+    </class>
+    <property>
+      <cache>long</cache>
+    </property>
+    <property>
+      <code>requirejs.config({
+  paths: {
+    'leaflet': ['$services.webjars.url("leaflet", "leaflet.js")']
+  }
+});
+require(['jquery', 'leaflet', 'leaflet-commons', 'bootstrap'], function ($, leaflet, leafletCommons) {
+  'use strict';
+  function init()
+  {
+
+    var map;
+
+    //Render the map
+    $$('.shape-editor-map-preview').each(function (element) {
+      var mapId = $(element).attr('id').replace('map-', '');
+      var options = {
+        'id': mapId,
+        'addFullscreen': 1,
+        'includeCurrentLocation': 1
+      };
+      map = leafletCommons.createEmptyMap(options);
+      map.on('click', function (e) {
+        if ($(".leaflet-popup-pane").html() == '') {
+          $('.map-search-filter').removeClass('open');
+        }
+      });
+      var locationInput = $('#markerLocation');
+      var location = locationInput.val().split(',');
+      map.setView(location, 14);
+      leafletCommons.addSinglePointSelection(map, location, function (marker) {
+        var newLocation = marker.getLatLng();
+        location = [newLocation.lat, newLocation.lng];
+        locationInput.val(location.join(','));
+      });
+    });
+
+    //Point editor place search
+    $('.map-search-form').submit(function (e) {
+      e.preventDefault();
+      var formVal = $(this).find('input[type=search]').val();
+      if (formVal !== '') {
+        leafletCommons.getLocationCoords(formVal, function (location) {
+          if (map &amp;&amp; location) {
+            map.setView(L.latLng(location), 14);
+          }
+        });
+      }
+    });
+
+  }
+
+  //Run the init() function when dom is loaded or updated
+  (XWiki &amp;&amp; XWiki.domIsLoaded &amp;&amp; init()) || document.observe("xwiki:dom:loaded", init);
+
+});</code>
+    </property>
+    <property>
+      <name>shape-editor</name>
+    </property>
+    <property>
+      <parse>1</parse>
+    </property>
+    <property>
+      <use>onDemand</use>
+    </property>
+  </object>
+  <object>
+    <name>Maps.Editors.ShapeEditor</name>
+    <number>0</number>
+    <className>XWiki.StyleSheetExtension</className>
+    <guid>cc3c3b87-0dfb-4543-a159-454281aeea40</guid>
+    <class>
+      <name>XWiki.StyleSheetExtension</name>
+      <customClass/>
+      <customMapping/>
+      <defaultViewSheet/>
+      <defaultEditSheet/>
+      <defaultWeb/>
+      <nameField/>
+      <validationScript/>
+      <cache>
+        <cache>0</cache>
+        <defaultValue>long</defaultValue>
+        <disabled>0</disabled>
+        <displayType>select</displayType>
+        <multiSelect>0</multiSelect>
+        <name>cache</name>
+        <number>5</number>
+        <prettyName>Caching policy</prettyName>
+        <relationalStorage>0</relationalStorage>
+        <separator> </separator>
+        <separators>|, </separators>
+        <size>1</size>
+        <unmodifiable>0</unmodifiable>
+        <values>long|short|default|forbid</values>
+        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
+      </cache>
+      <code>
+        <contenttype>PureText</contenttype>
+        <disabled>0</disabled>
+        <editor>PureText</editor>
+        <name>code</name>
+        <number>2</number>
+        <prettyName>Code</prettyName>
+        <rows>20</rows>
+        <size>50</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
+      </code>
+      <contentType>
+        <cache>0</cache>
+        <disabled>0</disabled>
+        <displayType>select</displayType>
+        <multiSelect>0</multiSelect>
+        <name>contentType</name>
+        <number>6</number>
+        <prettyName>Content Type</prettyName>
+        <relationalStorage>0</relationalStorage>
+        <separator> </separator>
+        <separators>|, </separators>
+        <size>1</size>
+        <unmodifiable>0</unmodifiable>
+        <values>CSS|LESS</values>
+        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
+      </contentType>
+      <name>
+        <disabled>0</disabled>
+        <name>name</name>
+        <number>1</number>
+        <prettyName>Name</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </name>
+      <parse>
+        <disabled>0</disabled>
+        <displayFormType>select</displayFormType>
+        <displayType>yesno</displayType>
+        <name>parse</name>
+        <number>4</number>
+        <prettyName>Parse content</prettyName>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.BooleanClass</classType>
+      </parse>
+      <use>
+        <cache>0</cache>
+        <disabled>0</disabled>
+        <displayType>select</displayType>
+        <multiSelect>0</multiSelect>
+        <name>use</name>
+        <number>3</number>
+        <prettyName>Use this extension</prettyName>
+        <relationalStorage>0</relationalStorage>
+        <separator> </separator>
+        <separators>|, </separators>
+        <size>1</size>
+        <unmodifiable>0</unmodifiable>
+        <values>currentPage|onDemand|always</values>
+        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
+      </use>
+    </class>
+    <property>
+      <cache>long</cache>
+    </property>
+    <property>
+      <code>.shape-type{
+  background: transparent;
+  color: @brand-primary;
+  border: 1px solid @brand-primary;
+  border-radius: 5px;
+  padding: 7px 10px;
+  outline: none;
+  margin-top: 5px;
+}
+.shape-type.selected, .shape-type:hover, .shape-type:active, .shape-type:visited, .shape-type:focus{
+  background: @brand-primary;
+  color: white;
+  border: 1px solid @brand-primary;
+  outline: none;
+}</code>
+    </property>
+    <property>
+      <contentType>LESS</contentType>
+    </property>
+    <property>
+      <name>shape-editor-styles</name>
+    </property>
+    <property>
+      <parse>0</parse>
+    </property>
+    <property>
+      <use>currentPage</use>
+    </property>
+  </object>
+</xwikidoc>

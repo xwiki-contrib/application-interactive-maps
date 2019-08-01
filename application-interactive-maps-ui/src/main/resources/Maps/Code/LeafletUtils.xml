@@ -431,6 +431,7 @@ define('leaflet-commons', ['jquery'], function ($) {
       });
     },
 
+    // Remove a parameter and its value from the url
     removeParameter: function (url, parameter) {
       var urlparts = url.split('?');
       if (urlparts.length &gt;= 2) {
@@ -732,16 +733,25 @@ require(['jquery', 'leaflet', 'leaflet-commons', 'bootstrap'], function ($, leaf
             new XWiki.widgets.Notification('The shape options are invaled. ' + err, 'error');
           }
           var shape;
-          if (data.shapeType === 'Polyline') {
-            shape = L.polyline(data.points, options);
-          } else if (data.shapeType === 'Polygon') {
-            shape = L.polygon(data.points, options);
-          } else if (data.shapeType === 'Rectangle') {
-            shape = L.rectangle(data.points, options);
-          } else if (data.shapeType === 'Circle') {
-            shape = L.circle(data.points[0], options);
-          } else if (data.shapeType === 'CircleMarker') {
-            shape = L.circleMarker(data.points[0], options);
+          switch(data.shapeType) {
+            case 'Polyline':
+              shape = L.polyline(data.points, options);
+              break;
+            case 'Polygon':
+              shape = L.polygon(data.points, options);
+              break;
+            case 'Rectangle':
+              shape = L.rectangle(data.points, options);
+              break;
+            case 'Circle':
+              shape = L.circle(data.points[0], options);
+              break;
+            case 'CircleMarker':
+              shape = L.circleMarker(data.points[0], options);
+              break;
+            default:
+              shape = undefined;
+              break;
           }
           leafletCommons.processPopupAndAdd(data, shape, allLayers);
           if (dataLength == i) {
@@ -1364,7 +1374,7 @@ require(['jquery', 'leaflet', 'leaflet-commons', 'bootstrap'], function ($, leaf
   top: 0;
   z-index: 1000000;
 }
-.map-wrapper.fullscreen .map-container{
+.map-wrapper.fullscreen .map-container, .map-wrapper.fullscreen .map-preview{
   height: 100% !important;
   width: 100% !important;
   border: 0px !important;

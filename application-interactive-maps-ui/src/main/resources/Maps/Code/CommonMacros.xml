@@ -212,6 +212,8 @@
   #set ($discard = $query.bindValue('tie', $solrConfig.tieBreaker))
   #set ($discard = $query.bindValue('mm', $solrConfig.minShouldMatch))
   #set ($discard = $query.bindValue('fq', 'type:DOCUMENT'))
+  ## Sort shapes according to their index
+  #set ($discard = $query.bindValue('sort', 'property.Maps.Code.ShapeClass.index_sortInt asc'))
   #setQueryFields($query)
   #setPhraseFields($query)
   #setFacetFields($query)
