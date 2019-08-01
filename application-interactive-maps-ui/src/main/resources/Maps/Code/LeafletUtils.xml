@@ -539,7 +539,7 @@ define('leaflet-commons', ['jquery'], function ($) {
     //Process item's popup and add it to master map layer
     processPopupAndAdd: function (data, bindElement, allLayers)
     {
-      if (data.includePopup === undefined || data.includePopup) {
+      if (data.includePopup !== undefined || data.includePopup) {
         var popupData = '';
         //If there is excessive popup data, allow it to be scrolled
         if (data.popupContent.length &gt; 500) {
@@ -724,34 +724,17 @@ require(['jquery', 'leaflet', 'leaflet-commons', 'bootstrap'], function ($, leaf
             });
           });
         } else if (data.type === 'shape') {
-          var shapeType = data.shapeType;
-          data.points = JSON.parse(data.points);
-          var options = {};
-          try {
-            var options = JSON.parse(data.options);
-          } catch (err) {
-            new XWiki.widgets.Notification('The shape options are invaled. ' + err, 'error');
-          }
+          var shapeGeoJSON;
           var shape;
-          switch(data.shapeType) {
-            case 'Polyline':
-              shape = L.polyline(data.points, options);
-              break;
-            case 'Polygon':
-              shape = L.polygon(data.points, options);
-              break;
-            case 'Rectangle':
-              shape = L.rectangle(data.points, options);
-              break;
-            case 'Circle':
-              shape = L.circle(data.points[0], options);
-              break;
-            case 'CircleMarker':
-              shape = L.circleMarker(data.points[0], options);
-              break;
-            default:
-              shape = undefined;
-              break;
+          try {
+            shapeGeoJSON = JSON.parse(data.shapeGeoJSON);
+            shape = L.geoJSON(shapeGeoJSON, {
+              style: function (feature) {
+                return feature.properties;
+              }
+            });
+          } catch (err) {
+            new XWiki.widgets.Notification('The shape properties are invaled. ' + err, 'error');
           }
           leafletCommons.processPopupAndAdd(data, shape, allLayers);
           if (dataLength == i) {
@@ -812,21 +795,7 @@ require(['jquery', 'leaflet', 'leaflet-commons', 'bootstrap'], function ($, leaf
     //Go to location of the path result item
     $('.search-item-results .goto-loc-points').on('click', function () {
       var loc = JSON.parse(this.dataset.location);
-      if (loc) {
-        var allPoints = loc.points;
-        var noOfPoints = allPoints.length - 1;
-        var processedPoints = [];
-        var i = 0;
-        allPoints.each(function (point) {
-          leafletCommons.getLocationCoords(point, function(pointLoc){
-            processedPoints.push(pointLoc);
-            if (noOfPoints === i) {
-              map.fitBounds(processedPoints);
-            }
-            i++;
-          });
-        });
-      }
+      map.fitBounds(loc.points);
     });
 
     $(document).on('keyup', function (e) {

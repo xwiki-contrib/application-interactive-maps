@@ -88,7 +88,8 @@
     #end
     ## Set the collected information
     #set ($discard = $responseData.put('location', $location))
-    #setDataFromDoc($responseData false $title $popupContent $response.get('fullname'))
+    #set ($includePopup = $response.get('property.Maps.Code.PointClass.includePopup_boolean')[0])
+    #setDataFromDoc($responseData $includePopup $title $popupContent $response.get('fullname'))
     ## Check for custom marker icon
     #checkMarkerIcon($response.get('fullname') $responseData)
     ## Add the collected data into array
@@ -107,7 +108,7 @@
     #set ($discard = $location.add($pointPageDoc.get('latitude')))
     #set ($discard = $location.add($pointPageDoc.get('longitude')))
     #set ($discard = $pointData.put('location', $location))
-    #setDataFromDoc($pointData false $pointPageDoc.getTitle() $pointPageDoc.getContent())
+    #setDataFromDoc($pointData $pointPageDoc.get('includePopup') $pointPageDoc.getTitle() $pointPageDoc.getContent())
     #checkMarkerIcon($pointPageDoc.getDocumentReference().getLocalDocumentReference() $pointData)
     #set ($disard = $pointPagesArr.add(${pointData}))
   #end
@@ -161,14 +162,7 @@
       #set ($responseData = {})
       #set ($discard = $responseData.put('type', 'shape'))
       #set ($discard = $responseData.put('index', $response.get('property.Maps.Code.ShapeClass.index_int')[0]))
-      #set ($discard = $responseData.put('shapeType', $response.get('property.Maps.Code.ShapeClass.type_string')[0]))
-      #set ($points = $response.get('property.Maps.Code.ShapeClass.points_string'))
-      #set ($pointsArr = [])
-      #foreach ($point in $points)
-        #set ($discard = $pointsArr.add($point.split(',')))
-      #end
-      #set ($discard = $responseData.put('points', $jsontool.serialize($pointsArr)))
-      #set ($discard = $responseData.put('options', $response.get('property.Maps.Code.ShapeClass.options_en')[0]))
+      #set ($discard = $responseData.put('shapeGeoJSON', $response.get('property.Maps.Code.ShapeClass.shapeGeoJSON_en')[0]))
       ## Set information for the popup
       #set ($includePopup = $response.get('property.Maps.Code.ShapeClass.includePopup_boolean')[0])
       #set ($title = $response.get('title_'))
@@ -383,7 +377,14 @@
             &lt;i class="fa fa-map-marker"&gt;&lt;/i&gt;
           )))
         #elseif ($item.get('type') == 'shape')
-          (% class="goto-loc goto-loc-points" data-location='{"points": $item.get('points') }' title="$services.localization.render('intmap.search.gotoLoc')" %)(((
+          #set ($shapeGeoJSON = $jsontool.parse($item.shapeGeoJSON))
+          #if ("$!shapeGeoJSON.features[0].geometry.coordinates" != '')
+            #set ($allPoints = $shapeGeoJSON.features[0].geometry.coordinates)
+          #else
+            #set ($allPoints = $shapeGeoJSON.geometry.coordinates)
+          #end
+          #set ($allPoints = $jsontool.serialize($allPoints))
+          (% class="goto-loc goto-loc-points" data-location='{"points": ${allPoints} }' title="$services.localization.render('intmap.search.gotoLoc')" %)(((
             &lt;i class="fa fa-map-marker"&gt;&lt;/i&gt;
           )))
         #end

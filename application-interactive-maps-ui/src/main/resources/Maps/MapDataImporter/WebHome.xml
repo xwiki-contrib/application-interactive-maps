@@ -49,7 +49,7 @@
     #if ("$!data[0].itemLabel" == '' || "$!data[0].lat" == '' || "$!data[0].lon" == '')
       {{error}}The required fields (itemLabel, lat, lon) do not exist in JSON file{{/error}}
     #else
-    #set ($POINT_CLASS_NAME = 'Maps.Code.PointClass')
+      #set ($POINT_CLASS_NAME = 'Maps.Code.PointClass')
       ## Create class with custom properties
       #if ("$!request.className" != '')
         #set ($NEW_CLASS_NAME = "${request.space}.${request.className}")
@@ -65,6 +65,9 @@
           #end
         #end
         #set ($discard = $classDoc.save())
+      #end
+      #if ($data.size() &gt; 0)
+        == Pages created ==
       #end
       #set ($i = 0)
       #foreach ($item in $data)
@@ -82,8 +85,8 @@
             #set ($pointObject = $page.newObject($POINT_CLASS_NAME))
             #set ($discard = $pointObject.set('latitude', "${item.lat}"))
             #set ($discard = $pointObject.set('longitude', "${item.lon}"))
+            #set ($discard = $pointObject.set('includePopup', 1))
             #set ($docSave = $page.save())
-            == Pages created ==
             * [[$page.fullName]]
           #end
         #end

@@ -52,12 +52,27 @@
     <defaultWeb/>
     <nameField/>
     <validationScript/>
+    <includePopup>
+      <customDisplay/>
+      <defaultValue>1</defaultValue>
+      <disabled>0</disabled>
+      <displayFormType>checkbox</displayFormType>
+      <displayType/>
+      <hint/>
+      <name>includePopup</name>
+      <number>3</number>
+      <prettyName>Add Popup to the Point</prettyName>
+      <unmodifiable>0</unmodifiable>
+      <validationMessage/>
+      <validationRegExp/>
+      <classType>com.xpn.xwiki.objects.classes.BooleanClass</classType>
+    </includePopup>
     <latitude>
       <customDisplay/>
       <disabled>0</disabled>
       <hint/>
       <name>latitude</name>
-      <number>2</number>
+      <number>1</number>
       <picker>0</picker>
       <prettyName>Latitude</prettyName>
       <size>30</size>
@@ -71,7 +86,7 @@
       <disabled>0</disabled>
       <hint/>
       <name>longitude</name>
-      <number>3</number>
+      <number>2</number>
       <picker>0</picker>
       <prettyName>Longitude</prettyName>
       <size>30</size>

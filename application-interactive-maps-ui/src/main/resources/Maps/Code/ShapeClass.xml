@@ -81,71 +81,23 @@
       <validationRegExp/>
       <classType>com.xpn.xwiki.objects.classes.NumberClass</classType>
     </index>
-    <options>
+    <shapeGeoJSON>
       <contenttype/>
       <customDisplay/>
       <disabled>0</disabled>
       <editor>Text</editor>
-      <hint>Options in JSON for shape properties like color etc.</hint>
-      <name>options</name>
+      <hint>Specify the properties of shape as GeoJSON</hint>
+      <name>shapeGeoJSON</name>
       <number>5</number>
       <picker>0</picker>
-      <prettyName>Options JSON</prettyName>
+      <prettyName>Shape GeoJSON</prettyName>
       <rows>5</rows>
       <size>40</size>
       <unmodifiable>0</unmodifiable>
       <validationMessage/>
       <validationRegExp/>
       <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
-    </options>
-    <points>
-      <cache>0</cache>
-      <customDisplay/>
-      <defaultValue/>
-      <disabled>0</disabled>
-      <displayType>input</displayType>
-      <freeText/>
-      <hint/>
-      <multiSelect>1</multiSelect>
-      <name>points</name>
-      <number>3</number>
-      <picker>0</picker>
-      <prettyName>Points</prettyName>
-      <relationalStorage>0</relationalStorage>
-      <separator> </separator>
-      <separators>|</separators>
-      <size>1</size>
-      <sort/>
-      <unmodifiable>0</unmodifiable>
-      <validationMessage/>
-      <validationRegExp/>
-      <values/>
-      <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
-    </points>
-    <type>
-      <cache>0</cache>
-      <customDisplay/>
-      <defaultValue>Polyline</defaultValue>
-      <disabled>0</disabled>
-      <displayType>select</displayType>
-      <freeText/>
-      <hint/>
-      <multiSelect>0</multiSelect>
-      <name>type</name>
-      <number>2</number>
-      <picker>0</picker>
-      <prettyName>Shape Type</prettyName>
-      <relationalStorage>0</relationalStorage>
-      <separator> </separator>
-      <separators>|, </separators>
-      <size>1</size>
-      <sort/>
-      <unmodifiable>0</unmodifiable>
-      <validationMessage/>
-      <validationRegExp/>
-      <values>Polyline|Polygon|Rectangle|Circle|CircleMarker</values>
-      <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
-    </type>
+    </shapeGeoJSON>
   </class>
   <object>
     <name>Maps.Code.ShapeClass</name>
