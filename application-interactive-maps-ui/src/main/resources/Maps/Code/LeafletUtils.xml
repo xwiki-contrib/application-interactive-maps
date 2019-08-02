@@ -550,6 +550,32 @@ define('leaflet-commons', ['jquery'], function ($) {
         bindElement.bindPopup(popupData);
       }
       allLayers.addLayer(bindElement);
+    },
+
+    //Process locations search for map preview
+    setupLocationSearchMP: function (parentClass, map)
+    {
+      var rootScope = this;
+      function performSearch (e)
+      {
+        e.preventDefault();
+        var formVal = $(parentClass + ' input[type=search]').val();
+        if (formVal !== '') {
+          rootScope.getLocationCoords(formVal, function (location) {
+            if (map &amp;&amp; location) {
+              map.setView(L.latLng(location), 14);
+            }
+          });
+        }
+      }
+      $(parentClass + ' input[type=search]').on("keypress", function(e) {
+        if (e.keyCode == 13) {
+          performSearch(e);
+        }
+      });
+      $(parentClass + ' button[type=search]').click(function (e) {
+        performSearch(e);
+      });
     }
 
   }

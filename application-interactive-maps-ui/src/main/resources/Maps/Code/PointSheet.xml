@@ -20,108 +20,91 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
 -->
 
-<xwikidoc version="1.3" reference="Maps.Editors.PointEditor" locale="">
-  <web>Maps.Editors</web>
-  <name>PointEditor</name>
+<xwikidoc version="1.3" reference="Maps.Code.PointSheet" locale="">
+  <web>Maps.Code</web>
+  <name>PointSheet</name>
   <language/>
   <defaultLanguage/>
   <translation>0</translation>
   <creator>xwiki:XWiki.Admin</creator>
-  <parent>Maps.WebHome</parent>
+  <parent>Maps.Code.PointClass</parent>
   <author>xwiki:XWiki.Admin</author>
   <contentAuthor>xwiki:XWiki.Admin</contentAuthor>
   <version>1.1</version>
-  <title>Point Editor</title>
+  <title>#if($doc.documentReference.name == 'PointSheet')PointSheet#{else}$services.display.title($doc, {'displayerHint': 'default', 'outputSyntaxId': 'plain/1.0'})#end</title>
   <comment/>
   <minorEdit>false</minorEdit>
   <syntaxId>xwiki/2.1</syntaxId>
-  <hidden>false</hidden>
+  <hidden>true</hidden>
   <content>{{include reference="Maps.Code.CommonMacros" /}}
 
 {{velocity}}
-#set ($discard = $xwiki.ssx.use('Maps.Code.LeafletUtils'))
-#set ($discard = $xwiki.jsx.use('Maps.Code.LeafletUtils'))
-#set ($discard = $xwiki.jsx.use('Maps.Editors.PointEditor'))
+## If the point is being edited, then display the point editor
+#if ($xcontext.action == 'edit')
+  #set ($discard = $xwiki.ssx.use('Maps.Code.LeafletUtils'))
+  #set ($discard = $xwiki.jsx.use('Maps.Code.LeafletUtils'))
+  #set ($discard = $xwiki.jsx.use('Maps.Code.PointSheet'))
 
-## Handling creation of the map
-#if ("$!request.pointSubmit" != '')
-  #set ($pointDocLocation = "${request.pointSpace}.${request.pointName}")
-  #set ($newPoint = $xwiki.getDocument($pointDocLocation))
-  #set ($discard = $newPoint.setTitle(${request.pointName}))
-  #set ($discard = $newPoint.setParent(${request.pointSpace}))
-  ## Check if custom marker is uploaded
-  #if ("$!xwiki.fileupload.getFileName('customMarkerImg')" != '')
-    ## Set uploaded marker image as the attachment of the new map page
-    #set ($markerImgBytes = $xwiki.fileupload.getFileItemData('customMarkerImg'))
-    $newPoint.addAttachment('marker.png', $markerImgBytes)
-  #end
-  ## Create and set values for the SimpleMapClass object
-  #set ($newPointObj = $newPoint.newObject('Maps.Code.PointClass'))
-  #set ($markerLocation = $request.markerLocation.split(','))
-  #set ($markerLocation[0] = $markerLocation[0].trim())
-  #set ($markerLocation[1] = $markerLocation[1].trim())
-  #set ($discard = $newPointObj.set('latitude', $markerLocation[0]))
-  #set ($discard = $newPointObj.set('longitude', $markerLocation[1]))
-  #if (!$xwiki.exists($pointDocLocation) &amp;&amp; $xwiki.hasAccessLevel('edit', $xcontext.user, $pointDocLocation))
-    $newPoint.save()
-    $response.sendRedirect($xwiki.getURL($pointDocLocation, 'edit'))
-  #end
-#end
-
-## Map with Marker and Popup
-#if ('$!pointDocLocation' != '' &amp;&amp; $xwiki.exists($pointDocLocation))
-{{warning}}The target document already exists. Please choose a different name, or [[view the existing document&gt;&gt;$pointDocLocation]]{{/warning}}
-#end
-{{html wiki="true" clean="false"}}
-(% class="row" %)(((
-  (% class="col-sm-6" %)(((
-  ## Preview of the map
-  &lt;p class="xform"&gt;&lt;span class="xHint"&gt;$services.localization.render('intmap.pointEditor.hint')&lt;/span&gt;&lt;/p&gt;
-  (% class="map-wrapper" %)(((
-    (% class="map-preview point-editor-map-preview" id="map-${util.generateRandomString(5)}" style="width: 100%; height: 300px;" %)((()))
-    (% class="map-search-filter" %)(((
-      #displayLocationSearchForm()
+  {{html wiki="true" clean="false"}}
+  (% class="row" %)(((
+    (% class="col-sm-6" %)(((
+    ## Preview of the map
+    &lt;p class="xform"&gt;&lt;span class="xHint"&gt;$services.localization.render('intmap.pointEditor.hint')&lt;/span&gt;&lt;/p&gt;
+    (% class="map-wrapper" %)(((
+      (% class="map-preview point-editor-map-preview" id="map-${util.generateRandomString(5)}" style="width: 100%; height: 300px;" %)((()))
+      (% class="map-search-filter" %)(((
+        #displayLocationSearch()
+      )))
+      (% id="map-search-close" %)(((
+      &lt;i class="fa fa-arrow-left"&gt;&lt;/i&gt;
+      )))
     )))
-    (% id="map-search-close" %)(((
-    &lt;i class="fa fa-arrow-left"&gt;&lt;/i&gt;
+    )))
+    (% class="col-sm-6" %)(((
+      #set($class = $doc.getObject('Maps.Code.PointClass').xWikiClass)
+      #macro (processField $prop)
+        &lt;dt&gt;
+          #set ($propId = "${class.getDocumentReference().getLocalDocumentReference()}_${class.getNumber()}_${prop.name}")
+          &lt;label for="${propId}"&gt;$prop.prettyName&lt;/label&gt;
+          #if($prop.hint)&lt;span class="xHint"&gt;$prop.hint&lt;/span&gt;#end
+        &lt;/dt&gt;
+        &lt;dd&gt;
+          $doc.display($prop.name)
+        &lt;/dd&gt;
+      #end
+      ## Form for creating the point
+      #set($pointObj = $doc.getObject('Maps.Code.PointClass'))
+      #set ($lat = $pointObj.getValue('latitude'))
+      #set ($lng = $pointObj.getValue('longitude'))
+      #if ("$!lat" == '' || "$!lat" == '')
+        #set ($lat = 48.8566)
+        #set ($lng = 2.3522)
+      #end
+      &lt;input type="hidden" id="pointLat" name="Maps.Code.PointClass_0_latitude" value="${lat}" /&gt;
+      &lt;input type="hidden" id="pointLng" name="Maps.Code.PointClass_0_longitude" value="${lng}" /&gt;
+      (% class="xform" %)(((
+        &lt;dl&gt;
+          #foreach($prop in $class.properties)
+            #if ($prop.name != 'latitude' &amp;&amp; $prop.name != 'longitude')
+              #processField($prop)
+            #end
+          #end
+        &lt;/dl&gt;
+      )))
     )))
   )))
-  )))
-  (% class="col-sm-6" %)(((
-  ## Form for creating the map
-  &lt;form class="xform" action="" method="post" enctype="multipart/form-data"&gt;
-    &lt;input type="hidden" id="markerLocation" name="markerLocation" value="48.8566,2.3522" required /&gt;
-    &lt;dl&gt;
-      &lt;dt&gt;
-        &lt;label for="pointName"&gt;$services.localization.render('intmap.pointEditor.pointName') &lt;span class="xRequired"&gt;(Required)&lt;/span&gt;&lt;/label&gt;
-      &lt;/dt&gt;
-      &lt;dd&gt;
-        &lt;input type="text" id="pointName" name="pointName" value="" required /&gt;
-      &lt;/dd&gt;
-      &lt;dt&gt;
-        &lt;label for="pointSpace"&gt;$services.localization.render('intmap.pointEditor.pointSpace') &lt;span class="xRequired"&gt;(Required)&lt;/span&gt;&lt;/label&gt;
-      &lt;/dt&gt;
-      &lt;dd&gt;
-        &lt;input type="text" id="pointSpace" name="pointSpace" value="" required /&gt;
-      &lt;/dd&gt;
-      &lt;dt&gt;
-        &lt;label for="customMarkerImg"&gt;$services.localization.render('intmap.pointEditor.customMarker')&lt;/label&gt;
-      &lt;/dt&gt;
-      &lt;dd&gt;
-        &lt;input type="file" id="customMarkerImg" name="customMarkerImg" accept="image/*" /&gt;
-      &lt;/dd&gt;
-    &lt;/dl&gt;
-    &lt;p&gt;&lt;input type="submit" class="btn btn-primary" name="pointSubmit" value="$services.localization.render('intmap.pointEditor.pointSubmit')" /&gt;&lt;/p&gt;
-  &lt;/form&gt;
-  )))
-)))
-{{/html}}
+  {{/html}}
+#elseif ($doc.documentReference.name == 'PointSheet' || $doc.documentReference.name == 'PointSheet')
+  ## Do nothing
+#else
+  
+#end
 {{/velocity}}</content>
   <object>
-    <name>Maps.Editors.PointEditor</name>
+    <name>Maps.Code.PointSheet</name>
     <number>0</number>
     <className>XWiki.JavaScriptExtension</className>
-    <guid>1e7d7e2f-7c33-4d63-b7dc-c9adc88e44f6</guid>
+    <guid>30cc5502-ffcc-4223-8214-5d013f683e96</guid>
     <class>
       <name>XWiki.JavaScriptExtension</name>
       <customClass/>
@@ -200,11 +183,7 @@
       <cache>long</cache>
     </property>
     <property>
-      <code>requirejs.config({
-  paths: {
-    'leaflet': ['$services.webjars.url("leaflet", "leaflet.js")']
-  }
-});
+      <code>// Make sure to include jsx Maps.Code.LeafletUtils before include this jsx
 require(['jquery', 'leaflet', 'leaflet-commons', 'bootstrap'], function ($, leaflet, leafletCommons) {
   'use strict';
   function init()
@@ -217,7 +196,7 @@ require(['jquery', 'leaflet', 'leaflet-commons', 'bootstrap'], function ($, leaf
       var mapId = $(element).attr('id').replace('map-', '');
       var options = {
         'id': mapId,
-        'addFullscreen': 0,
+        'addFullscreen': 1,
         'includeCurrentLocation': 1
       };
       map = leafletCommons.createEmptyMap(options);
@@ -226,28 +205,19 @@ require(['jquery', 'leaflet', 'leaflet-commons', 'bootstrap'], function ($, leaf
           $('.map-search-filter').removeClass('open');
         }
       });
-      var locationInput = $('#markerLocation');
-      var location = locationInput.val().split(',');
-      map.setView(location, 14);
-      leafletCommons.addSinglePointSelection(map, location, function (marker) {
+      var $latInput = $('#pointLat');
+      var $lngInput = $('#pointLng');
+      var defLocation = [$latInput.val(), $lngInput.val()];
+      map.setView(defLocation, 14);
+      leafletCommons.addSinglePointSelection(map, defLocation, function (marker) {
         var newLocation = marker.getLatLng();
-        location = [newLocation.lat, newLocation.lng];
-        locationInput.val(location.join(','));
+        $latInput.val(newLocation.lat);
+        $lngInput.val(newLocation.lng);
       });
     });
 
     //Point editor place search
-    $('.map-search-form').submit(function (e) {
-      e.preventDefault();
-      var formVal = $(this).find('input[type=search]').val();
-      if (formVal !== '') {
-        leafletCommons.getLocationCoords(formVal, function (location) {
-          if (map &amp;&amp; location) {
-            map.setView(L.latLng(location), 14);
-          }
-        });
-      }
-    });
+    leafletCommons.setupLocationSearchMP('.map-search', map);
 
   }
 
@@ -260,7 +230,7 @@ require(['jquery', 'leaflet', 'leaflet-commons', 'bootstrap'], function ($, leaf
       <name>point-editor</name>
     </property>
     <property>
-      <parse>1</parse>
+      <parse>0</parse>
     </property>
     <property>
       <use>onDemand</use>

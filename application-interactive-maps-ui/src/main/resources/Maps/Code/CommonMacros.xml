@@ -89,6 +89,9 @@
     ## Set the collected information
     #set ($discard = $responseData.put('location', $location))
     #set ($includePopup = $response.get('property.Maps.Code.PointClass.includePopup_boolean')[0])
+    #if ("$!includePopup" == '')
+      #set ($includePopup = true)
+    #end
     #setDataFromDoc($responseData $includePopup $title $popupContent $response.get('fullname'))
     ## Check for custom marker icon
     #checkMarkerIcon($response.get('fullname') $responseData)
@@ -395,19 +398,19 @@
 #end
 
 ## Simple search form for only location search
-#macro(displayLocationSearchForm)
+#macro(displayLocationSearch)
   {{html clean="false"}}
-  &lt;form class="map-search-form" role="search"&gt;
+  &lt;div class="map-search-form"&gt;
     &lt;div class="map-search"&gt;
       &lt;div class="map-search-input-wrapper"&gt;
         &lt;input type="search" name="text" class="form-control withTip useTitleAsTip map-search-input"
           title="$services.localization.render('intmap.search.placeholder')" value=""/&gt;
-        &lt;button type="submit" class="btn btn-primary map-search-btn"&gt;
+        &lt;button type="search" class="btn btn-primary map-search-btn"&gt;
           &lt;span class="fa fa-search"&gt;&lt;/span&gt;
         &lt;/button&gt;
       &lt;/div&gt;
     &lt;/div&gt;
-  &lt;/form&gt;
+  &lt;/div&gt;
   {{/html}}
 #end
 

@@ -20,8 +20,6 @@
 package org.xwiki.intmap.test.ui;
 
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
 
 import org.junit.Assert;
 import org.junit.Rule;
@@ -29,6 +27,7 @@ import org.junit.Test;
 import org.openqa.selenium.WebElement;
 import org.xwiki.intmap.test.po.IntMapEditPage;
 import org.xwiki.intmap.test.po.IntMapHomePage;
+import org.xwiki.intmap.test.po.PointEditPage;
 import org.xwiki.model.reference.DocumentReference;
 import org.xwiki.model.reference.EntityReference;
 import org.xwiki.panels.test.po.ApplicationsPanel;
@@ -51,13 +50,13 @@ public class InteractiveMapsTest extends AbstractTest
 
     private final String TEST_SPACE = "Maps.Testing";
 
-    private final String[] TEST_SPACE_ARR = { "Maps", "Testing" };
-
     private final String MAP_NAME = "IslamabadMap";
 
     private final String[] MAP_SPACE = { "Maps", "Testing", MAP_NAME };
 
     private final String POINT_NAME = "Islamabad";
+
+    private final String[] POINT_SPACE = { "Maps", "Testing", "Points", POINT_NAME };
 
     private final String WIKI_NAME = "xwiki";
 
@@ -72,9 +71,25 @@ public class InteractiveMapsTest extends AbstractTest
         Assert.assertEquals(mapsHomePage.getSpace(), mapsVP.getMetaDataValue("space"));
         Assert.assertEquals(mapsHomePage.getPage(), mapsVP.getMetaDataValue("page"));
 
+        // Delete the point if it already exists
+        if (getUtil().pageExists(Arrays.asList(POINT_SPACE), "WebHome")) {
+            EntityReference pointReference = new DocumentReference(WIKI_NAME, Arrays.asList(POINT_SPACE), "WebHome");
+            getUtil().deletePage(pointReference);
+        }
+
+        EntityReference homeReference = new DocumentReference(WIKI_NAME, Arrays.asList("Maps"), "WebHome");
+        getUtil().gotoPage(homeReference);
+
+        // Create button for creating pages from templates
+        WebElement createBtn = getDriver().findElementById("tmCreate");
+        createBtn.click();
+
         // Create a point for the map
-        String[] locationIslamabad  = new String[]{"33.6844", "73.0479"};
-        createPageWithPoint(POINTS_SPACE, POINT_NAME, "This point is Islamabad.", locationIslamabad);
+        CreatePagePage pointPage = new CreatePagePage();
+        pointPage.createPageFromTemplate(String.join(".", POINTS_SPACE), POINT_NAME, "Maps.Code.PointProvider", true);
+        PointEditPage pointEditPage = new PointEditPage();
+        pointEditPage.setValuesForPoint("33.6844", "73.0479", true, "Some data");
+        pointEditPage.clickSaveAndView();
 
         // Delete the map if it already exists
         if (getUtil().pageExists(Arrays.asList(MAP_SPACE), "WebHome")) {
@@ -82,11 +97,10 @@ public class InteractiveMapsTest extends AbstractTest
             getUtil().deletePage(mapReference);
         }
 
-        EntityReference homeReference = new DocumentReference(WIKI_NAME, Arrays.asList("Maps"), "WebHome");
         getUtil().gotoPage(homeReference);
 
         // Click on the create button and go to the create page
-        WebElement createBtn = getDriver().findElementById("tmCreate");
+        createBtn = getDriver().findElementById("tmCreate");
         createBtn.click();
 
         // Create a page from template (MapProvider in this case)
@@ -112,18 +126,5 @@ public class InteractiveMapsTest extends AbstractTest
         //          .until(ExpectedConditions.visibilityOf(getDriver().findElement(By.className("leaflet-marker-icon"))));
         //  WebElement leafletMarker = getDriver().findElementByClassName("leaflet-marker-icon");
         //  Assert.assertNotNull(leafletMarker);
-    }
-
-    public ViewPage createPageWithPoint(String[] space, String title, String content, String[] location)
-    {
-        EntityReference entityReference = new DocumentReference(WIKI_NAME, Arrays.asList(space), title);
-        getUtil().deletePage(entityReference);
-        ViewPage pointPage = getUtil().createPage(entityReference, content, title);
-        Map<String, String> pointPageObject = new HashMap<>();
-        pointPageObject.put("latitude", location[0]);
-        pointPageObject.put("longitude", location[1]);
-        getUtil().addObject(entityReference, "Maps.Code.PointClass", pointPageObject);
-        getUtil().gotoPage(entityReference);
-        return pointPage;
     }
 }
