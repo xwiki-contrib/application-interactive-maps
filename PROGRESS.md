@@ -195,6 +195,26 @@
 - [x] Create a macro for repeating setting popup data and common map item options
 - [x] Create ShapeClass
 - [x] Implement polyline shape type
+## Day 64 (31 July 2019)
+- [x] Go to location of shapes from map results
+- [x] Implement polygon, rectangle, circle and circle marker shape types
+## Day 65 (1 August 2019)
+- [x] Full screen for map previews
+- [x] Setup shape editor
+## Day 66 (2 August 2019)
+- [x] Change structure of PointClass to include popup option
+- [x] Use GeoJSON for shapes
+- [x] Change ShapeClass to support GeoJSON
+- [x] Update map data importer for new PointClass structure
+- [x] Setup GeoJSON shapes to include as map items
+## Day 67 (3 August 2019)
+- [x] Common function for setting up map search in map previews
+- [x] Edit points directly on the page with a map preview based PointSheet
+- [x] Point Editor as PointSheet for editing and creating points
+- [x] Code for PointSheet
+- [x] Create PointTemplate and PointProvider
+## Day 68 (4 August 2019)
+- [ ] Break
 ---
 # Marks the progress of the Interactive Maps Application (Old)
 ## Day 1 (18 May 2019)
