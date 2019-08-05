@@ -20,22 +20,22 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
 -->
 
-<xwikidoc version="1.3" reference="Maps.Code.PointSheet" locale="">
+<xwikidoc version="1.3" reference="Maps.Code.ShapeSheet" locale="">
   <web>Maps.Code</web>
-  <name>PointSheet</name>
+  <name>ShapeSheet</name>
   <language/>
   <defaultLanguage/>
   <translation>0</translation>
   <creator>xwiki:XWiki.Admin</creator>
-  <parent>Maps.Code.PointClass</parent>
+  <parent>Maps.Code.ShapeClass</parent>
   <author>xwiki:XWiki.Admin</author>
   <contentAuthor>xwiki:XWiki.Admin</contentAuthor>
   <version>1.1</version>
-  <title>#if($doc.documentReference.name == 'PointSheet')PointSheet#{else}$services.display.title($doc, {'displayerHint': 'default', 'outputSyntaxId': 'plain/1.0'})#end</title>
+  <title>#if($doc.documentReference.name == 'ShapeSheet')ShapeSheet#{else}$services.display.title($doc, {'displayerHint': 'default', 'outputSyntaxId': 'plain/1.0'})#end</title>
   <comment/>
   <minorEdit>false</minorEdit>
   <syntaxId>xwiki/2.1</syntaxId>
-  <hidden>true</hidden>
+  <hidden>false</hidden>
   <content>{{include reference="Maps.Code.CommonMacros" /}}
 
 {{velocity}}
@@ -43,15 +43,15 @@
 #if ($xcontext.action == 'edit')
   #set ($discard = $xwiki.ssx.use('Maps.Code.LeafletUtils'))
   #set ($discard = $xwiki.jsx.use('Maps.Code.LeafletUtils'))
-  #set ($discard = $xwiki.jsx.use('Maps.Code.PointSheet'))
+  #set ($discard = $xwiki.jsx.use('Maps.Code.ShapeSheet'))
 
   {{html wiki="true" clean="false"}}
   (% class="row" %)(((
-    (% class="col-sm-6" %)(((
+    (% class="col-sm-12" %)(((
     ## Preview of the map
-    &lt;p class="xform"&gt;&lt;span class="xHint"&gt;$services.localization.render('intmap.pointEditor.hint')&lt;/span&gt;&lt;/p&gt;
+    &lt;p class="xform"&gt;&lt;span class="xHint"&gt;$services.localization.render('intmap.shapeEditor.hint')&lt;/span&gt;&lt;/p&gt;
     (% class="map-wrapper" %)(((
-      (% class="map-preview point-editor-map-preview" id="map-${util.generateRandomString(5)}" style="width: 100%; height: 300px;" %)((()))
+      (% class="map-preview shape-editor-map-preview" id="map-${util.generateRandomString(5)}" style="width: 100%; height: 400px;" %)((()))
       (% class="map-search-filter" %)(((
         #displayLocationSearch()
       )))
@@ -60,23 +60,27 @@
       )))
     )))
     )))
-    (% class="col-sm-6" %)(((
-      #set($class = $doc.getObject('Maps.Code.PointClass').xWikiClass)
-      ## Form for creating the point
-      #set($pointObj = $doc.getObject('Maps.Code.PointClass'))
-      #set ($lat = $pointObj.getValue('latitude'))
-      #set ($lng = $pointObj.getValue('longitude'))
-      #if ("$!lat" == '' || "$!lat" == '')
-        #set ($lat = 48.8566)
-        #set ($lng = 2.3522)
+    (% class="col-sm-12" %)(((
+      #set($class = $doc.getObject('Maps.Code.ShapeClass').xWikiClass)
+      #macro (processField $prop)
+        &lt;dt&gt;
+          #set ($propId = "${class.getDocumentReference().getLocalDocumentReference()}_${class.getNumber()}_${prop.name}")
+          &lt;label for="${propId}"&gt;$prop.prettyName&lt;/label&gt;
+          #if($prop.hint)&lt;span class="xHint"&gt;$prop.hint&lt;/span&gt;#end
+        &lt;/dt&gt;
+        &lt;dd&gt;
+          $doc.display($prop.name)
+        &lt;/dd&gt;
       #end
-      &lt;input type="hidden" id="pointLat" name="Maps.Code.PointClass_0_latitude" value="${lat}" /&gt;
-      &lt;input type="hidden" id="pointLng" name="Maps.Code.PointClass_0_longitude" value="${lng}" /&gt;
+      ## Form for creating the point
+      #set($pointObj = $doc.getObject('Maps.Code.ShapeClass'))
+      #set ($shapeGeoJSON = $pointObj.getValue('shapeGeoJSON'))
+      &lt;input type="hidden" id="shapeGeoJSON" name="Maps.Code.ShapeClass_0_shapeGeoJSON" value='${shapeGeoJSON}' /&gt;
       (% class="xform" %)(((
         &lt;dl&gt;
           #foreach($prop in $class.properties)
-            #if ($prop.name != 'latitude' &amp;&amp; $prop.name != 'longitude')
-              #displayClassProperty($prop)
+            #if ($prop.name != 'shapeGeoJSON')
+              #processField($prop)
             #end
           #end
         &lt;/dl&gt;
@@ -84,26 +88,17 @@
     )))
   )))
   {{/html}}
-#elseif ($doc.documentReference.name == 'PointSheet')
+#elseif ($doc.documentReference.name == 'ShapeSheet')
   ## Do nothing
 #else
-  #set($class = $doc.getObject('Maps.Code.PointClass').xWikiClass)
-  {{html wiki="true" clean="false"}}
-  (% class="xform" %)(((
-    &lt;dl&gt;
-      #foreach($prop in $class.properties)
-        #displayClassProperty($prop)
-      #end
-    &lt;/dl&gt;
-  )))
-  {{/html}}
+  
 #end
 {{/velocity}}</content>
   <object>
-    <name>Maps.Code.PointSheet</name>
+    <name>Maps.Code.ShapeSheet</name>
     <number>0</number>
     <className>XWiki.JavaScriptExtension</className>
-    <guid>30cc5502-ffcc-4223-8214-5d013f683e96</guid>
+    <guid>42125f83-4d5b-4ce1-8e80-8add36d1d38a</guid>
     <class>
       <name>XWiki.JavaScriptExtension</name>
       <customClass/>
@@ -182,8 +177,14 @@
       <cache>long</cache>
     </property>
     <property>
-      <code>// Make sure to include jsx Maps.Code.LeafletUtils before including this jsx
-require(['jquery', 'leaflet', 'leaflet-commons', 'bootstrap'], function ($, leaflet, leafletCommons) {
+      <code>requirejs.config({
+  paths: {
+    'leaflet-edit': ['https://cdnjs.cloudflare.com/ajax/libs/leaflet-editable/1.2.0/Leaflet.Editable.min'],
+    'leaflet-drag': ['https://npmcdn.com/leaflet.path.drag/src/Path.Drag']
+  }
+});
+// Make sure to include jsx Maps.Code.LeafletUtils before including this jsx
+require(['jquery', 'leaflet', 'leaflet-commons', 'leaflet-edit', 'leaflet-drag', 'bootstrap'], function ($, leaflet, leafletCommons) {
   'use strict';
   function init()
   {
@@ -191,12 +192,13 @@ require(['jquery', 'leaflet', 'leaflet-commons', 'bootstrap'], function ($, leaf
     var map;
 
     //Render the map
-    $$('.point-editor-map-preview').each(function (element) {
+    $$('.shape-editor-map-preview').each(function (element) {
       var mapId = $(element).attr('id').replace('map-', '');
       var options = {
         'id': mapId,
         'addFullscreen': 1,
-        'includeCurrentLocation': 1
+        'includeCurrentLocation': 1,
+        'editable': true
       };
       map = leafletCommons.createEmptyMap(options);
       map.on('click', function (e) {
@@ -204,19 +206,23 @@ require(['jquery', 'leaflet', 'leaflet-commons', 'bootstrap'], function ($, leaf
           $('.map-search-filter').removeClass('open');
         }
       });
-      var $latInput = $('#pointLat');
-      var $lngInput = $('#pointLng');
-      var defLocation = [$latInput.val(), $lngInput.val()];
-      map.setView(defLocation, 14);
-      leafletCommons.addSinglePointSelection(map, defLocation, function (marker) {
-        var newLocation = marker.getLatLng();
-        $latInput.val(newLocation.lat);
-        $lngInput.val(newLocation.lng);
-      });
+      leafletCommons.addShapeEditControls(map);
     });
 
-    //Point editor place search
+    //Shape editor place search
     leafletCommons.setupLocationSearchMP('.map-search', map);
+
+    var $shapeGeoJSON = $('#shapeGeoJSON');
+    var allShapes = L.featureGroup();
+    map.on('editable:drawing:commit', function (e) {
+      var drawnLayer = e.layer;
+      allShapes.addLayer(drawnLayer);
+      var allShapesJSON = allShapes.toGeoJSON();
+      $shapeGeoJSON.val(JSON.stringify(allShapesJSON));
+      drawnLayer.on('dblclick', function (e1) {
+        drawnLayer.remove();
+      });
+    });
 
   }
 
@@ -226,10 +232,10 @@ require(['jquery', 'leaflet', 'leaflet-commons', 'bootstrap'], function ($, leaf
 });</code>
     </property>
     <property>
-      <name>point-editor</name>
+      <name/>
     </property>
     <property>
-      <parse>0</parse>
+      <parse>1</parse>
     </property>
     <property>
       <use>onDemand</use>

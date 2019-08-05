@@ -381,10 +381,17 @@
           )))
         #elseif ($item.get('type') == 'shape')
           #set ($shapeGeoJSON = $jsontool.parse($item.shapeGeoJSON))
-          #if ("$!shapeGeoJSON.features[0].geometry.coordinates" != '')
+          #if ("$!shapeGeoJSON.features[0].geometry.coordinates[0][0][0]" != '')
+            #set ($allPoints = $shapeGeoJSON.features[0].geometry.coordinates[0])
+          #elseif ("$!shapeGeoJSON.features[0].geometry.coordinates[0][0]" != '')
             #set ($allPoints = $shapeGeoJSON.features[0].geometry.coordinates)
+          #elseif ("$!shapeGeoJSON.geometry.coordinates[0][0][0]" != '')
+            #set ($allPoints = $shapeGeoJSON.geometry.coordinates[0])
           #else
             #set ($allPoints = $shapeGeoJSON.geometry.coordinates)
+          #end
+          #foreach ($coordinate in $allPoints)
+            #set ($discard = $collectionstool.reverse($coordinate))
           #end
           #set ($allPoints = $jsontool.serialize($allPoints))
           (% class="goto-loc goto-loc-points" data-location='{"points": ${allPoints} }' title="$services.localization.render('intmap.search.gotoLoc')" %)(((
@@ -454,6 +461,22 @@
     {{/html}}
   )))
   #set($void = $services.progress.endStep())
+#end
+
+##
+## Simple common macros
+##
+
+## Process the property of a class for edit or display
+#macro (displayClassProperty $prop)
+  &lt;dt&gt;
+    #set ($propId = "${class.getDocumentReference().getLocalDocumentReference()}_${class.getNumber()}_${prop.name}")
+    &lt;label for="${propId}"&gt;$prop.prettyName&lt;/label&gt;
+    #if($prop.hint)&lt;span class="xHint"&gt;$prop.hint&lt;/span&gt;#end
+  &lt;/dt&gt;
+  &lt;dd&gt;
+    $doc.display($prop.name)
+  &lt;/dd&gt;
 #end
 {{/velocity}}</content>
 </xwikidoc>

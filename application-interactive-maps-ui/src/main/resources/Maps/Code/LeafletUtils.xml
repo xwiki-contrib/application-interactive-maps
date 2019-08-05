@@ -142,10 +142,11 @@ define('leaflet-commons', ['jquery'], function ($) {
     {
       //Create the map
       var mapId = 'map-' + options.id,
+          editable = options.editable !== undefined ? options.editable : false,
           zoom = options.defaultZoom !== null ? (options.defaultZoom !== undefined ? options.defaultZoom : 12) : 12,
           tiles = options.tiles !== '' ? (options.tiles !== undefined ? options.tiles : 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png') : 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
           attribution = options.attribution !== undefined ? options.attribution : '',
-          map = new L.Map(mapId, {zoom: zoom, center: [48, 2]});
+          map = new L.Map(mapId, {zoom: zoom, center: [48, 2], editable: editable});
       options.defaultLocation = options.defaultLocation !== '' ? options.defaultLocation : '48,2';
       map.zoomControl.setPosition('bottomright');
       //Adding the navigation control
@@ -278,6 +279,32 @@ define('leaflet-commons', ['jquery'], function ($) {
         }
       });
       (new L.Control.customControl({ position: position })).addTo(map);
+    },
+
+    //Adding shape edit controls
+    addShapeEditControls: function (map)
+    {
+      var rootScope = this;
+      //For editing circle
+      this.addCustomControl(map, 'fa-circle', 'New circle', 'bottomleft',  function (e) {
+        map.editTools.startCircle();
+      });
+      //For editing rectangle
+      this.addCustomControl(map, 'fa-stop', 'New rectangle', 'bottomleft',  function (e) {
+        map.editTools.startRectangle();
+      });
+      //For editing polygon
+      this.addCustomControl(map, 'fa-cube', 'New polygon', 'bottomleft',  function (e) {
+        map.editTools.startPolygon();
+      });
+      //For editing polyline
+      this.addCustomControl(map, 'fa-chevron-down', 'New polyline', 'bottomleft',  function (e) {
+        map.editTools.startPolyline();
+      });
+      //For editing marker
+      this.addCustomControl(map, 'fa-map-marker', 'New marker', 'bottomleft', function (e) {
+        map.editTools.startMarker();
+      });
     },
 
     //Return latlng if location is address or a string of latlng

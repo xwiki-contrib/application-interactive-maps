@@ -35,7 +35,7 @@
   <comment/>
   <minorEdit>false</minorEdit>
   <syntaxId>xwiki/2.1</syntaxId>
-  <hidden>false</hidden>
+  <hidden>true</hidden>
   <content/>
   <object>
     <name>Maps.Code.PointTemplate</name>
@@ -113,13 +113,13 @@
       </popupContent>
     </class>
     <property>
-      <includePopup/>
+      <includePopup>1</includePopup>
     </property>
     <property>
-      <latitude/>
+      <latitude>48.8566</latitude>
     </property>
     <property>
-      <longitude/>
+      <longitude>2.3522</longitude>
     </property>
     <property>
       <popupContent/>
