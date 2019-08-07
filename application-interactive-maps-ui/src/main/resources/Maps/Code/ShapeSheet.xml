@@ -35,7 +35,7 @@
   <comment/>
   <minorEdit>false</minorEdit>
   <syntaxId>xwiki/2.1</syntaxId>
-  <hidden>false</hidden>
+  <hidden>true</hidden>
   <content>{{include reference="Maps.Code.CommonMacros" /}}
 
 {{velocity}}
@@ -48,39 +48,31 @@
   {{html wiki="true" clean="false"}}
   (% class="row" %)(((
     (% class="col-sm-12" %)(((
-    ## Preview of the map
-    &lt;p class="xform"&gt;&lt;span class="xHint"&gt;$services.localization.render('intmap.shapeEditor.hint')&lt;/span&gt;&lt;/p&gt;
-    (% class="map-wrapper" %)(((
-      (% class="map-preview shape-editor-map-preview" id="map-${util.generateRandomString(5)}" style="width: 100%; height: 400px;" %)((()))
-      (% class="map-search-filter" %)(((
-        #displayLocationSearch()
+      ## Preview of the map
+      &lt;p class="xform"&gt;&lt;span class="xHint"&gt;$services.localization.render('intmap.shapeEditor.hint')&lt;/span&gt;&lt;/p&gt;
+      (% class="map-wrapper" %)(((
+        &lt;div class="map-preview shape-editor-map-preview" id="map-${util.generateRandomString(5)}" style="width: 100%; height: 400px;"&gt;&lt;/div&gt;
+        (% class="map-search-filter" %)(((
+          #displayLocationSearch()
+        )))
+        (% id="map-search-close" %)(((
+        &lt;i class="fa fa-arrow-left"&gt;&lt;/i&gt;
+        )))
       )))
-      (% id="map-search-close" %)(((
-      &lt;i class="fa fa-arrow-left"&gt;&lt;/i&gt;
-      )))
-    )))
     )))
     (% class="col-sm-12" %)(((
       #set($class = $doc.getObject('Maps.Code.ShapeClass').xWikiClass)
-      #macro (processField $prop)
-        &lt;dt&gt;
-          #set ($propId = "${class.getDocumentReference().getLocalDocumentReference()}_${class.getNumber()}_${prop.name}")
-          &lt;label for="${propId}"&gt;$prop.prettyName&lt;/label&gt;
-          #if($prop.hint)&lt;span class="xHint"&gt;$prop.hint&lt;/span&gt;#end
-        &lt;/dt&gt;
-        &lt;dd&gt;
-          $doc.display($prop.name)
-        &lt;/dd&gt;
-      #end
       ## Form for creating the point
       #set($pointObj = $doc.getObject('Maps.Code.ShapeClass'))
       #set ($shapeGeoJSON = $pointObj.getValue('shapeGeoJSON'))
-      &lt;input type="hidden" id="shapeGeoJSON" name="Maps.Code.ShapeClass_0_shapeGeoJSON" value='${shapeGeoJSON}' /&gt;
+      {{html wiki="false"}}
+      &lt;input type="hidden" id="shapeGeoJSON" name="Maps.Code.ShapeClass_0_shapeGeoJSON" value='$shapeGeoJSON' /&gt;
+      {{/html}}
       (% class="xform" %)(((
         &lt;dl&gt;
           #foreach($prop in $class.properties)
             #if ($prop.name != 'shapeGeoJSON')
-              #processField($prop)
+              #displayClassProperty($prop)
             #end
           #end
         &lt;/dl&gt;
@@ -179,6 +171,7 @@
     <property>
       <code>requirejs.config({
   paths: {
+    //$services.webjars.url("github-com-Leaflet-Leaflet-Editable", "Leaflet.Editable.js")
     'leaflet-edit': ['https://cdnjs.cloudflare.com/ajax/libs/leaflet-editable/1.2.0/Leaflet.Editable.min'],
     'leaflet-drag': ['https://npmcdn.com/leaflet.path.drag/src/Path.Drag']
   }
@@ -188,6 +181,26 @@ require(['jquery', 'leaflet', 'leaflet-commons', 'leaflet-edit', 'leaflet-drag',
   'use strict';
   function init()
   {
+
+    function updateShapesJSON ($shapeGeoJSON, allShapesJSON, allShapes)
+    {
+      allShapesJSON = allShapes.toGeoJSON();
+      $shapeGeoJSON.val(JSON.stringify(allShapesJSON));
+    }
+
+    function processShapeLayer (layer, $shapeGeoJSON, allShapesJSON, allShapes)
+    {
+      allShapes.addLayer(layer);
+      updateShapesJSON($shapeGeoJSON, allShapesJSON, allShapes);
+      layer.on('dblclick', function (e1) {
+        layer.remove();
+        allShapes.removeLayer(layer);
+        updateShapesJSON($shapeGeoJSON, allShapesJSON, allShapes);
+      });
+      layer.on('move', function (e1) {
+        updateShapesJSON($shapeGeoJSON, allShapesJSON, allShapes);
+      });
+    }
 
     var map;
 
@@ -207,20 +220,26 @@ require(['jquery', 'leaflet', 'leaflet-commons', 'leaflet-edit', 'leaflet-drag',
         }
       });
       leafletCommons.addShapeEditControls(map);
-    });
 
-    //Shape editor place search
-    leafletCommons.setupLocationSearchMP('.map-search', map);
+      //Shape editor place search
+      leafletCommons.setupLocationSearchMP('.map-search', map);
 
-    var $shapeGeoJSON = $('#shapeGeoJSON');
-    var allShapes = L.featureGroup();
-    map.on('editable:drawing:commit', function (e) {
-      var drawnLayer = e.layer;
-      allShapes.addLayer(drawnLayer);
-      var allShapesJSON = allShapes.toGeoJSON();
-      $shapeGeoJSON.val(JSON.stringify(allShapesJSON));
-      drawnLayer.on('dblclick', function (e1) {
-        drawnLayer.remove();
+      var $shapeGeoJSON = $('#shapeGeoJSON');
+      var allShapes = L.featureGroup();
+      var allShapesJSON;
+
+      var currentGeoJSON = JSON.parse($shapeGeoJSON.val());
+      var currentShapes = L.geoJSON(currentGeoJSON, {
+        onEachFeature: function (feature, layer) {
+          layer.addTo(map).enableEdit();
+          processShapeLayer(layer, $shapeGeoJSON, allShapesJSON, allShapes);
+        }
+      });
+      map.fitBounds(currentShapes.getBounds());
+
+      map.on('editable:drawing:commit', function (e) {
+        var drawnLayer = e.layer;
+        processShapeLayer(drawnLayer, $shapeGeoJSON, allShapesJSON, allShapes);
       });
     });
 
