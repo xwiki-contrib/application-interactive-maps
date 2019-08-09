@@ -237,7 +237,7 @@ require(['jquery', 'leaflet', 'leaflet-commons', 'leaflet-edit', 'leaflet-drag',
       });
       map.fitBounds(currentShapes.getBounds());
 
-      map.on('editable:drawing:commit', function (e) {
+      map.on('editable:drawing:commit editable:vertex:dragend', function (e) {
         var drawnLayer = e.layer;
         processShapeLayer(drawnLayer, $shapeGeoJSON, allShapesJSON, allShapes);
       });

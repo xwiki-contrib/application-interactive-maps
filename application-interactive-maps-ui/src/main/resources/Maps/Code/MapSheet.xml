@@ -41,7 +41,7 @@
 {{velocity}}
 ## If the document is being edited then display the edit form
 #if ($xcontext.action == 'edit')
-  #set ($advancedFieldsNames = ['includeMapScale', 'defaultZoom', 'defaultLocation', 'tiles', 'mapSize', 'includeFacets', 'facetFields', 'attribution', 'customLocationProperties'])
+  #set ($advancedFieldsNames = ['locationClasses', 'includeMapScale', 'defaultZoom', 'defaultLocation', 'tiles', 'mapSize', 'includeFacets', 'facetFields', 'attribution', 'customLocationProperties'])
   #set ($advancedFields = [])
   #set($class = $doc.getObject('Maps.Code.MapClass').xWikiClass)
   {{html wiki="true" clean="false"}}
@@ -90,6 +90,16 @@
     #set ($mapSize = ['100%', '500px'])
   #else
     #set ($mapSize = $mapObjMapping.get('mapSize').split(','))
+  #end
+  ## Get all location classes
+  #set ($allLocationClasses = [])
+  #foreach ($locationClassLine in $mapObjMapping.get('locationClasses').split('\n'))
+    #set ($locationClassData = $locationClassLine.split(':'))
+    #set ($locationClass = {})
+    #set ($discard = $locationClass.put('className', $locationClassData[0].trim()))
+    #set ($discard = $locationClass.put('latitude', $locationClassData[1].split(',')[0].trim()))
+    #set ($discard = $locationClass.put('longitude', $locationClassData[1].split(',')[1].trim()))
+    #set ($discard = $allLocationClasses.add($locationClass))
   #end
   #displayMapUI()
 #end
