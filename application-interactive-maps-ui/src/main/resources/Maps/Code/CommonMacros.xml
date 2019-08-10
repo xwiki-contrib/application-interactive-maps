@@ -39,7 +39,7 @@
   <content>{{velocity output="false"}}
 #set ($solrConfig = {
   'filterQuery': [
-    'type:DOCUMENT', 'class:Maps.Code.PointClass OR class:Maps.Code.PathClass OR class:Maps.Code.ShapeClass'
+    'type:DOCUMENT', 'class:Maps.Code.PathClass OR class:Maps.Code.ShapeClass'
   ],
   'facetFields': []
 })
@@ -100,6 +100,36 @@
   #end
 #end
 
+## Process location property data
+#macro (processCustomLocationClass $classData)
+  ## Set property names of class for query
+  #set ($latProp = 'property.' + $classData.get('className') + '.' + $classData.get('latitude') + '__')
+  #set ($lngProp = 'property.' + $classData.get('className') + '.' + $classData.get('longitude') + '__')
+  #set ($includePopupField = 'property.' + $classData.get('className') + '.includePopup_boolean')
+  #if ("$!response.get(${latProp})" != '' &amp;&amp; "$!response.get(${lngProp})" != '' )
+    #set ($responseData = {})
+    #set ($discard = $responseData.put('type', 'point'))
+    ## Get document title and content
+    #set ($title = $response.get('title_'))
+    #set ($popupContent = $response.get('doccontentraw_'))
+    ## Get the location
+    #set ($location = [])
+    #set ($discard = $location.add($response.get(${latProp})[0]))
+    #set ($discard = $location.add($response.get(${lngProp})[0]))
+    ## Set the collected information
+    #set ($discard = $responseData.put('location', $location))
+    #set ($includePopup = $response.get($includePopupField)[0])
+    #if ("$!includePopup" == '')
+      #set ($includePopup = true)
+    #end
+    #setDataFromDoc($responseData $includePopup $title $popupContent $response.get('fullname'))
+    ## Check for custom marker icon
+    #checkMarkerIcon($response.get('fullname') $responseData)
+    ## Add the collected data into array
+    #set ($discard = $mapDataArr.add($responseData))
+  #end
+#end
+
 ## Process all path points
 #macro (getPathPointsJSON)
   #set ($pointPages = $response.get("property.Maps.Code.PathClass.pointsPages_string"))
@@ -137,14 +167,24 @@
 #macro (handleSolrResponse $searchResponse)
   #set ($mapDataArr = [])
   #foreach ($response in $searchResponse.getResults())
-    ## Check for PointClass
-    #processLocationProperty('property.Maps.Code.PointClass.latitude_string')
+    ## Check for Point
+    ##processLocationProperty('property.Maps.Code.PointClass.latitude_string')
     ## Check for custom location properties
     #if (!$customLocationProperties.isEmpty())
       #foreach ($customProp in $mapObjMapping.get('customLocationProperties'))
         #processLocationProperty($customProp.trim())
       #end
     #end
+    ## Custom Point classes
+    #if (!$allLocationClasses.isEmpty())
+      #foreach ($locationClass in $allLocationClasses)
+        #set ($locationClassName = $locationClass.get('className'))
+        #if ($response.get('class').contains($locationClassName))
+          #processCustomLocationClass($locationClass)
+        #end
+      #end
+    #end
+    ## Point END
     ## Check for PathClass and process path
     #if ($response.get('class').contains('Maps.Code.PathClass'))
       #set ($responseData = {})
@@ -160,6 +200,7 @@
       ## Add the path data to the main map data array
       #set ($discard = $mapDataArr.add($responseData))
     #end
+    ## Path END
     ## Check for shape and process it
     #if ($response.get('class').contains('Maps.Code.ShapeClass'))
       #set ($responseData = {})
@@ -242,6 +283,11 @@
       &lt;noscript class="hidden skin-extension-imports"&gt;#skinExtensionHooks&lt;/noscript&gt;
       {{/html}}
     #end
+    ## Get all custom point classes. Filter the results according to classes
+    #foreach ($locationClass in $allLocationClasses)
+      #set ($locationClassName = $locationClass.get('className').trim())
+      #set ($solrConfig.filterQuery[1] = "${solrConfig.filterQuery[1]} OR class:${locationClassName}")
+    #end
     ## Get all custom location field properties. Filter the results according to object properties to look for
     #foreach ($customProp in $mapObjMapping.get('customLocationProperties'))
       #set ($customProp = $customProp.trim())
@@ -260,6 +306,7 @@
     #end
     ## Execute the query to get map results
     #getMapResults()
+    ##{{code language="java"}}$searchResponse.results{{/code}}
     #if ($debug)
       #displaySearchDebugInfo()
     #end
