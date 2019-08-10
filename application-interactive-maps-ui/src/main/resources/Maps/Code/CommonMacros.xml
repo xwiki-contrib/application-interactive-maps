@@ -428,14 +428,16 @@
           )))
         #elseif ($item.get('type') == 'shape')
           #set ($shapeGeoJSON = $jsontool.parse($item.shapeGeoJSON))
-          #if ("$!shapeGeoJSON.features[0].geometry.coordinates[0][0][0]" != '')
-            #set ($allPoints = $shapeGeoJSON.features[0].geometry.coordinates[0])
-          #elseif ("$!shapeGeoJSON.features[0].geometry.coordinates[0][0]" != '')
-            #set ($allPoints = $shapeGeoJSON.features[0].geometry.coordinates)
-          #elseif ("$!shapeGeoJSON.geometry.coordinates[0][0][0]" != '')
-            #set ($allPoints = $shapeGeoJSON.geometry.coordinates[0])
-          #else
-            #set ($allPoints = $shapeGeoJSON.geometry.coordinates)
+          #if ("$!shapeGeoJSON.geometry" != '' || $shapeGeoJSON.features.size() &gt; 0)
+            #if ("$!shapeGeoJSON.features[0].geometry.coordinates[0][0][0]" != '')
+              #set ($allPoints = $shapeGeoJSON.features[0].geometry.coordinates[0])
+            #elseif ("$!shapeGeoJSON.features[0].geometry.coordinates[0][0]" != '')
+              #set ($allPoints = $shapeGeoJSON.features[0].geometry.coordinates)
+            #elseif ("$!shapeGeoJSON.geometry.coordinates[0][0][0]" != '')
+              #set ($allPoints = $shapeGeoJSON.geometry.coordinates[0])
+            #else
+              #set ($allPoints = $shapeGeoJSON.geometry.coordinates)
+            #end
           #end
           #foreach ($coordinate in $allPoints)
             #set ($discard = $collectionstool.reverse($coordinate))

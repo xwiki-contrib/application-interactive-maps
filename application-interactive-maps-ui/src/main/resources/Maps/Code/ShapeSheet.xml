@@ -228,14 +228,18 @@ require(['jquery', 'leaflet', 'leaflet-commons', 'leaflet-edit', 'leaflet-drag',
       var allShapes = L.featureGroup();
       var allShapesJSON;
 
-      var currentGeoJSON = JSON.parse($shapeGeoJSON.val());
-      var currentShapes = L.geoJSON(currentGeoJSON, {
-        onEachFeature: function (feature, layer) {
-          layer.addTo(map).enableEdit();
-          processShapeLayer(layer, $shapeGeoJSON, allShapesJSON, allShapes);
-        }
-      });
-      map.fitBounds(currentShapes.getBounds());
+      if ($shapeGeoJSON.val() !== '') {
+        var currentGeoJSON = JSON.parse($shapeGeoJSON.val());
+        var currentShapes = L.geoJSON(currentGeoJSON, {
+          onEachFeature: function (feature, layer) {
+            layer.addTo(map).enableEdit();
+            processShapeLayer(layer, $shapeGeoJSON, allShapesJSON, allShapes);
+          }
+        });
+        map.fitBounds(currentShapes.getBounds());
+      } else {
+        $shapeGeoJSON.val('{"type":"FeatureCollection","features":[]}');
+      }
 
       map.on('editable:drawing:commit editable:vertex:dragend', function (e) {
         var drawnLayer = e.layer;
