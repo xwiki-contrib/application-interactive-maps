@@ -215,6 +215,31 @@
 - [x] Create PointTemplate and PointProvider
 ## Day 68 (4 August 2019)
 - [ ] Break
+## Day 69 (5 August 2019)
+- [x] Shape Editor as ShapeSheet
+- [x] Edit shapes directly with a preview
+- [x] Map controls as tools for creating shapes using Leaflet.Editable
+- [x] Creating shapes and saving as GeoJSON
+- [x] Move to GeoJSON shape in map results
+- [x] Code optimization
+## Day 70 (6 August 2019)
+- [ ] Break
+## Day 71 (7 August 2019)
+- [x] Editing old shapes with ShapeSheet
+- [x] Code optimization
+## Day 72 (8 August 2019)
+- [ ] Break
+## Day 73 (9 August 2019)
+- [x] Support for custom specified for Points
+- [x] Latitude and longitude of Points from custom classes
+- [x] Save shape's GeoJSON after vertex changed (not just after commiting a shape)
+## Day 74 (10 August 2019)
+- [x] Process custom point class to create a map item
+- [x] Take latitude and longitude of custom class using property names specified
+## Day 75 (11 August 2019)
+- [x] Create ShapeProvider for interactively creating shapes
+- [x] Fix velocity error occuring when trying to load shape object with no data
+- [x] Set empty GeoJSON for ShapeSheet if there is no shape data
 ---
 # Marks the progress of the Interactive Maps Application (Old)
 ## Day 1 (18 May 2019)
