@@ -51,40 +51,78 @@
       <defaultWeb/>
       <nameField/>
       <validationScript/>
+      <includePopup>
+        <customDisplay/>
+        <defaultValue>1</defaultValue>
+        <disabled>0</disabled>
+        <displayFormType>checkbox</displayFormType>
+        <displayType/>
+        <hint/>
+        <name>includePopup</name>
+        <number>3</number>
+        <prettyName>Add Popup to the Point</prettyName>
+        <unmodifiable>0</unmodifiable>
+        <validationMessage/>
+        <validationRegExp/>
+        <classType>com.xpn.xwiki.objects.classes.BooleanClass</classType>
+      </includePopup>
       <latitude>
         <customDisplay/>
         <disabled>0</disabled>
         <hint/>
         <name>latitude</name>
-        <number>2</number>
-        <picker>0</picker>
+        <number>1</number>
+        <numberType>double</numberType>
         <prettyName>Latitude</prettyName>
         <size>30</size>
         <unmodifiable>0</unmodifiable>
         <validationMessage/>
         <validationRegExp/>
-        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+        <classType>com.xpn.xwiki.objects.classes.NumberClass</classType>
       </latitude>
       <longitude>
         <customDisplay/>
         <disabled>0</disabled>
         <hint/>
         <name>longitude</name>
-        <number>3</number>
-        <picker>0</picker>
-        <prettyName>Longitude</prettyName>
+        <number>2</number>
+        <numberType>double</numberType>
+        <prettyName>longitude</prettyName>
         <size>30</size>
         <unmodifiable>0</unmodifiable>
         <validationMessage/>
         <validationRegExp/>
-        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+        <classType>com.xpn.xwiki.objects.classes.NumberClass</classType>
       </longitude>
+      <popupContent>
+        <contenttype/>
+        <customDisplay>{{include reference='AppWithinMinutes.Content'/}}</customDisplay>
+        <disabled>0</disabled>
+        <editor/>
+        <hint>Content that will appear in the point's popup</hint>
+        <name>popupContent</name>
+        <number>4</number>
+        <picker>0</picker>
+        <prettyName>Popup Content</prettyName>
+        <rows>5</rows>
+        <size>40</size>
+        <unmodifiable>0</unmodifiable>
+        <validationMessage/>
+        <validationRegExp/>
+        <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
+      </popupContent>
     </class>
+    <property>
+      <includePopup/>
+    </property>
     <property>
       <latitude>48.8582602</latitude>
     </property>
     <property>
       <longitude>2.29449905431968</longitude>
+    </property>
+    <property>
+      <popupContent/>
     </property>
   </object>
 </xwikidoc>

@@ -73,13 +73,13 @@
       <hint/>
       <name>latitude</name>
       <number>1</number>
-      <picker>0</picker>
+      <numberType>double</numberType>
       <prettyName>Latitude</prettyName>
       <size>30</size>
       <unmodifiable>0</unmodifiable>
       <validationMessage/>
       <validationRegExp/>
-      <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      <classType>com.xpn.xwiki.objects.classes.NumberClass</classType>
     </latitude>
     <longitude>
       <customDisplay/>
@@ -87,19 +87,19 @@
       <hint/>
       <name>longitude</name>
       <number>2</number>
-      <picker>0</picker>
-      <prettyName>Longitude</prettyName>
+      <numberType>double</numberType>
+      <prettyName>longitude</prettyName>
       <size>30</size>
       <unmodifiable>0</unmodifiable>
       <validationMessage/>
       <validationRegExp/>
-      <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      <classType>com.xpn.xwiki.objects.classes.NumberClass</classType>
     </longitude>
     <popupContent>
       <contenttype/>
       <customDisplay>{{include reference='AppWithinMinutes.Content'/}}</customDisplay>
       <disabled>0</disabled>
-      <editor>Wysiwyg</editor>
+      <editor/>
       <hint>Content that will appear in the point's popup</hint>
       <name>popupContent</name>
       <number>4</number>

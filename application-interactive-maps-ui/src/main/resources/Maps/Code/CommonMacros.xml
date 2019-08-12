@@ -79,19 +79,10 @@
     #set ($title = $response.get('title_'))
     #set ($popupContent = $response.get('doccontentraw_'))
     ## Get the location
-    #if ($property.equals('property.Maps.Code.PointClass.latitude_string'))
-      #set ($location = [])
-      #set ($discard = $location.add($response.get(${property})[0]))
-      #set ($discard = $location.add($response.get('property.Maps.Code.PointClass.longitude_string')[0]))
-    #else
-      #set ($location = $response.get($property)[0])
-    #end
+    #set ($location = $response.get($property)[0])
     ## Set the collected information
     #set ($discard = $responseData.put('location', $location))
-    #set ($includePopup = $response.get('property.Maps.Code.PointClass.includePopup_boolean')[0])
-    #if ("$!includePopup" == '')
-      #set ($includePopup = true)
-    #end
+    #set ($includePopup = true)
     #setDataFromDoc($responseData $includePopup $title $popupContent $response.get('fullname'))
     ## Check for custom marker icon
     #checkMarkerIcon($response.get('fullname') $responseData)
@@ -103,9 +94,25 @@
 ## Process location property data
 #macro (processCustomLocationClass $classData)
   ## Set property names of class for query
-  #set ($latProp = 'property.' + $classData.get('className') + '.' + $classData.get('latitude') + '__')
-  #set ($lngProp = 'property.' + $classData.get('className') + '.' + $classData.get('longitude') + '__')
+  #set ($latProp = 'property.' + $classData.get('className') + '.' + $classData.get('latitude'))
+  #set ($lngProp = 'property.' + $classData.get('className') + '.' + $classData.get('longitude'))
   #set ($includePopupField = 'property.' + $classData.get('className') + '.includePopup_boolean')
+  ## Check for the keys in $response that start with the given property name (handling unknown suffixes in property names)
+  #set ($latSet = false)
+  #set ($lngSet = false)
+  #foreach ($key in $response.keySet())
+    #if ($latSet &amp;&amp; $lngSet)
+      #break
+    #end
+    #if ($key.startsWith($latProp) &amp;&amp; !$latSet)
+      #set ($latProp = $key)
+      #set ($latSet = true)
+    #elseif ($key.startsWith($lngProp) &amp;&amp; !$lngSet)
+      #set ($lngProp = $key)
+      #set ($lngSet = true)
+    #end
+  #end
+  ## Handling unknown suffixes END
   #if ("$!response.get(${latProp})" != '' &amp;&amp; "$!response.get(${lngProp})" != '' )
     #set ($responseData = {})
     #set ($discard = $responseData.put('type', 'point'))
@@ -167,8 +174,6 @@
 #macro (handleSolrResponse $searchResponse)
   #set ($mapDataArr = [])
   #foreach ($response in $searchResponse.getResults())
-    ## Check for Point
-    ##processLocationProperty('property.Maps.Code.PointClass.latitude_string')
     ## Check for custom location properties
     #if (!$customLocationProperties.isEmpty())
       #foreach ($customProp in $mapObjMapping.get('customLocationProperties'))
