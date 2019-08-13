@@ -143,7 +143,7 @@
 ## Set values for popup
 #macro (setDataFromDoc $dataMap $includePopup $title $rawPopupContent $docFullname)
   ## Get and set all the required popup data
-  #if ($includePopup)
+  #if ($includePopup &amp;&amp; $mapObjMapping.get('includePopups') == 1)
     #set ($discard = $dataMap.put('includePopup', $includePopup))
   #end
   ## Get document content as html

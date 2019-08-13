@@ -41,7 +41,7 @@
 {{velocity}}
 ## If the document is being edited then display the edit form
 #if ($xcontext.action == 'edit')
-  #set ($advancedFieldsNames = ['locationClasses', 'includeMapScale', 'defaultZoom', 'defaultLocation', 'tiles', 'mapSize', 'includeFacets', 'facetFields', 'attribution', 'customLocationProperties'])
+  #set ($advancedFieldsNames = ['locationClasses', 'includePopups', 'includeMapScale', 'defaultZoom', 'defaultLocation', 'tiles', 'mapSize', 'includeFacets', 'facetFields', 'attribution', 'customLocationProperties'])
   #set ($advancedFields = [])
   #set($class = $doc.getObject('Maps.Code.MapClass').xWikiClass)
   {{html wiki="true" clean="false"}}
