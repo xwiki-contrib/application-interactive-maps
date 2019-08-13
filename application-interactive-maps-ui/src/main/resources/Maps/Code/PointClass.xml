@@ -52,6 +52,23 @@
     <defaultWeb/>
     <nameField/>
     <validationScript/>
+    <content>
+      <contenttype/>
+      <customDisplay>{{include reference='AppWithinMinutes.Content'/}}</customDisplay>
+      <disabled>0</disabled>
+      <editor/>
+      <hint>Content associated with the point</hint>
+      <name>content</name>
+      <number>4</number>
+      <picker>0</picker>
+      <prettyName>Content</prettyName>
+      <rows>5</rows>
+      <size>40</size>
+      <unmodifiable>0</unmodifiable>
+      <validationMessage/>
+      <validationRegExp/>
+      <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
+    </content>
     <includePopup>
       <customDisplay/>
       <defaultValue>1</defaultValue>
@@ -95,23 +112,6 @@
       <validationRegExp/>
       <classType>com.xpn.xwiki.objects.classes.NumberClass</classType>
     </longitude>
-    <popupContent>
-      <contenttype/>
-      <customDisplay>{{include reference='AppWithinMinutes.Content'/}}</customDisplay>
-      <disabled>0</disabled>
-      <editor/>
-      <hint>Content that will appear in the point's popup</hint>
-      <name>popupContent</name>
-      <number>4</number>
-      <picker>0</picker>
-      <prettyName>Popup Content</prettyName>
-      <rows>5</rows>
-      <size>40</size>
-      <unmodifiable>0</unmodifiable>
-      <validationMessage/>
-      <validationRegExp/>
-      <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
-    </popupContent>
   </class>
   <object>
     <name>Maps.Code.PointClass</name>

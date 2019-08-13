@@ -575,10 +575,10 @@ define('leaflet-commons', ['jquery'], function ($) {
       if (data.includePopup !== undefined || data.includePopup) {
         var popupData = '';
         //If there is excessive popup data, allow it to be scrolled
-        if (data.popupContent.length &gt; 500) {
-          popupData = '&lt;h2&gt;' + data.title + '&lt;/h2&gt;&lt;hr/&gt;' + '&lt;div style="height: 150px; overflow: auto;"&gt;' + data.popupContent + '&lt;/div&gt;';
+        if (data.content.length &gt; 500) {
+          popupData = '&lt;h2&gt;' + data.title + '&lt;/h2&gt;&lt;hr/&gt;' + '&lt;div style="height: 150px; overflow: auto;"&gt;' + data.content + '&lt;/div&gt;';
         } else {
-          popupData = '&lt;h2&gt;' + data.title + '&lt;/h2&gt;&lt;hr/&gt;' + '&lt;div&gt;' + data.popupContent + '&lt;/div&gt;';
+          popupData = '&lt;h2&gt;' + data.title + '&lt;/h2&gt;&lt;hr/&gt;' + '&lt;div&gt;' + data.content + '&lt;/div&gt;';
         }
         bindElement.bindPopup(popupData);
       }

@@ -149,7 +149,7 @@
   ## Get document content as html
   #set ($popupContent = "#getHtml(${rawPopupContent})")
   #set ($discard = $dataMap.put('title', $title))
-  #set ($discard = $dataMap.put('popupContent', $popupContent))
+  #set ($discard = $dataMap.put('content', $popupContent))
   #if ($docFullname)
     #set ($discard = $dataMap.put('doclocation', $docFullname))
   #end
