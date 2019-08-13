@@ -550,13 +550,19 @@ define('leaflet-commons', ['jquery'], function ($) {
     //Select a place on the map
     addSinglePointSelection: function (map, defaultLocation, callback)
     {
-      var marker = L.marker(defaultLocation).addTo(map);
+      var marker = L.marker(defaultLocation, {draggable: true}).addTo(map);
+      marker.on('move', function (e) {
+        callback(marker);
+      });
       map.on('click', function (e) {
         if ($(".leaflet-popup-pane").html() == '') {
           if ($('.map-search-filter') &amp;&amp; !$('.map-search-filter').hasClass('open')) {
             marker.remove();
             marker = null;
-            marker = L.marker(e.latlng).addTo(map);
+            marker = L.marker(e.latlng, {draggable: true}).addTo(map);
+            marker.on('move', function (e) {
+              callback(marker);
+            });
             callback(marker);
           }
         }

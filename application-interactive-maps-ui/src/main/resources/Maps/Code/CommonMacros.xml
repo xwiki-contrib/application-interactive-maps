@@ -97,21 +97,6 @@
   #set ($latProp = 'property.' + $classData.get('className') + '.' + $classData.get('latitude'))
   #set ($lngProp = 'property.' + $classData.get('className') + '.' + $classData.get('longitude'))
   #set ($includePopupField = 'property.' + $classData.get('className') + '.includePopup_boolean')
-  ## Check for the keys in $response that start with the given property name (handling unknown suffixes in property names)
-  #set ($latSet = false)
-  #set ($lngSet = false)
-  #foreach ($key in $response.keySet())
-    #if ($latSet &amp;&amp; $lngSet)
-      #break
-    #end
-    #if ($key.startsWith($latProp) &amp;&amp; !$latSet)
-      #set ($latProp = $key)
-      #set ($latSet = true)
-    #elseif ($key.startsWith($lngProp) &amp;&amp; !$lngSet)
-      #set ($lngProp = $key)
-      #set ($lngSet = true)
-    #end
-  #end
   ## Handling unknown suffixes END
   #if ("$!response.get(${latProp})" != '' &amp;&amp; "$!response.get(${lngProp})" != '' )
     #set ($responseData = {})
@@ -531,6 +516,17 @@
   &lt;dd&gt;
     $doc.display($prop.name)
   &lt;/dd&gt;
+#end
+
+## Get key value from hashmap whose key starts with the given string
+#macro (getFullKey $valuesMap $shortKey)
+  #foreach ($key in $valuesMap.keySet())
+    #if ($key.startsWith($shortKey))
+      #set ($fullKey = $key)
+      #break
+    #end
+  #end
+  $fullKey
 #end
 {{/velocity}}</content>
 </xwikidoc>
