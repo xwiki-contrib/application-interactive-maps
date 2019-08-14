@@ -39,12 +39,12 @@
   <content>{{include reference="Maps.Code.CommonMacros" /}}
 
 {{velocity}}
+#set ($discard = $xwiki.ssx.use('Maps.Code.LeafletUtils'))
+#set ($discard = $xwiki.jsx.use('Maps.Code.LeafletUtils'))
+#set ($discard = $xwiki.jsx.use('Maps.Code.PointSheet'))
+#set($class = $doc.getObject('Maps.Code.PointClass').xWikiClass)
 ## If the point is being edited, then display the point editor
 #if ($xcontext.action == 'edit')
-  #set ($discard = $xwiki.ssx.use('Maps.Code.LeafletUtils'))
-  #set ($discard = $xwiki.jsx.use('Maps.Code.LeafletUtils'))
-  #set ($discard = $xwiki.jsx.use('Maps.Code.PointSheet'))
-
   {{html wiki="true" clean="false"}}
   (% class="row" %)(((
     (% class="col-sm-6" %)(((
@@ -61,7 +61,6 @@
     )))
     )))
     (% class="col-sm-6" %)(((
-      #set($class = $doc.getObject('Maps.Code.PointClass').xWikiClass)
       ## Form for creating the point
       #set($pointObj = $doc.getObject('Maps.Code.PointClass'))
       #set ($lat = $pointObj.getValue('latitude'))
@@ -70,14 +69,11 @@
         #set ($lat = 48.8566)
         #set ($lng = 2.3522)
       #end
-      &lt;input type="hidden" id="pointLat" name="Maps.Code.PointClass_0_latitude" value="${lat}" /&gt;
-      &lt;input type="hidden" id="pointLng" name="Maps.Code.PointClass_0_longitude" value="${lng}" /&gt;
       (% class="xform" %)(((
         &lt;dl&gt;
+          &lt;dt&gt;&lt;button type="button" id="updateLocBtn" class="btn btn-primary"&gt;Update Location&lt;/button&gt;&lt;/dt&gt;
           #foreach($prop in $class.properties)
-            #if ($prop.name != 'latitude' &amp;&amp; $prop.name != 'longitude')
-              #displayClassProperty($prop)
-            #end
+            #displayClassProperty($prop)
           #end
         &lt;/dl&gt;
       )))
@@ -87,14 +83,23 @@
 #elseif ($doc.documentReference.name == 'PointSheet')
   ## Do nothing
 #else
-  #set($class = $doc.getObject('Maps.Code.PointClass').xWikiClass)
+  #set($pointObj = $doc.getObject('Maps.Code.PointClass'))
+  #set($lat = $pointObj.getValue('latitude'))
+  #set($lng = $pointObj.getValue('longitude'))
   {{html wiki="true" clean="false"}}
-  (% class="xform" %)(((
-    &lt;dl&gt;
-      #foreach($prop in $class.properties)
-        #displayClassProperty($prop)
-      #end
-    &lt;/dl&gt;
+  (% class="row" %)(((
+    (% class="col-sm-6" %)(((
+      (% class="map-preview map-point-view" data-location="${lat},${lng}" id="map-${util.generateRandomString(5)}" style="width: 100%; height: 300px;" %)((()))
+    )))
+    (% class="col-sm-6" %)(((
+      (% class="xform" %)(((
+        &lt;dl&gt;
+          #foreach($prop in $class.properties)
+            #displayClassProperty($prop)
+          #end
+        &lt;/dl&gt;
+      )))
+    )))
   )))
   {{/html}}
 #end
@@ -204,14 +209,48 @@ require(['jquery', 'leaflet', 'leaflet-commons', 'bootstrap'], function ($, leaf
           $('.map-search-filter').removeClass('open');
         }
       });
-      var $latInput = $('#pointLat');
-      var $lngInput = $('#pointLng');
+      var $latInput = $('#Maps\\.Code\\.PointClass_0_latitude');
+      var $lngInput = $('#Maps\\.Code\\.PointClass_0_longitude');
       var defLocation = [$latInput.val(), $lngInput.val()];
       map.setView(defLocation, 14);
-      leafletCommons.addSinglePointSelection(map, defLocation, function (marker) {
+      var oldLocVal = defLocation;
+      leafletCommons.addSinglePointSelection(map, defLocation, function (marker, action) {
         var newLocation = marker.getLatLng();
         $latInput.val(newLocation.lat);
         $lngInput.val(newLocation.lng);
+        oldLocVal = [newLocation.lat, newLocation.lng];
+        if (action === 'pointAdded') {
+          $('#updateLocBtn').on('click', function () {
+            try {
+              var updatedLoc = [$latInput.val().trim(), $lngInput.val().trim()];
+              marker.setLatLng(updatedLoc);
+              map.setView(updatedLoc, 14);
+              oldLocVal = updatedLoc;
+            } catch (e) {
+              if (e.message.includes('Invalid LatLng object')) {
+                new XWiki.widgets.Notification('Invalid values for latitude and longitude.', 'error');
+                $latInput.val(oldLocVal[0]);
+                $lngInput.val(oldLocVal[1]);
+              }
+            }
+          });
+        }
+      });
+    });
+
+    $$('.map-point-view').each(function (element) {
+      var mapId = $(element).attr('id').replace('map-', '');
+      console.log(mapId);
+      var options = {
+        'id': mapId,
+        'addFullscreen': 1,
+        'includeCurrentLocation': 1
+      };
+      var viewMap = leafletCommons.createEmptyMap(options);
+      var loc = element.dataset.location.split(',');
+      leafletCommons.getLocationCoords(loc, function (location) {
+        L.marker(location).addTo(viewMap);
+        viewMap.setView(location);
       });
     });
 

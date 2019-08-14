@@ -551,7 +551,8 @@ define('leaflet-commons', ['jquery'], function ($) {
     addSinglePointSelection: function (map, defaultLocation, callback)
     {
       var marker = L.marker(defaultLocation, {draggable: true}).addTo(map);
-      marker.on('move', function (e) {
+      callback(marker, 'pointAdded');
+      marker.on('drag', function (e) {
         callback(marker);
       });
       map.on('click', function (e) {
