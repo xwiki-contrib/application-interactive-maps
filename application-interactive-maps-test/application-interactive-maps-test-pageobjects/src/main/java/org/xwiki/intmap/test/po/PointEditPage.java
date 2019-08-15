@@ -41,16 +41,18 @@ public class PointEditPage extends EditPage
     @FindBy(id = "content")
     private WebElement popupContent;
 
-    @FindBy(id = "pointLat")
+    @FindBy(id = "Maps.Code.PointClass_0_latitude")
     private WebElement pointLat;
 
-    @FindBy(id = "pointLng")
+    @FindBy(id = "Maps.Code.PointClass_0_longitude")
     private WebElement pointLng;
 
     public void setValuesForPoint(String latitude, String longitude, boolean includePopup, String popupContent)
     {
-        setAttribute(this.pointLat, "value", latitude);
-        setAttribute(this.pointLng, "value", longitude);
+        this.pointLat.clear();
+        this.pointLat.sendKeys(latitude);
+        this.pointLng.clear();
+        this.pointLng.sendKeys(longitude);
         handleCheckBox(this.includePopup, includePopup);
         this.popupContent.clear();
         this.popupContent.sendKeys(popupContent);
@@ -63,11 +65,6 @@ public class PointEditPage extends EditPage
         } else if (!value && element.isSelected()) {
             element.click();
         }
-    }
-
-    private void setAttribute(WebElement element, String attName, String attValue) {
-        getDriver().executeScript("arguments[0].setAttribute(arguments[1], arguments[2]);",
-                element, attName, attValue);
     }
 
 }

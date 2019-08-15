@@ -86,7 +86,7 @@ public class InteractiveMapsTest extends AbstractTest
 
         // Create a point for the map
         CreatePagePage pointPage = new CreatePagePage();
-        pointPage.createPageFromTemplate(String.join(".", POINTS_SPACE), POINT_NAME, "Maps.Code.PointProvider", true);
+        pointPage.createPageFromTemplate(String.join(".", POINTS_SPACE), POINT_NAME, "Maps.Code.PointTemplateProvider", true);
         PointEditPage pointEditPage = new PointEditPage();
         pointEditPage.setValuesForPoint("33.6844", "73.0479", true, "Some data");
         pointEditPage.clickSaveAndView();
@@ -103,9 +103,9 @@ public class InteractiveMapsTest extends AbstractTest
         createBtn = getDriver().findElementById("tmCreate");
         createBtn.click();
 
-        // Create a page from template (MapProvider in this case)
+        // Create a page from template (MapTemplateProvider in this case)
         CreatePagePage cp = new CreatePagePage();
-        cp.createPageFromTemplate(TEST_SPACE, MAP_NAME, "Maps.Code.MapProvider", true);
+        cp.createPageFromTemplate(TEST_SPACE, MAP_NAME, "Maps.Code.MapTemplateProvider", true);
 
         // Perform actions on the map edit page
         IntMapEditPage mapEditPage = new IntMapEditPage();
