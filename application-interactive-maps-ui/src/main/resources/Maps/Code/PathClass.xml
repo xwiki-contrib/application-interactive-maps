@@ -98,6 +98,50 @@
   <object>
     <name>Maps.Code.PathClass</name>
     <number>0</number>
+    <className>XWiki.ClassSheetBinding</className>
+    <guid>f4250a35-064a-4f00-85c9-d56792b1d1cc</guid>
+    <class>
+      <name>XWiki.ClassSheetBinding</name>
+      <customClass/>
+      <customMapping/>
+      <defaultViewSheet/>
+      <defaultEditSheet/>
+      <defaultWeb/>
+      <nameField/>
+      <validationScript/>
+      <sheet>
+        <cache>0</cache>
+        <classname/>
+        <customDisplay/>
+        <disabled>0</disabled>
+        <displayType>input</displayType>
+        <hint/>
+        <idField/>
+        <multiSelect>0</multiSelect>
+        <name>sheet</name>
+        <number>1</number>
+        <picker>1</picker>
+        <prettyName>Sheet</prettyName>
+        <relationalStorage>0</relationalStorage>
+        <separator> </separator>
+        <separators/>
+        <size>30</size>
+        <sort>none</sort>
+        <sql/>
+        <unmodifiable>0</unmodifiable>
+        <validationMessage/>
+        <validationRegExp/>
+        <valueField/>
+        <classType>com.xpn.xwiki.objects.classes.PageClass</classType>
+      </sheet>
+    </class>
+    <property>
+      <sheet>PathSheet</sheet>
+    </property>
+  </object>
+  <object>
+    <name>Maps.Code.PathClass</name>
+    <number>0</number>
     <className>XWiki.DocumentSheetBinding</className>
     <guid>2dc1e5fd-6a2d-4ce0-bdfa-c53c18598972</guid>
     <class>

@@ -252,7 +252,7 @@
       <description>Interactive map page</description>
     </property>
     <property>
-      <icon>map</icon>
+      <icon>wiki</icon>
     </property>
     <property>
       <name>Map</name>

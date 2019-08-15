@@ -20,28 +20,28 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
 -->
 
-<xwikidoc version="1.3" reference="Maps.Code.ShapeTemplateProvider" locale="">
+<xwikidoc version="1.3" reference="Maps.Code.PathTemplateProvider" locale="">
   <web>Maps.Code</web>
-  <name>ShapeTemplateProvider</name>
+  <name>PathTemplateProvider</name>
   <language/>
   <defaultLanguage/>
   <translation>0</translation>
   <creator>xwiki:XWiki.Admin</creator>
-  <parent>WebHome</parent>
+  <parent>XWiki.TemplateProviderClass</parent>
   <author>xwiki:XWiki.Admin</author>
   <contentAuthor>xwiki:XWiki.Admin</contentAuthor>
   <version>1.1</version>
-  <title>ShapeTemplateProvider</title>
+  <title>PathTemplateProvider</title>
   <comment/>
   <minorEdit>false</minorEdit>
   <syntaxId>xwiki/2.0</syntaxId>
-  <hidden>true</hidden>
+  <hidden>false</hidden>
   <content/>
   <object>
-    <name>Maps.Code.ShapeTemplateProvider</name>
+    <name>Maps.Code.PathTemplateProvider</name>
     <number>0</number>
     <className>XWiki.TemplateProviderClass</className>
-    <guid>8dff9726-b5bb-474d-a3e4-bfd511224b15</guid>
+    <guid>89959359-c130-4617-ab6c-39d1e187741e</guid>
     <class>
       <name>XWiki.TemplateProviderClass</name>
       <customClass/>
@@ -247,19 +247,19 @@
       <creationRestrictionsAreSuggestions>0</creationRestrictionsAreSuggestions>
     </property>
     <property>
-      <description>Geometrical shape such as polyline, rectangle etc.</description>
+      <description>Geographical route through points</description>
     </property>
     <property>
-      <icon>star</icon>
+      <icon>check</icon>
     </property>
     <property>
-      <name>Map Shape</name>
+      <name>Map Path</name>
     </property>
     <property>
       <spaces/>
     </property>
     <property>
-      <template>Maps.Code.ShapeTemplate</template>
+      <template>Maps.Code.PathTemplate</template>
     </property>
     <property>
       <terminal>1</terminal>

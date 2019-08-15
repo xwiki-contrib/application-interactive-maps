@@ -262,7 +262,7 @@
       <template>Maps.Code.PointTemplate</template>
     </property>
     <property>
-      <terminal>0</terminal>
+      <terminal>1</terminal>
     </property>
     <property>
       <visibilityRestrictions/>
