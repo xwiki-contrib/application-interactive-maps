@@ -20,28 +20,28 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
 -->
 
-<xwikidoc version="1.3" reference="Maps.Code.PointProvider" locale="">
+<xwikidoc version="1.3" reference="Maps.Code.PointTemplateProvider" locale="">
   <web>Maps.Code</web>
-  <name>PointProvider</name>
+  <name>PointTemplateProvider</name>
   <language/>
   <defaultLanguage/>
   <translation>0</translation>
   <creator>xwiki:XWiki.Admin</creator>
-  <parent>XWiki.TemplateProviderClass</parent>
+  <parent>WebHome</parent>
   <author>xwiki:XWiki.Admin</author>
   <contentAuthor>xwiki:XWiki.Admin</contentAuthor>
   <version>1.1</version>
-  <title>PointProvider</title>
+  <title>PointTemplateProvider</title>
   <comment/>
   <minorEdit>false</minorEdit>
   <syntaxId>xwiki/2.0</syntaxId>
   <hidden>true</hidden>
   <content/>
   <object>
-    <name>Maps.Code.PointProvider</name>
+    <name>Maps.Code.PointTemplateProvider</name>
     <number>0</number>
     <className>XWiki.TemplateProviderClass</className>
-    <guid>bbb762bb-17df-4e06-9623-04b311bf936a</guid>
+    <guid>29ab8a4d-9497-4994-a725-a789d586dff1</guid>
     <class>
       <name>XWiki.TemplateProviderClass</name>
       <customClass/>
