@@ -247,7 +247,7 @@
       <creationRestrictionsAreSuggestions>0</creationRestrictionsAreSuggestions>
     </property>
     <property>
-      <description>Create a shape for map</description>
+      <description>Geometrical shape such as polyline, rectangle etc.</description>
     </property>
     <property>
       <icon>star</icon>

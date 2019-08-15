@@ -247,7 +247,7 @@
       <creationRestrictionsAreSuggestions>0</creationRestrictionsAreSuggestions>
     </property>
     <property>
-      <description>Create a point for map</description>
+      <description>Geographical point with a latitude and longitude</description>
     </property>
     <property>
       <icon>map</icon>
