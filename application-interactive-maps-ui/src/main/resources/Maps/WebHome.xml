@@ -38,8 +38,7 @@
   <hidden>false</hidden>
   <content>{{velocity}}
 #set ($displayDocExtra = false)
-=== Maps ===
-
+== Maps ==
 #set($columns = ["doc.title", "doc.creationDate", "_actions"])
 #set($columnsProperties = {
   "doc.title" : { "type" : "text", "link" : "view", "html" : "true", "sortable":true },
@@ -53,7 +52,7 @@
 })
 #livetable("mapTable" $columns $columnsProperties $options)
 ----
-=== Points ===
+== Points ==
 #set($columnsPoints = ["doc.title", "doc.creationDate", "_actions"])
 #set($columnsPropertiesPoints = {
   "doc.title" : { "type" : "text", "link" : "view", "html" : "true", "sortable":true },
@@ -67,7 +66,7 @@
 })
 #livetable("mapPointsTable" $columnsPoints $columnsPropertiesPoints $optionsPoints)
 ----
-=== Paths ===
+== Paths ==
 #set($columnsPaths = ["doc.title", "doc.creationDate", "_actions"])
 #set($columnsPropertiesPaths = {
   "doc.title" : { "type" : "text", "link" : "view", "html" : "true", "sortable":true },
@@ -81,7 +80,7 @@
 })
 #livetable("mapPathsTable" $columnsPaths $columnsPropertiesPaths $optionsPaths)
 ----
-=== Shapes ===
+== Shapes ==
 #set($columnsShapes = ["doc.title", "doc.creationDate", "_actions"])
 #set($columnsPropertiesShapes = {
   "doc.title" : { "type" : "text", "link" : "view", "html" : "true", "sortable":true },
@@ -94,7 +93,6 @@
  "rowCount": 10
 })
 #livetable("mapShapesTable" $columnsShapes $columnsPropertiesShapes $optionsShapes)
-
 {{/velocity}}</content>
   <object>
     <name>Maps.WebHome</name>

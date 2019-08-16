@@ -42,58 +42,47 @@
 #set ($discard = $xwiki.ssx.use('Maps.Code.LeafletUtils'))
 #set ($discard = $xwiki.jsx.use('Maps.Code.LeafletUtils'))
 #set ($discard = $xwiki.jsx.use('Maps.Code.PointSheet'))
-#set($class = $doc.getObject('Maps.Code.PointClass').xWikiClass)
-## If the point is being edited, then display the point editor
-#if ($xcontext.action == 'edit')
+#if ($doc.documentReference.name == 'PointSheet')
+  ## Do nothing
+#else
+  ## If the point is being edited, then display the point editor
+  ## Else display an uneditable map preview
+  #set($class = $doc.getObject('Maps.Code.PointClass').xWikiClass)
+  #set($pointObj = $doc.getObject('Maps.Code.PointClass'))
+  #set ($lat = $pointObj.getValue('latitude'))
+  #set ($lng = $pointObj.getValue('longitude'))
   {{html wiki="true" clean="false"}}
   (% class="row" %)(((
     (% class="col-sm-6" %)(((
     ## Preview of the map
-    &lt;p class="xform"&gt;&lt;span class="xHint"&gt;$services.localization.render('intmap.pointEditor.hint')&lt;/span&gt;&lt;/p&gt;
     (% class="map-wrapper" %)(((
-      (% class="map-preview point-editor-map-preview" id="map-${util.generateRandomString(5)}" style="width: 100%; height: 300px;" %)((()))
+      #if ($xcontext.action == 'edit')
+        &lt;p class="xform"&gt;&lt;span class="xHint"&gt;$services.localization.render('intmap.pointEditor.hint')&lt;/span&gt;&lt;/p&gt;
+        (% class="map-preview point-editor-map-preview" id="map-${util.generateRandomString(5)}" style="width: 100%; height: 300px;" %)((()))
+      #else
+        (% class="map-preview map-point-view" data-location="${lat},${lng}" id="map-${util.generateRandomString(5)}" style="width: 100%; height: 300px;" %)((()))
+      #end
       (% class="map-search-filter" %)(((
         #displayLocationSearch()
       )))
       (% id="map-search-close" %)(((
-      &lt;i class="fa fa-arrow-left"&gt;&lt;/i&gt;
+        &lt;i class="fa fa-arrow-left"&gt;&lt;/i&gt;
       )))
     )))
     )))
     (% class="col-sm-6" %)(((
-      ## Form for creating the point
-      #set($pointObj = $doc.getObject('Maps.Code.PointClass'))
-      #set ($lat = $pointObj.getValue('latitude'))
-      #set ($lng = $pointObj.getValue('longitude'))
-      #if ("$!lat" == '' || "$!lat" == '')
-        #set ($lat = 48.8566)
-        #set ($lng = 2.3522)
+      #if ($xcontext.action == 'edit')
+        ## Form for creating the point
+        #if ("$!lat" == '' || "$!lat" == '')
+          #set ($lat = 48.8566)
+          #set ($lng = 2.3522)
+        #end
       #end
       (% class="xform" %)(((
         &lt;dl&gt;
-          &lt;dt&gt;&lt;button type="button" id="updateLocBtn" class="btn btn-primary"&gt;Update Location&lt;/button&gt;&lt;/dt&gt;
-          #foreach($prop in $class.properties)
-            #displayClassProperty($prop)
+          #if ($xcontext.action == 'edit')
+            &lt;dt&gt;&lt;button type="button" id="updateLocBtn" class="btn btn-primary"&gt;Update Location&lt;/button&gt;&lt;/dt&gt;
           #end
-        &lt;/dl&gt;
-      )))
-    )))
-  )))
-  {{/html}}
-#elseif ($doc.documentReference.name == 'PointSheet')
-  ## Do nothing
-#else
-  #set($pointObj = $doc.getObject('Maps.Code.PointClass'))
-  #set($lat = $pointObj.getValue('latitude'))
-  #set($lng = $pointObj.getValue('longitude'))
-  {{html wiki="true" clean="false"}}
-  (% class="row" %)(((
-    (% class="col-sm-6" %)(((
-      (% class="map-preview map-point-view" data-location="${lat},${lng}" id="map-${util.generateRandomString(5)}" style="width: 100%; height: 300px;" %)((()))
-    )))
-    (% class="col-sm-6" %)(((
-      (% class="xform" %)(((
-        &lt;dl&gt;
           #foreach($prop in $class.properties)
             #displayClassProperty($prop)
           #end
@@ -236,11 +225,12 @@ require(['jquery', 'leaflet', 'leaflet-commons', 'bootstrap'], function ($, leaf
           });
         }
       });
+      //Point editor place search
+      leafletCommons.setupLocationSearchMP('.map-search', map);
     });
 
     $$('.map-point-view').each(function (element) {
       var mapId = $(element).attr('id').replace('map-', '');
-      console.log(mapId);
       var options = {
         'id': mapId,
         'addFullscreen': 1,
@@ -252,10 +242,8 @@ require(['jquery', 'leaflet', 'leaflet-commons', 'bootstrap'], function ($, leaf
         L.marker(location).addTo(viewMap);
         viewMap.setView(location);
       });
+      leafletCommons.setupLocationSearchMP('.map-search', viewMap);
     });
-
-    //Point editor place search
-    leafletCommons.setupLocationSearchMP('.map-search', map);
 
   }
 

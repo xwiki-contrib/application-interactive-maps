@@ -59,7 +59,7 @@
         <displayType/>
         <hint/>
         <name>includePopup</name>
-        <number>4</number>
+        <number>2</number>
         <prettyName>Add Popup to the Shape</prettyName>
         <unmodifiable>0</unmodifiable>
         <validationMessage/>
@@ -114,6 +114,23 @@
         <validationRegExp/>
         <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
       </shapeGeoJSON>
+      <style>
+        <contenttype/>
+        <customDisplay/>
+        <disabled>0</disabled>
+        <editor>Text</editor>
+        <hint>Options for styling shapes</hint>
+        <name>style</name>
+        <number>3</number>
+        <picker>0</picker>
+        <prettyName>Style</prettyName>
+        <rows>5</rows>
+        <size>40</size>
+        <unmodifiable>0</unmodifiable>
+        <validationMessage/>
+        <validationRegExp/>
+        <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
+      </style>
     </class>
     <property>
       <includePopup/>
@@ -126,6 +143,9 @@
     </property>
     <property>
       <shapeGeoJSON/>
+    </property>
+    <property>
+      <style/>
     </property>
   </object>
 </xwikidoc>

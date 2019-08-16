@@ -40,18 +40,26 @@
 
 {{velocity}}
 ## If the point is being edited, then display the point editor
-#if ($xcontext.action == 'edit')
+#if ($doc.documentReference.name == 'ShapeSheet')
+  ## Do nothing
+#else
   #set ($discard = $xwiki.ssx.use('Maps.Code.LeafletUtils'))
   #set ($discard = $xwiki.jsx.use('Maps.Code.LeafletUtils'))
   #set ($discard = $xwiki.jsx.use('Maps.Code.ShapeSheet'))
-
+  #set($class = $doc.getObject('Maps.Code.ShapeClass').xWikiClass)
+  #set($shapeObj = $doc.getObject('Maps.Code.ShapeClass'))
+  #set ($shapeGeoJSON = $shapeObj.getValue('shapeGeoJSON'))
   {{html wiki="true" clean="false"}}
   (% class="row" %)(((
     (% class="col-sm-12" %)(((
       ## Preview of the map
       &lt;p class="xform"&gt;&lt;span class="xHint"&gt;$services.localization.render('intmap.shapeEditor.hint')&lt;/span&gt;&lt;/p&gt;
       (% class="map-wrapper" %)(((
-        &lt;div class="map-preview shape-editor-map-preview" id="map-${util.generateRandomString(5)}" style="width: 100%; height: 400px;"&gt;&lt;/div&gt;
+         #if ($context.action == 'edit')
+           &lt;div class="map-preview shape-editor-map-preview" id="map-${util.generateRandomString(5)}" style="width: 100%; height: 400px;"&gt;&lt;/div&gt;
+         #else
+           &lt;div class="map-preview map-shape-view" id="map-${util.generateRandomString(5)}" style="width: 100%; height: 400px;"&gt;&lt;/div&gt;
+         #end
         (% class="map-search-filter" %)(((
           #displayLocationSearch()
         )))
@@ -59,14 +67,11 @@
         &lt;i class="fa fa-arrow-left"&gt;&lt;/i&gt;
         )))
       )))
+      ----
     )))
     (% class="col-sm-12" %)(((
-      #set($class = $doc.getObject('Maps.Code.ShapeClass').xWikiClass)
-      ## Form for creating the point
-      #set($pointObj = $doc.getObject('Maps.Code.ShapeClass'))
-      #set ($shapeGeoJSON = $pointObj.getValue('shapeGeoJSON'))
-      {{html wiki="false"}}
-      &lt;input type="hidden" id="shapeGeoJSON" name="Maps.Code.ShapeClass_0_shapeGeoJSON" value='$shapeGeoJSON' /&gt;
+      {{html wiki='false'}}
+        &lt;input type="hidden" id="shapeGeoJSON" name="Maps.Code.ShapeClass_0_shapeGeoJSON" value='$shapeGeoJSON' /&gt;
       {{/html}}
       (% class="xform" %)(((
         &lt;dl&gt;
@@ -80,10 +85,6 @@
     )))
   )))
   {{/html}}
-#elseif ($doc.documentReference.name == 'ShapeSheet')
-  ## Do nothing
-#else
-  
 #end
 {{/velocity}}</content>
   <object>
@@ -229,14 +230,18 @@ require(['jquery', 'leaflet', 'leaflet-commons', 'leaflet-edit', 'leaflet-drag',
       var allShapesJSON;
 
       if ($shapeGeoJSON.val() !== '') {
-        var currentGeoJSON = JSON.parse($shapeGeoJSON.val());
-        var currentShapes = L.geoJSON(currentGeoJSON, {
-          onEachFeature: function (feature, layer) {
-            layer.addTo(map).enableEdit();
-            processShapeLayer(layer, $shapeGeoJSON, allShapesJSON, allShapes);
-          }
-        });
-        map.fitBounds(currentShapes.getBounds());
+        try {
+          var currentGeoJSON = JSON.parse($shapeGeoJSON.val());
+          var currentShapes = L.geoJSON(currentGeoJSON, {
+            onEachFeature: function (feature, layer) {
+              layer.addTo(map).enableEdit();
+              processShapeLayer(layer, $shapeGeoJSON, allShapesJSON, allShapes);
+            }
+          });
+          map.fitBounds(currentShapes.getBounds());
+        } catch (e) {
+          new XWiki.widgets.Notification('Error processing GeoJSON.', 'error');
+        }
       } else {
         $shapeGeoJSON.val('{"type":"FeatureCollection","features":[]}');
       }
@@ -245,6 +250,24 @@ require(['jquery', 'leaflet', 'leaflet-commons', 'leaflet-edit', 'leaflet-drag',
         var drawnLayer = e.layer;
         processShapeLayer(drawnLayer, $shapeGeoJSON, allShapesJSON, allShapes);
       });
+    });
+
+    $$('.map-shape-view').each(function (element) {
+      var mapId = $(element).attr('id').replace('map-', '');
+      var options = {
+        'id': mapId,
+        'addFullscreen': 1,
+        'includeCurrentLocation': 1
+      };
+      var viewMap = leafletCommons.createEmptyMap(options);
+      try {
+        var $shapeGeoJSON = $('#shapeGeoJSON')
+        var currentGeoJSON = JSON.parse($shapeGeoJSON.val());
+        var currentShapes = L.geoJSON(currentGeoJSON).addTo(viewMap);
+        viewMap.fitBounds(currentShapes.getBounds());
+      } catch (e) {
+          new XWiki.widgets.Notification('Error processing GeoJSON.', 'error');
+      }
     });
 
   }
