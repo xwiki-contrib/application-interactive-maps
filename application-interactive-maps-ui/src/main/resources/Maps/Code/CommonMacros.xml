@@ -197,6 +197,7 @@
       #set ($discard = $responseData.put('type', 'shape'))
       #set ($discard = $responseData.put('index', $response.get('property.Maps.Code.ShapeClass.index_int')[0]))
       #set ($discard = $responseData.put('shapeGeoJSON', $response.get('property.Maps.Code.ShapeClass.shapeGeoJSON_en')[0]))
+      #set ($discard = $responseData.put('style', $response.get('property.Maps.Code.ShapeClass.style_en')[0]))
       ## Set information for the popup
       #set ($includePopup = $response.get('property.Maps.Code.ShapeClass.includePopup_boolean')[0])
       #set ($title = $response.get('title_'))

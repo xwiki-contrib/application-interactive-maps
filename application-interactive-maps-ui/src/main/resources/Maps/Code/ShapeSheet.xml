@@ -49,13 +49,14 @@
   #set($class = $doc.getObject('Maps.Code.ShapeClass').xWikiClass)
   #set($shapeObj = $doc.getObject('Maps.Code.ShapeClass'))
   #set ($shapeGeoJSON = $shapeObj.getValue('shapeGeoJSON'))
+  #set ($shapeStyle = $shapeObj.getValue('style'))
   {{html wiki="true" clean="false"}}
   (% class="row" %)(((
     (% class="col-sm-12" %)(((
       ## Preview of the map
-      &lt;p class="xform"&gt;&lt;span class="xHint"&gt;$services.localization.render('intmap.shapeEditor.hint')&lt;/span&gt;&lt;/p&gt;
       (% class="map-wrapper" %)(((
          #if ($context.action == 'edit')
+            &lt;p class="xform"&gt;&lt;span class="xHint"&gt;$services.localization.render('intmap.shapeEditor.hint')&lt;/span&gt;&lt;/p&gt;
            &lt;div class="map-preview shape-editor-map-preview" id="map-${util.generateRandomString(5)}" style="width: 100%; height: 400px;"&gt;&lt;/div&gt;
          #else
            &lt;div class="map-preview map-shape-view" id="map-${util.generateRandomString(5)}" style="width: 100%; height: 400px;"&gt;&lt;/div&gt;
@@ -72,6 +73,7 @@
     (% class="col-sm-12" %)(((
       {{html wiki='false'}}
         &lt;input type="hidden" id="shapeGeoJSON" name="Maps.Code.ShapeClass_0_shapeGeoJSON" value='$shapeGeoJSON' /&gt;
+        &lt;input type="hidden" id="shapeStyle" value='$shapeStyle' /&gt;
       {{/html}}
       (% class="xform" %)(((
         &lt;dl&gt;
@@ -188,7 +190,6 @@ require(['jquery', 'leaflet', 'leaflet-commons', 'leaflet-edit', 'leaflet-drag',
       allShapesJSON = allShapes.toGeoJSON();
       $shapeGeoJSON.val(JSON.stringify(allShapesJSON));
     }
-
     function processShapeLayer (layer, $shapeGeoJSON, allShapesJSON, allShapes)
     {
       allShapes.addLayer(layer);
@@ -201,6 +202,16 @@ require(['jquery', 'leaflet', 'leaflet-commons', 'leaflet-edit', 'leaflet-drag',
       layer.on('move', function (e1) {
         updateShapesJSON($shapeGeoJSON, allShapesJSON, allShapes);
       });
+    }
+    var shapeStyle;
+    if ($('#shapeStyle').val() !== '') {
+      try {
+        shapeStyle = JSON.parse($('#shapeStyle').val());
+      } catch (e) {
+        new XWiki.widgets.Notification('Shape style is not valid.', 'error');
+      }
+    } else {
+      shapeStyle = {};
     }
 
     var map;
@@ -233,6 +244,7 @@ require(['jquery', 'leaflet', 'leaflet-commons', 'leaflet-edit', 'leaflet-drag',
         try {
           var currentGeoJSON = JSON.parse($shapeGeoJSON.val());
           var currentShapes = L.geoJSON(currentGeoJSON, {
+            style: shapeStyle,
             onEachFeature: function (feature, layer) {
               layer.addTo(map).enableEdit();
               processShapeLayer(layer, $shapeGeoJSON, allShapesJSON, allShapes);
@@ -263,11 +275,12 @@ require(['jquery', 'leaflet', 'leaflet-commons', 'leaflet-edit', 'leaflet-drag',
       try {
         var $shapeGeoJSON = $('#shapeGeoJSON')
         var currentGeoJSON = JSON.parse($shapeGeoJSON.val());
-        var currentShapes = L.geoJSON(currentGeoJSON).addTo(viewMap);
+        var currentShapes = L.geoJSON(currentGeoJSON, {style: shapeStyle}).addTo(viewMap);
         viewMap.fitBounds(currentShapes.getBounds());
       } catch (e) {
-          new XWiki.widgets.Notification('Error processing GeoJSON.', 'error');
+        new XWiki.widgets.Notification('Error processing GeoJSON.', 'error');
       }
+      leafletCommons.setupLocationSearchMP('.map-search', viewMap);
     });
 
   }

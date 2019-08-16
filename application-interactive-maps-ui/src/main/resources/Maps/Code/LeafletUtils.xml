@@ -785,16 +785,20 @@ require(['jquery', 'leaflet', 'leaflet-commons', 'bootstrap'], function ($, leaf
           });
         } else if (data.type === 'shape') {
           var shapeGeoJSON;
+          var shapeStyle;
           var shape;
           try {
+            if (data.style !== '') {
+              shapeStyle = JSON.parse(data.style);
+            } else {
+              shapeStyle = {};
+            }
             shapeGeoJSON = JSON.parse(data.shapeGeoJSON);
             shape = L.geoJSON(shapeGeoJSON, {
-              style: function (feature) {
-                return feature.properties;
-              }
+              style: shapeStyle
             });
           } catch (err) {
-            new XWiki.widgets.Notification('The shape properties are invaled. ' + err, 'error');
+            new XWiki.widgets.Notification('The shape properties are invalid. ' + err, 'error');
           }
           leafletCommons.processPopupAndAdd(data, shape, allLayers);
           if (dataLength == i) {
