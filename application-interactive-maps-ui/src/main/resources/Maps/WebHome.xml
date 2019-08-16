@@ -36,10 +36,10 @@
   <minorEdit>false</minorEdit>
   <syntaxId>xwiki/2.1</syntaxId>
   <hidden>false</hidden>
-  <content>=== Maps Created ===
-
-{{velocity}}
+  <content>{{velocity}}
 #set ($displayDocExtra = false)
+=== Maps ===
+
 #set($columns = ["doc.title", "doc.creationDate", "_actions"])
 #set($columnsProperties = {
   "doc.title" : { "type" : "text", "link" : "view", "html" : "true", "sortable":true },
@@ -47,11 +47,54 @@
 })
 #set($options = {
  "className":"Maps.Code.MapClass",
- "translationPrefix" : "maps.livetable.",
+ "translationPrefix" : "intmap.livetable.",
  "tagCloud" : true,
  "rowCount": 10
 })
 #livetable("mapTable" $columns $columnsProperties $options)
+----
+=== Points ===
+#set($columnsPoints = ["doc.title", "doc.creationDate", "_actions"])
+#set($columnsPropertiesPoints = {
+  "doc.title" : { "type" : "text", "link" : "view", "html" : "true", "sortable":true },
+  "_actions" : {"actions": ["edit","delete"]}
+})
+#set($optionsPoints = {
+ "className":"Maps.Code.PointClass",
+ "translationPrefix" : "intmap.livetable.",
+ "tagCloud" : true,
+ "rowCount": 10
+})
+#livetable("mapPointsTable" $columnsPoints $columnsPropertiesPoints $optionsPoints)
+----
+=== Paths ===
+#set($columnsPaths = ["doc.title", "doc.creationDate", "_actions"])
+#set($columnsPropertiesPaths = {
+  "doc.title" : { "type" : "text", "link" : "view", "html" : "true", "sortable":true },
+  "_actions" : {"actions": ["edit","delete"]}
+})
+#set($optionsPaths = {
+ "className":"Maps.Code.PathClass",
+ "translationPrefix" : "intmap.livetable.",
+ "tagCloud" : true,
+ "rowCount": 10
+})
+#livetable("mapPathsTable" $columnsPaths $columnsPropertiesPaths $optionsPaths)
+----
+=== Shapes ===
+#set($columnsShapes = ["doc.title", "doc.creationDate", "_actions"])
+#set($columnsPropertiesShapes = {
+  "doc.title" : { "type" : "text", "link" : "view", "html" : "true", "sortable":true },
+  "_actions" : {"actions": ["edit","delete"]}
+})
+#set($optionsShapes = {
+ "className":"Maps.Code.ShapeClass",
+ "translationPrefix" : "intmap.livetable.",
+ "tagCloud" : true,
+ "rowCount": 10
+})
+#livetable("mapShapesTable" $columnsShapes $columnsPropertiesShapes $optionsShapes)
+
 {{/velocity}}</content>
   <object>
     <name>Maps.WebHome</name>
