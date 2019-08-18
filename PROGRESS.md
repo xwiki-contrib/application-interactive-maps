@@ -240,6 +240,33 @@
 - [x] Create ShapeProvider for interactively creating shapes
 - [x] Fix velocity error occuring when trying to load shape object with no data
 - [x] Set empty GeoJSON for ShapeSheet if there is no shape data
+## Day 76 (12 August 2019)
+- [x] Improve code for custom point classes
+- [x] Fix error in demo map points
+- [x] Change latitude and longitude of PointClass from string to double
+## Day 77 (13 August 2019)
+- [x] Write macro for getting a key value with multiple suffixes
+- [x] Make marker draggable when editing a point (PointSheet)
+- [x] Rename PointClass popupContent property to content
+- [x] Add includePopups option for maps
+## Day 78 (14 August 2019)
+- [x] Update edit and view modes of PointSheet
+- [x] Show map with a point when viewing a Point object (PointSheet)
+- [x] Show latitude and longitude fields when editing points
+- [x] Allow updating Point location according to custom filled latitude and longitude 
+## Day 79 (15 August 2019)
+- [x] Rename template providers to include "TemplateProvider" suffix (MapTemplateProvider etc.)
+- [x] Update hints of shape and point template providers
+- [x] Use terminal pages by default for template providers except MapTemplateProvider
+- [x] Create PathSheet, PathTemplate for creating a PathTemplateProvider
+- [x] Fix tests failing after updating PointSheet to include latitude and longitude fields
+## Day 80 (16 August 2019)
+- [x] Update Maps.WebHome to include livetables of Point, Path and Shape objects
+- [x] Improve code of PointSheet and ShapeSheet
+- [x] Show map with shape when viewing a Shape object (ShapeSheet)
+- [x] Add style property to ShapeClass for applying styles to shapes using JSON
+## Day 81 (17 August 2019)
+- [ ] Break
 ---
 # Marks the progress of the Interactive Maps Application (Old)
 ## Day 1 (18 May 2019)
