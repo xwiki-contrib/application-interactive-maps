@@ -173,7 +173,7 @@ define('leaflet-commons', ['jquery'], function ($) {
     },
 
     //Add a new marker
-    addMarker: function (iconUrl, location, callback)
+    addMarker: function (iconUrl, location, options, callback)
     {
       var marker;
       if (iconUrl) {
@@ -190,11 +190,12 @@ define('leaflet-commons', ['jquery'], function ($) {
             iconAnchor: [width/2, (height-1)],
             popupAnchor: [0, -(height-5)]
           });
-          marker = L.marker(location, {icon: icon});
+          options.icon = icon;
+          marker = L.marker(location, options);
           callback(marker);
         });
       } else {
-        marker = L.marker(location);
+        marker = L.marker(location, options);
         callback(marker);
       }
     },
@@ -204,7 +205,7 @@ define('leaflet-commons', ['jquery'], function ($) {
     {
       var locMarker;
       this.addCustomControl(map, 'fa-location-arrow', 'Current location', 'bottomright', function (e) {
-        var locate = map.locate({ setView: true, maxZoom: 16, watch: false });
+        var locate = map.locate({ setView: true, watch: false });
         map.on('locationerror', function (e) {
           new XWiki.widgets.Notification('Cannot get location in an insecure context (HTTP). Secure context (HTTPS) required.', 'error');
         });
@@ -548,9 +549,10 @@ define('leaflet-commons', ['jquery'], function ($) {
     },
 
     //Select a place on the map
-    addSinglePointSelection: function (map, defaultLocation, callback)
+    addSinglePointSelection: function (map, defaultLocation, pointOptions, callback)
     {
-      var marker = L.marker(defaultLocation, {draggable: true}).addTo(map);
+      pointOptions.draggable = true;
+      var marker = L.marker(defaultLocation, pointOptions).addTo(map);
       callback(marker, 'pointAdded');
       marker.on('drag', function (e) {
         callback(marker);
@@ -558,9 +560,7 @@ define('leaflet-commons', ['jquery'], function ($) {
       map.on('click', function (e) {
         if ($(".leaflet-popup-pane").html() == '') {
           if ($('.map-search-filter') &amp;&amp; !$('.map-search-filter').hasClass('open')) {
-            marker.remove();
-            marker = null;
-            marker = L.marker(e.latlng, {draggable: true}).addTo(map);
+            marker.setLatLng(e.latlng);
             marker.on('move', function (e) {
               callback(marker);
             });
@@ -742,8 +742,19 @@ require(['jquery', 'leaflet', 'leaflet-commons', 'bootstrap'], function ($, leaf
       });
       mapData.each(function (data) {
         if (data.location != null &amp;&amp; data.type == 'point') {
+          //Set options for the point
+          var pointOptions;
+          try {
+            if (data.options !== '' &amp;&amp; data.options !== null) {
+              pointOptions = JSON.parse(data.options);
+            } else {
+              pointOptions = {};
+            }
+          } catch (e) {
+            pointOptions = {};
+          }
           leafletCommons.getLocationCoords(data.location, function (location) {
-            leafletCommons.addMarker(data.markerIcon, location, function (marker) {
+            leafletCommons.addMarker(data.markerIcon, location, pointOptions, function (marker) {
               leafletCommons.processPopupAndAdd(data, marker, allLayers);
             });
             if (dataLength == i) {
@@ -758,9 +769,19 @@ require(['jquery', 'leaflet', 'leaflet-commons', 'bootstrap'], function ($, leaf
           var j = 0;
           var allPoints = [];
           points.forEach(function (point) {
+            var pointOptions;
+            try {
+              if (point.options !== '' &amp;&amp; point.options !== null) {
+                pointOptions = JSON.parse(point.options);
+              } else {
+                pointOptions = {};
+              }
+            } catch (e) {
+              pointOptions = {};
+            }
             allPoints.push(point.location);
             leafletCommons.getLocationCoords(point.location, function (pointLocation) {
-              leafletCommons.addMarker(point.markerIcon, pointLocation, function (pointMarker) {
+              leafletCommons.addMarker(point.markerIcon, pointLocation, pointOptions, function (pointMarker) {
                 //Putting point data in a single object
                 point.location = pointLocation;
                 point.marker = pointMarker;
@@ -788,8 +809,8 @@ require(['jquery', 'leaflet', 'leaflet-commons', 'bootstrap'], function ($, leaf
           var shapeStyle;
           var shape;
           try {
-            if (data.style !== '') {
-              shapeStyle = JSON.parse(data.style);
+            if (data.styles !== '' &amp;&amp; data.styles !== null) {
+              shapeStyle = JSON.parse(data.styles);
             } else {
               shapeStyle = {};
             }

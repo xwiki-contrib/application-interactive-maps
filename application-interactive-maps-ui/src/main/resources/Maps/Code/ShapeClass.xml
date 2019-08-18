@@ -88,7 +88,7 @@
       <editor>Wysiwyg</editor>
       <hint>Content that will appear in the point's popup</hint>
       <name>popupContent</name>
-      <number>4</number>
+      <number>3</number>
       <picker>0</picker>
       <prettyName>Popup Content</prettyName>
       <rows>5</rows>
@@ -105,7 +105,7 @@
       <editor>Text</editor>
       <hint>Specify the properties of shape as GeoJSON</hint>
       <name>shapeGeoJSON</name>
-      <number>5</number>
+      <number>4</number>
       <picker>0</picker>
       <prettyName>Shape GeoJSON</prettyName>
       <rows>5</rows>
@@ -115,23 +115,23 @@
       <validationRegExp/>
       <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
     </shapeGeoJSON>
-    <style>
+    <styles>
       <contenttype/>
       <customDisplay/>
       <disabled>0</disabled>
       <editor>Text</editor>
       <hint>Options for styling shapes</hint>
-      <name>style</name>
-      <number>3</number>
+      <name>styles</name>
+      <number>5</number>
       <picker>0</picker>
-      <prettyName>Style</prettyName>
+      <prettyName>Styles</prettyName>
       <rows>5</rows>
       <size>40</size>
       <unmodifiable>0</unmodifiable>
       <validationMessage/>
       <validationRegExp/>
       <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
-    </style>
+    </styles>
   </class>
   <object>
     <name>Maps.Code.ShapeClass</name>

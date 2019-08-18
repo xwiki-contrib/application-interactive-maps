@@ -55,9 +55,11 @@
   (% class="row" %)(((
     (% class="col-sm-6" %)(((
     ## Preview of the map
+    #if ($xcontext.action == 'edit')
+    &lt;p class="xform"&gt;&lt;span class="xHint"&gt;$services.localization.render('intmap.pointEditor.hint')&lt;/span&gt;&lt;/p&gt;
+    #end
     (% class="map-wrapper" %)(((
       #if ($xcontext.action == 'edit')
-        &lt;p class="xform"&gt;&lt;span class="xHint"&gt;$services.localization.render('intmap.pointEditor.hint')&lt;/span&gt;&lt;/p&gt;
         (% class="map-preview point-editor-map-preview" id="map-${util.generateRandomString(5)}" style="width: 100%; height: 300px;" %)((()))
       #else
         (% class="map-preview map-point-view" data-location="${lat},${lng}" id="map-${util.generateRandomString(5)}" style="width: 100%; height: 300px;" %)((()))
@@ -74,14 +76,18 @@
       #if ($xcontext.action == 'edit')
         ## Form for creating the point
         #if ("$!lat" == '' || "$!lat" == '')
-          #set ($lat = 48.8566)
-          #set ($lng = 2.3522)
+          #set ($discard = $pointObj.set('latitude', 48.8566))
+          #set ($discard = $pointObj.set('latitude', 2.3522))
         #end
       #end
+      {{html wiki='false'}}
+        #set ($pointOptions = $pointObj.getValue('options'))
+        &lt;input type="hidden" id="pointOptions" value='$pointOptions' /&gt;
+      {{/html}}
       (% class="xform" %)(((
         &lt;dl&gt;
           #if ($xcontext.action == 'edit')
-            &lt;dt&gt;&lt;button type="button" id="updateLocBtn" class="btn btn-primary"&gt;Update Location&lt;/button&gt;&lt;/dt&gt;
+            &lt;dt&gt;&lt;button type="button" id="updateLocBtn" class="btn btn-primary"&gt;$services.localization.render('intmap.pointEditor.updateLocation')&lt;/button&gt;&lt;/dt&gt;
           #end
           #foreach($prop in $class.properties)
             #displayClassProperty($prop)
@@ -182,6 +188,18 @@ require(['jquery', 'leaflet', 'leaflet-commons', 'bootstrap'], function ($, leaf
   function init()
   {
 
+    var pointOptions;
+    if ($('#pointOptions').val() !== '') {
+      try {
+        pointOptions = JSON.parse($('#pointOptions').val());
+      } catch (e) {
+        new XWiki.widgets.Notification('Point options are not valid.', 'error');
+        pointOptions = {};
+      }
+    } else {
+      pointOptions = {};
+    }
+
     var map;
 
     //Render the map
@@ -203,7 +221,7 @@ require(['jquery', 'leaflet', 'leaflet-commons', 'bootstrap'], function ($, leaf
       var defLocation = [$latInput.val(), $lngInput.val()];
       map.setView(defLocation, 14);
       var oldLocVal = defLocation;
-      leafletCommons.addSinglePointSelection(map, defLocation, function (marker, action) {
+      leafletCommons.addSinglePointSelection(map, defLocation, pointOptions, function (marker, action) {
         var newLocation = marker.getLatLng();
         $latInput.val(newLocation.lat);
         $lngInput.val(newLocation.lng);
@@ -239,7 +257,7 @@ require(['jquery', 'leaflet', 'leaflet-commons', 'bootstrap'], function ($, leaf
       var viewMap = leafletCommons.createEmptyMap(options);
       var loc = element.dataset.location.split(',');
       leafletCommons.getLocationCoords(loc, function (location) {
-        L.marker(location).addTo(viewMap);
+        L.marker(location, pointOptions).addTo(viewMap);
         viewMap.setView(location);
       });
       leafletCommons.setupLocationSearchMP('.map-search', viewMap);

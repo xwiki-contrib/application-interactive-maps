@@ -88,7 +88,7 @@ public class InteractiveMapsTest extends AbstractTest
         CreatePagePage pointPage = new CreatePagePage();
         pointPage.createPageFromTemplate(String.join(".", POINTS_SPACE), POINT_NAME, "Maps.Code.PointTemplateProvider", true);
         PointEditPage pointEditPage = new PointEditPage();
-        pointEditPage.setValuesForPoint("33.6844", "73.0479", true, "Some data");
+        pointEditPage.setValuesForPoint("33.6844", "73.0479", true, "Some data", "");
         pointEditPage.clickSaveAndView();
 
         // Delete the map if it already exists

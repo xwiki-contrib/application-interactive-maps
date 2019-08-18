@@ -49,14 +49,16 @@
   #set($class = $doc.getObject('Maps.Code.ShapeClass').xWikiClass)
   #set($shapeObj = $doc.getObject('Maps.Code.ShapeClass'))
   #set ($shapeGeoJSON = $shapeObj.getValue('shapeGeoJSON'))
-  #set ($shapeStyle = $shapeObj.getValue('style'))
+  #set ($shapeStyle = $shapeObj.getValue('styles'))
   {{html wiki="true" clean="false"}}
   (% class="row" %)(((
     (% class="col-sm-12" %)(((
       ## Preview of the map
+      #if ($xcontext.action == 'edit')
+      &lt;p class="xform"&gt;&lt;span class="xHint"&gt;$services.localization.render('intmap.shapeEditor.hint')&lt;/span&gt;&lt;/p&gt;
+      #end
       (% class="map-wrapper" %)(((
          #if ($context.action == 'edit')
-            &lt;p class="xform"&gt;&lt;span class="xHint"&gt;$services.localization.render('intmap.shapeEditor.hint')&lt;/span&gt;&lt;/p&gt;
            &lt;div class="map-preview shape-editor-map-preview" id="map-${util.generateRandomString(5)}" style="width: 100%; height: 400px;"&gt;&lt;/div&gt;
          #else
            &lt;div class="map-preview map-shape-view" id="map-${util.generateRandomString(5)}" style="width: 100%; height: 400px;"&gt;&lt;/div&gt;
@@ -209,6 +211,7 @@ require(['jquery', 'leaflet', 'leaflet-commons', 'leaflet-edit', 'leaflet-drag',
         shapeStyle = JSON.parse($('#shapeStyle').val());
       } catch (e) {
         new XWiki.widgets.Notification('Shape style is not valid.', 'error');
+        shapeStyle = {};
       }
     } else {
       shapeStyle = {};

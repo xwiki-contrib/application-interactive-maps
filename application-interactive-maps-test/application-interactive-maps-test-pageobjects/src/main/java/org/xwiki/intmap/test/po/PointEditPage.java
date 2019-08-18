@@ -35,19 +35,22 @@ public class PointEditPage extends EditPage
      *
      * @version $Id$
      */
-    @FindBy(id = "Maps.Code.PointClass_0_includePopup")
-    private WebElement includePopup;
-
-    @FindBy(id = "content")
-    private WebElement popupContent;
-
     @FindBy(id = "Maps.Code.PointClass_0_latitude")
     private WebElement pointLat;
 
     @FindBy(id = "Maps.Code.PointClass_0_longitude")
     private WebElement pointLng;
 
-    public void setValuesForPoint(String latitude, String longitude, boolean includePopup, String popupContent)
+    @FindBy(id = "Maps.Code.PointClass_0_includePopup")
+    private WebElement includePopup;
+
+    @FindBy(id = "content")
+    private WebElement popupContent;
+
+    @FindBy(id = "Maps.Code.PointClass_0_options")
+    private WebElement pointOptions;
+
+    public void setValuesForPoint(String latitude, String longitude, boolean includePopup, String popupContent, String pointOptions)
     {
         this.pointLat.clear();
         this.pointLat.sendKeys(latitude);
@@ -56,6 +59,8 @@ public class PointEditPage extends EditPage
         handleCheckBox(this.includePopup, includePopup);
         this.popupContent.clear();
         this.popupContent.sendKeys(popupContent);
+        this.pointOptions.clear();
+        this.pointOptions.sendKeys(popupContent);
     }
 
     private void handleCheckBox(WebElement element, boolean value)

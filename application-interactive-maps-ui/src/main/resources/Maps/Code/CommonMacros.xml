@@ -97,6 +97,7 @@
   #set ($latProp = 'property.' + $classData.get('className') + '.' + $classData.get('latitude'))
   #set ($lngProp = 'property.' + $classData.get('className') + '.' + $classData.get('longitude'))
   #set ($includePopupField = 'property.' + $classData.get('className') + '.includePopup_boolean')
+  #set ($optionsField = 'property.' + $classData.get('className') + '.options__')
   ## Handling unknown suffixes END
   #if ("$!response.get(${latProp})" != '' &amp;&amp; "$!response.get(${lngProp})" != '' )
     #set ($responseData = {})
@@ -114,6 +115,9 @@
     #if ("$!includePopup" == '')
       #set ($includePopup = true)
     #end
+    ## Set options for the point
+    #set ($pointOptions = $response.get(${optionsField})[0])
+    #set ($discard = $responseData.put('options', $!pointOptions))
     #setDataFromDoc($responseData $includePopup $title $popupContent $response.get('fullname'))
     ## Check for custom marker icon
     #checkMarkerIcon($response.get('fullname') $responseData)
@@ -130,9 +134,10 @@
     #set ($pointPageDoc = $xwiki.getDocument(${pointPage}))
     #set ($pointData = {})
     #set ($location = [])
-    #set ($discard = $location.add($pointPageDoc.get('latitude')))
-    #set ($discard = $location.add($pointPageDoc.get('longitude')))
+    #set ($discard = $location.add($pointPageDoc.getValue('latitude')))
+    #set ($discard = $location.add($pointPageDoc.getValue('longitude')))
     #set ($discard = $pointData.put('location', $location))
+    #set ($discard = $pointData.put('options', $pointPageDoc.getValue('options')))
     #setDataFromDoc($pointData $pointPageDoc.get('includePopup') $pointPageDoc.getTitle() $pointPageDoc.getContent())
     #checkMarkerIcon($pointPageDoc.getDocumentReference().getLocalDocumentReference() $pointData)
     #set ($disard = $pointPagesArr.add(${pointData}))
@@ -197,7 +202,7 @@
       #set ($discard = $responseData.put('type', 'shape'))
       #set ($discard = $responseData.put('index', $response.get('property.Maps.Code.ShapeClass.index_int')[0]))
       #set ($discard = $responseData.put('shapeGeoJSON', $response.get('property.Maps.Code.ShapeClass.shapeGeoJSON_en')[0]))
-      #set ($discard = $responseData.put('style', $response.get('property.Maps.Code.ShapeClass.style_en')[0]))
+      #set ($discard = $responseData.put('styles', $response.get('property.Maps.Code.ShapeClass.styles_en')[0]))
       ## Set information for the popup
       #set ($includePopup = $response.get('property.Maps.Code.ShapeClass.includePopup_boolean')[0])
       #set ($title = $response.get('title_'))

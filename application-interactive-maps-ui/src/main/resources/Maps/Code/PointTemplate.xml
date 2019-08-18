@@ -111,6 +111,23 @@
         <validationRegExp/>
         <classType>com.xpn.xwiki.objects.classes.NumberClass</classType>
       </longitude>
+      <options>
+        <contenttype/>
+        <customDisplay/>
+        <disabled>0</disabled>
+        <editor>Text</editor>
+        <hint>Options for marker</hint>
+        <name>options</name>
+        <number>5</number>
+        <picker>1</picker>
+        <prettyName>Options</prettyName>
+        <rows>5</rows>
+        <size>40</size>
+        <unmodifiable>0</unmodifiable>
+        <validationMessage/>
+        <validationRegExp/>
+        <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
+      </options>
     </class>
     <property>
       <content/>
@@ -123,6 +140,9 @@
     </property>
     <property>
       <longitude>2.3522</longitude>
+    </property>
+    <property>
+      <options/>
     </property>
   </object>
 </xwikidoc>
