@@ -176,9 +176,8 @@
     <property>
       <code>requirejs.config({
   paths: {
-    //$services.webjars.url("github-com-Leaflet-Leaflet-Editable", "Leaflet.Editable.js")
-    'leaflet-edit': ['https://cdnjs.cloudflare.com/ajax/libs/leaflet-editable/1.2.0/Leaflet.Editable.min'],
-    'leaflet-drag': ['https://npmcdn.com/leaflet.path.drag/src/Path.Drag']
+    'leaflet-edit': ['$services.webjars.url("github-com-Leaflet-Leaflet-Editable", "1.1.0/Leaflet.Editable.js")'],
+    'leaflet-drag': ['$services.webjars.url("leaflet.path.drag", "src/Path.Drag.js")']
   }
 });
 // Make sure to include jsx Maps.Code.LeafletUtils before including this jsx
@@ -187,12 +186,13 @@ require(['jquery', 'leaflet', 'leaflet-commons', 'leaflet-edit', 'leaflet-drag',
   function init()
   {
 
-    function updateShapesJSON ($shapeGeoJSON, allShapesJSON, allShapes)
+    //Functions for shapes
+    function updateShapesJSON (shapeGeoJSON, allShapesJSON, allShapes)
     {
       allShapesJSON = allShapes.toGeoJSON();
-      $shapeGeoJSON.val(JSON.stringify(allShapesJSON));
+      shapeGeoJSON.val(JSON.stringify(allShapesJSON));
     }
-    function processShapeLayer (layer, $shapeGeoJSON, allShapesJSON, allShapes)
+    function processShapeLayer (layer, shapeGeoJSON, allShapesJSON, allShapes)
     {
       if (layer instanceof L.Circle) {
         layer.feature = layer.feature || {};
@@ -203,16 +203,18 @@ require(['jquery', 'leaflet', 'leaflet-commons', 'leaflet-edit', 'leaflet-drag',
         layer.feature.properties.radius = layer.getRadius();
       }
       allShapes.addLayer(layer);
-      updateShapesJSON($shapeGeoJSON, allShapesJSON, allShapes);
+      updateShapesJSON(shapeGeoJSON, allShapesJSON, allShapes);
       layer.on('dblclick', function (e1) {
         layer.remove();
         allShapes.removeLayer(layer);
-        updateShapesJSON($shapeGeoJSON, allShapesJSON, allShapes);
+        updateShapesJSON(shapeGeoJSON, allShapesJSON, allShapes);
       });
       layer.on('move', function (e1) {
-        updateShapesJSON($shapeGeoJSON, allShapesJSON, allShapes);
+        updateShapesJSON(shapeGeoJSON, allShapesJSON, allShapes);
       });
     }
+
+    //Getting shape style for both view and edit modes
     var shapeStyle;
     if ($('#shapeStyle').val() !== '') {
       try {
@@ -318,7 +320,7 @@ require(['jquery', 'leaflet', 'leaflet-commons', 'leaflet-edit', 'leaflet-drag',
 });</code>
     </property>
     <property>
-      <name/>
+      <name>shape-editor</name>
     </property>
     <property>
       <parse>1</parse>

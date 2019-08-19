@@ -38,11 +38,7 @@
     <xwiki.extension.category>application</xwiki.extension.category>
   </properties>
   <dependencies>
-    <dependency>
-      <groupId>org.webjars</groupId>
-      <artifactId>leaflet</artifactId>
-      <version>1.5.1</version>
-    </dependency>
+    <!-- XWiki dependencies -->
     <dependency>
       <groupId>org.xwiki.platform</groupId>
       <artifactId>xwiki-platform-search-solr-ui</artifactId>
@@ -54,6 +50,22 @@
       <artifactId>xwiki-platform-appwithinminutes-ui</artifactId>
       <version>${platform.version}</version>
       <type>xar</type>
+    </dependency>
+    <!-- Leaflet dependencies -->
+    <dependency>
+      <groupId>org.webjars</groupId>
+      <artifactId>leaflet</artifactId>
+      <version>1.5.1</version>
+    </dependency>
+    <dependency>
+      <groupId>org.webjars.npm</groupId>
+      <artifactId>github-com-Leaflet-Leaflet-Editable</artifactId>
+      <version>1.1.0</version>
+    </dependency>
+    <dependency>
+      <groupId>org.webjars.bowergithub.leaflet</groupId>
+      <artifactId>path.drag.js</artifactId>
+      <version>0.0.6</version>
     </dependency>
   </dependencies>
   <build>

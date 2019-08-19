@@ -39,12 +39,12 @@
   <content>{{include reference="Maps.Code.CommonMacros" /}}
 
 {{velocity}}
-#set ($discard = $xwiki.ssx.use('Maps.Code.LeafletUtils'))
-#set ($discard = $xwiki.jsx.use('Maps.Code.LeafletUtils'))
-#set ($discard = $xwiki.jsx.use('Maps.Code.PointSheet'))
 #if ($doc.documentReference.name == 'PointSheet')
   ## Do nothing
 #else
+  #set ($discard = $xwiki.ssx.use('Maps.Code.LeafletUtils'))
+  #set ($discard = $xwiki.jsx.use('Maps.Code.LeafletUtils'))
+  #set ($discard = $xwiki.jsx.use('Maps.Code.PointSheet'))
   ## If the point is being edited, then display the point editor
   ## Else display an uneditable map preview
   #set($class = $doc.getObject('Maps.Code.PointClass').xWikiClass)
