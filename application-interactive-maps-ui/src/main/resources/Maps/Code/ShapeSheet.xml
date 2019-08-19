@@ -194,6 +194,14 @@ require(['jquery', 'leaflet', 'leaflet-commons', 'leaflet-edit', 'leaflet-drag',
     }
     function processShapeLayer (layer, $shapeGeoJSON, allShapesJSON, allShapes)
     {
+      if (layer instanceof L.Circle) {
+        layer.feature = layer.feature || {};
+        layer.feature.type = layer.feature.type || 'Feature';
+        layer.feature.geometry = layer.feature.geometry || {};
+        layer.feature.geometry.type = 'Circle';
+        layer.feature.properties = layer.feature.properties || {};
+        layer.feature.properties.radius = layer.getRadius();
+      }
       allShapes.addLayer(layer);
       updateShapesJSON($shapeGeoJSON, allShapesJSON, allShapes);
       layer.on('dblclick', function (e1) {
@@ -248,6 +256,13 @@ require(['jquery', 'leaflet', 'leaflet-commons', 'leaflet-edit', 'leaflet-drag',
           var currentGeoJSON = JSON.parse($shapeGeoJSON.val());
           var currentShapes = L.geoJSON(currentGeoJSON, {
             style: shapeStyle,
+            pointToLayer: function (feature, latlng) {
+              if (feature.properties !== undefined) {
+                if (feature.properties.radius !== undefined) {
+                  return L.circle(latlng, {radius: feature.properties.radius});
+                }
+              }
+            },
             onEachFeature: function (feature, layer) {
               layer.addTo(map).enableEdit();
               processShapeLayer(layer, $shapeGeoJSON, allShapesJSON, allShapes);
@@ -276,9 +291,18 @@ require(['jquery', 'leaflet', 'leaflet-commons', 'leaflet-edit', 'leaflet-drag',
       };
       var viewMap = leafletCommons.createEmptyMap(options);
       try {
-        var $shapeGeoJSON = $('#shapeGeoJSON')
+        var $shapeGeoJSON = $('#shapeGeoJSON');
         var currentGeoJSON = JSON.parse($shapeGeoJSON.val());
-        var currentShapes = L.geoJSON(currentGeoJSON, {style: shapeStyle}).addTo(viewMap);
+        var currentShapes = L.geoJSON(currentGeoJSON, {
+          style: shapeStyle,
+          pointToLayer: function (feature, latlng) {
+            if (feature.properties !== undefined) {
+              if (feature.properties.radius !== undefined) {
+                return L.circle(latlng, {radius: feature.properties.radius});
+              }
+            }
+          }
+        }).addTo(viewMap);
         viewMap.fitBounds(currentShapes.getBounds());
       } catch (e) {
         new XWiki.widgets.Notification('Error processing GeoJSON.', 'error');

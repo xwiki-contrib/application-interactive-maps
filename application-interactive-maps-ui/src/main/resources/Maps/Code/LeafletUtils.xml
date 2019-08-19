@@ -816,7 +816,14 @@ require(['jquery', 'leaflet', 'leaflet-commons', 'bootstrap'], function ($, leaf
             }
             shapeGeoJSON = JSON.parse(data.shapeGeoJSON);
             shape = L.geoJSON(shapeGeoJSON, {
-              style: shapeStyle
+              style: shapeStyle,
+              pointToLayer: function (feature, latlng) {
+                if (feature.properties !== undefined) {
+                  if (feature.properties.radius !== undefined) {
+                    return L.circle(latlng, {radius: feature.properties.radius});
+                  }
+                }
+              }
             });
           } catch (err) {
             new XWiki.widgets.Notification('The shape properties are invalid. ' + err, 'error');
