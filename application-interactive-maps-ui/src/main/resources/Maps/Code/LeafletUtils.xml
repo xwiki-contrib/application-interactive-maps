@@ -820,10 +820,12 @@ require(['jquery', 'leaflet', 'leaflet-commons', 'bootstrap'], function ($, leaf
             shape = L.geoJSON(shapeGeoJSON, {
               style: shapeStyle,
               pointToLayer: function (feature, latlng) {
-                if (feature.properties !== undefined) {
+                if (feature.properties !== undefined &amp;&amp; Object.keys(feature.properties).length !== 0) {
                   if (feature.properties.radius !== undefined) {
                     return L.circle(latlng, {radius: feature.properties.radius});
                   }
+                } else {
+                  return L.marker(latlng);
                 }
               }
             });

@@ -58,7 +58,7 @@
       &lt;p class="xform"&gt;&lt;span class="xHint"&gt;$services.localization.render('intmap.shapeEditor.hint')&lt;/span&gt;&lt;/p&gt;
       #end
       (% class="map-wrapper" %)(((
-         #if ($context.action == 'edit')
+         #if ($xcontext.action == 'edit')
            &lt;div class="map-preview shape-editor-map-preview" id="map-${util.generateRandomString(5)}" style="width: 100%; height: 400px;"&gt;&lt;/div&gt;
          #else
            &lt;div class="map-preview map-shape-view" id="map-${util.generateRandomString(5)}" style="width: 100%; height: 400px;"&gt;&lt;/div&gt;
@@ -249,25 +249,27 @@ require(['jquery', 'leaflet', 'leaflet-commons', 'leaflet-edit', 'leaflet-drag',
       //Shape editor place search
       leafletCommons.setupLocationSearchMP('.map-search', map);
 
-      var $shapeGeoJSON = $('#shapeGeoJSON');
+      var shapeGeoJSON = $('#shapeGeoJSON');
       var allShapes = L.featureGroup();
       var allShapesJSON;
 
-      if ($shapeGeoJSON.val() !== '') {
+      if (shapeGeoJSON.val() !== '') {
         try {
-          var currentGeoJSON = JSON.parse($shapeGeoJSON.val());
+          var currentGeoJSON = JSON.parse(shapeGeoJSON.val());
           var currentShapes = L.geoJSON(currentGeoJSON, {
             style: shapeStyle,
             pointToLayer: function (feature, latlng) {
-              if (feature.properties !== undefined) {
+              if (feature.properties !== undefined &amp;&amp; Object.keys(feature.properties).length !== 0) {
                 if (feature.properties.radius !== undefined) {
                   return L.circle(latlng, {radius: feature.properties.radius});
                 }
+              } else {
+                return L.marker(latlng);
               }
             },
             onEachFeature: function (feature, layer) {
               layer.addTo(map).enableEdit();
-              processShapeLayer(layer, $shapeGeoJSON, allShapesJSON, allShapes);
+              processShapeLayer(layer, shapeGeoJSON, allShapesJSON, allShapes);
             }
           });
           map.fitBounds(currentShapes.getBounds());
@@ -275,12 +277,12 @@ require(['jquery', 'leaflet', 'leaflet-commons', 'leaflet-edit', 'leaflet-drag',
           new XWiki.widgets.Notification('Error processing GeoJSON.', 'error');
         }
       } else {
-        $shapeGeoJSON.val('{"type":"FeatureCollection","features":[]}');
+        shapeGeoJSON.val('{"type":"FeatureCollection","features":[]}');
       }
 
       map.on('editable:drawing:commit editable:vertex:dragend', function (e) {
         var drawnLayer = e.layer;
-        processShapeLayer(drawnLayer, $shapeGeoJSON, allShapesJSON, allShapes);
+        processShapeLayer(drawnLayer, shapeGeoJSON, allShapesJSON, allShapes);
       });
     });
 
@@ -293,15 +295,17 @@ require(['jquery', 'leaflet', 'leaflet-commons', 'leaflet-edit', 'leaflet-drag',
       };
       var viewMap = leafletCommons.createEmptyMap(options);
       try {
-        var $shapeGeoJSON = $('#shapeGeoJSON');
-        var currentGeoJSON = JSON.parse($shapeGeoJSON.val());
+        var shapeGeoJSON = $('#shapeGeoJSON');
+        var currentGeoJSON = JSON.parse(shapeGeoJSON.val());
         var currentShapes = L.geoJSON(currentGeoJSON, {
           style: shapeStyle,
           pointToLayer: function (feature, latlng) {
-            if (feature.properties !== undefined) {
+            if (feature.properties !== undefined &amp;&amp; Object.keys(feature.properties).length !== 0) {
               if (feature.properties.radius !== undefined) {
                 return L.circle(latlng, {radius: feature.properties.radius});
               }
+            } else {
+              return L.marker(latlng);
             }
           }
         }).addTo(viewMap);

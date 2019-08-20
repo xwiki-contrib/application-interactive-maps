@@ -415,7 +415,7 @@
           )))
         #elseif ($item.get('type') == 'path')
           #set ($allPointsLocation = [])
-          #foreach ($point in $jsontool.parse($item.points))
+          #foreach ($point in $jsontool.fromString($item.points))
             #set ($discard = $allPointsLocation.add(${point.location}))
           #end
           #set ($allPointsLocation = $jsontool.serialize($allPointsLocation))
@@ -423,7 +423,7 @@
             &lt;i class="fa fa-map-marker"&gt;&lt;/i&gt;
           )))
         #elseif ($item.get('type') == 'shape')
-          #set ($shapeGeoJSON = $jsontool.parse($item.shapeGeoJSON))
+          #set ($shapeGeoJSON = $jsontool.fromString($item.shapeGeoJSON))
           #if ("$!shapeGeoJSON.geometry" != '' || $shapeGeoJSON.features.size() &gt; 0)
             #if ("$!shapeGeoJSON.features[0].geometry.coordinates[0][0][0]" != '')
               #set ($allPoints = $shapeGeoJSON.features[0].geometry.coordinates[0])
