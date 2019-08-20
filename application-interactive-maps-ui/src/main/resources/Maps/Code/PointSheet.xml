@@ -227,6 +227,13 @@ require(['jquery', 'leaflet', 'leaflet-commons', 'bootstrap'], function ($, leaf
         $lngInput.val(newLocation.lng);
         oldLocVal = [newLocation.lat, newLocation.lng];
         if (action === 'pointAdded') {
+          $('.map-search').on('locationsearch', function (e, location) {
+            marker.setLatLng(location);
+            map.setView(location, 14);
+            $latInput.val(location[0]);
+            $lngInput.val(location[1]);
+            oldLocVal = location;
+          });
           $('#updateLocBtn').on('click', function () {
             try {
               var updatedLoc = [$latInput.val().trim(), $lngInput.val().trim()];

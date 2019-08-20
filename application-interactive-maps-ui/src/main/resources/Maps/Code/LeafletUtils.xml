@@ -205,11 +205,12 @@ define('leaflet-commons', ['jquery'], function ($) {
     {
       var locMarker;
       this.addCustomControl(map, 'fa-location-arrow', 'Current location', 'bottomright', function (e) {
-        var locate = map.locate({ setView: true, watch: false });
+        var locate = map.locate({ watch: false });
         map.on('locationerror', function (e) {
           new XWiki.widgets.Notification('Cannot get location in an insecure context (HTTP). Secure context (HTTPS) required.', 'error');
         });
         map.on('locationfound', function (e) {
+          map.fitBounds([e.latlng], {zoom: 14});
           if (locMarker) {
             locMarker.remove();
           }
@@ -597,6 +598,7 @@ define('leaflet-commons', ['jquery'], function ($) {
         if (formVal !== '') {
           rootScope.getLocationCoords(formVal, function (location) {
             if (map &amp;&amp; location) {
+              $(parentClass).trigger('locationsearch', [location]);
               map.setView(L.latLng(location), 14);
             }
           });
