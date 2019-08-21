@@ -39,7 +39,7 @@
   <content>{{velocity output="false"}}
 #set ($solrConfig = {
   'filterQuery': [
-    'type:DOCUMENT', 'class:Maps.Code.PathClass OR class:Maps.Code.ShapeClass'
+    'type:DOCUMENT', 'class:Maps.Code.PathClass OR class:Maps.Code.ShapeClass OR class:Maps.Code.IndoorClass'
   ],
   'facetFields': []
 })
@@ -211,6 +211,36 @@
       #set ($discard = $mapDataArr.add($responseData))
     #end
     ## Shapes END
+    ## Check for indoor structure and process it
+    #if ($response.get('class').contains('Maps.Code.IndoorClass'))
+      #set ($responseData = {})
+      #set ($discard = $responseData.put('type', 'indoor'))
+      ## Get raw indoor structure data
+      #set ($rawIndoorData = $response.get('property.Maps.Code.IndoorClass.levels_en')[0])
+      #set ($allLevels = $rawIndoorData.split('\n'))
+      #set ($levelsData = {})
+      ## Process each level data of indoor
+      #foreach ($level in $allLevels)
+        #set ($levelShapesArr = [])
+        #set ($singleLevelData = $level.trim().split(':'))
+        #set ($levelShapes = $singleLevelData[1].split(','))
+        #foreach ($levelShape in $levelShapes)
+          #set ($levelShapeMap = {})
+          #set ($shapeDoc = $xwiki.getDocument($levelShape.trim()))
+          #set ($discard = $levelShapeMap.put('title', $shapeDoc.getTitle()))
+          #set ($popupContent = "#getHtml(${shapeDoc.getContent()})")
+          #set ($discard = $levelShapeMap.put('content', $popupContent))
+          #set ($discard = $levelShapeMap.put('includePopup', $shapeDoc.getValue('includePopup')))
+          #set ($discard = $levelShapeMap.put('shapeGeoJSON', $shapeDoc.getValue('shapeGeoJSON')))
+          #set ($discard = $levelShapeMap.put('styles', $shapeDoc.getValue('styles')))
+          #set ($discard = $levelShapesArr.add($levelShapeMap))
+        #end
+        #set ($discard = $levelsData.put($singleLevelData[0].trim(), $levelShapesArr))
+      #end
+      #set ($discard = $responseData.put('allIndoorData', $levelsData))
+      #set ($discard = $mapDataArr.add($responseData))
+    #end
+    ## Indoor END
   #end
   $jsontool.serialize($mapDataArr)
 #end
@@ -429,6 +459,8 @@
               #set ($allPoints = $shapeGeoJSON.features[0].geometry.coordinates[0])
             #elseif ("$!shapeGeoJSON.features[0].geometry.coordinates[0][0]" != '')
               #set ($allPoints = $shapeGeoJSON.features[0].geometry.coordinates)
+            #elseif ("$!shapeGeoJSON.features[0].geometry.coordinates[0]" != '')
+              #set ($allPoints = [$shapeGeoJSON.features[0].geometry.coordinates])
             #elseif ("$!shapeGeoJSON.geometry.coordinates[0][0][0]" != '')
               #set ($allPoints = $shapeGeoJSON.geometry.coordinates[0])
             #else

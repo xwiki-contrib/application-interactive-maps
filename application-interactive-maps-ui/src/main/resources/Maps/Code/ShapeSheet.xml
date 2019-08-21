@@ -59,15 +59,37 @@
       #end
       (% class="map-wrapper" %)(((
          #if ($xcontext.action == 'edit')
-           &lt;div class="map-preview shape-editor-map-preview" id="map-${util.generateRandomString(5)}" style="width: 100%; height: 400px;"&gt;&lt;/div&gt;
+           &lt;div class="map-preview shape-editor-map-preview" id="map-${util.generateRandomString(5)}" style="width: 100%; height: 450px;"&gt;&lt;/div&gt;
          #else
-           &lt;div class="map-preview map-shape-view" id="map-${util.generateRandomString(5)}" style="width: 100%; height: 400px;"&gt;&lt;/div&gt;
+           &lt;div class="map-preview map-shape-view" id="map-${util.generateRandomString(5)}" style="width: 100%; height: 450px;"&gt;&lt;/div&gt;
          #end
         (% class="map-search-filter" %)(((
           #displayLocationSearch()
         )))
         (% id="map-search-close" %)(((
         &lt;i class="fa fa-arrow-left"&gt;&lt;/i&gt;
+        )))
+        (% id="shape-properties" class="xform" %)(((
+          &lt;dl&gt;
+            &lt;dt&gt;
+              &lt;label for="shape-p-title"&gt;$services.localization.render('intmap.shapeEditor.shapePropTitle')&lt;/label&gt;
+              &lt;span class="xHint"&gt;$services.localization.render('intmap.shapeEditor.shapePropTitleHint')&lt;/span&gt;
+            &lt;/dt&gt;
+            &lt;dd&gt;&lt;input type="text" id="shape-p-title" /&gt;&lt;/dd&gt;
+            &lt;dt&gt;
+              &lt;label for="shape-p-desc"&gt;$services.localization.render('intmap.shapeEditor.shapePropDescription')&lt;/label&gt;
+              &lt;span class="xHint"&gt;$services.localization.render('intmap.shapeEditor.shapePropDescriptionHint')&lt;/span&gt;
+            &lt;/dt&gt;
+            &lt;dd&gt;&lt;textarea id="shape-p-desc"&gt;&lt;/textarea&gt;&lt;/dd&gt;
+            &lt;dt&gt;
+              &lt;label for="shape-p-style"&gt;$services.localization.render('intmap.shapeEditor.shapePropStyle')&lt;/label&gt;
+              &lt;span class="xHint"&gt;$services.localization.render('intmap.shapeEditor.shapePropStyleHint')&lt;/span&gt;
+            &lt;/dt&gt;
+            &lt;dd&gt;&lt;textarea id="shape-p-style"&gt;&lt;/textarea&gt;&lt;/dd&gt;
+            &lt;button id="shape-p-update" class="btn btn-primary" type="button"&gt;$services.localization.render('intmap.shapeEditor.shapePropUpdate')&lt;/button&gt;
+            &lt;button id="shape-p-delete" class="btn btn-danger" type="button"&gt;$services.localization.render('intmap.shapeEditor.shapePropDelete')&lt;/button&gt;
+            &lt;button id="shape-p-close" class="btn btn-secondary" type="button"&gt;$services.localization.render('intmap.shapeEditor.shapePropClose')&lt;/button&gt;
+          &lt;/dl&gt;
         )))
       )))
       ----
@@ -185,8 +207,15 @@ require(['jquery', 'leaflet', 'leaflet-commons', 'leaflet-edit', 'leaflet-drag',
   'use strict';
   function init()
   {
-
     //Functions for shapes
+    function createLayerProperties(layer)
+    {
+      layer.feature = layer.feature || {};
+      layer.feature.type = layer.feature.type || 'Feature';
+      layer.feature.properties = layer.feature.properties || {};
+      layer.feature.properties.radius = layer.getRadius();
+      return layer;
+    }
     function updateShapesJSON (shapeGeoJSON, allShapesJSON, allShapes)
     {
       allShapesJSON = allShapes.toGeoJSON();
@@ -194,13 +223,10 @@ require(['jquery', 'leaflet', 'leaflet-commons', 'leaflet-edit', 'leaflet-drag',
     }
     function processShapeLayer (layer, shapeGeoJSON, allShapesJSON, allShapes)
     {
+      layer = createLayerProperties(layer);
       if (layer instanceof L.Circle) {
-        layer.feature = layer.feature || {};
-        layer.feature.type = layer.feature.type || 'Feature';
         layer.feature.geometry = layer.feature.geometry || {};
         layer.feature.geometry.type = 'Circle';
-        layer.feature.properties = layer.feature.properties || {};
-        layer.feature.properties.radius = layer.getRadius();
       }
       allShapes.addLayer(layer);
       updateShapesJSON(shapeGeoJSON, allShapesJSON, allShapes);
@@ -213,6 +239,8 @@ require(['jquery', 'leaflet', 'leaflet-commons', 'leaflet-edit', 'leaflet-drag',
         updateShapesJSON(shapeGeoJSON, allShapesJSON, allShapes);
       });
     }
+
+    var map;
 
     //Getting shape style for both view and edit modes
     var shapeStyle;
@@ -227,10 +255,9 @@ require(['jquery', 'leaflet', 'leaflet-commons', 'leaflet-edit', 'leaflet-drag',
       shapeStyle = {};
     }
 
-    var map;
-
     //Render the map
     $$('.shape-editor-map-preview').each(function (element) {
+      //Setting up the map
       var mapId = $(element).attr('id').replace('map-', '');
       var options = {
         'id': mapId,
@@ -253,6 +280,7 @@ require(['jquery', 'leaflet', 'leaflet-commons', 'leaflet-edit', 'leaflet-drag',
       var allShapes = L.featureGroup();
       var allShapesJSON;
 
+      //Adding editable shapes with already avaiable geojson if any
       if (shapeGeoJSON.val() !== '') {
         try {
           var currentGeoJSON = JSON.parse(shapeGeoJSON.val());
@@ -280,6 +308,7 @@ require(['jquery', 'leaflet', 'leaflet-commons', 'leaflet-edit', 'leaflet-drag',
         shapeGeoJSON.val('{"type":"FeatureCollection","features":[]}');
       }
 
+      //Update shapes input when shape is drawn or changed
       map.on('editable:drawing:commit editable:vertex:dragend', function (e) {
         var drawnLayer = e.layer;
         processShapeLayer(drawnLayer, shapeGeoJSON, allShapesJSON, allShapes);
@@ -306,6 +335,13 @@ require(['jquery', 'leaflet', 'leaflet-commons', 'leaflet-edit', 'leaflet-drag',
               }
             } else {
               return L.marker(latlng);
+            }
+          },
+          onEachFeature: function (feature, layer) {
+            var title = feature.properties.title || '';
+            var desc = feature.properties.description || '';
+            if (title !== '' &amp;&amp; desc !== '') {
+              layer.bindPopup('&lt;h2&gt;' + title + '&lt;/h2&gt;' + '&lt;p&gt;' + desc + '&lt;/p&gt;')
             }
           }
         }).addTo(viewMap);

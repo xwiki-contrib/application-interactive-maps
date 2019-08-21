@@ -407,7 +407,7 @@ define('leaflet-commons', ['jquery'], function ($) {
       var rootScope = this;
       //Get the path as polyline from osm open source routing machine (osrm)
       //OSRM takes coords as [longitude,latitude] not [latitude,longitude]
-      var pointsForOSRM = data.points.map((point) =&gt; {
+      var pointsForOSRM = data.points.map(function (point) {
         return point.reverse().join();
       }).join(';');
       var queryURL = 'http://router.project-osrm.org/route/v1/car/' + pointsForOSRM;
@@ -712,7 +712,8 @@ define('leaflet-commons', ['jquery'], function ($) {
     <property>
       <code>requirejs.config({
   paths: {
-    'leaflet': ['$services.webjars.url("leaflet", "leaflet.js")']
+    'leaflet': ['$services.webjars.url("leaflet", "leaflet.js")'],
+    'leaflet-indoor': ['https://cdn.jsdelivr.net/gh/cbaines/leaflet-indoor/leaflet-indoor']
   }
 });
 require(['jquery', 'leaflet', 'leaflet-commons', 'bootstrap'], function ($, leaflet, leafletCommons) {
@@ -832,12 +833,62 @@ require(['jquery', 'leaflet', 'leaflet-commons', 'bootstrap'], function ($, leaf
           } catch (err) {
             new XWiki.widgets.Notification('The shape properties are invalid. ' + err, 'error');
           }
-          leafletCommons.processPopupAndAdd(data, shape, allLayers);
+          if (shape) {
+            leafletCommons.processPopupAndAdd(data, shape, allLayers);
+          }
           if (dataLength == i) {
             allLayers.addTo(map);
             map.fitBounds(allLayers.getBounds());
           }
           i++;
+        } else if (data.type === 'indoor') {
+          console.log('Indoor structure implementation');
+          /*var allLevelsJSON = {type: 'FeatureCollection', features: []};
+          //Processing each level separately
+          Object.keys(data.allIndoorData).forEach(function (level) {
+            var allLevelShapes = data.allIndoorData[level];
+            //Placing required data of each level into shape's geojson
+            allLevelShapes.map(function (shape) {
+              try {
+                shape.shapeGeoJSON = JSON.parse(shape.shapeGeoJSON);
+                shape.shapeGeoJSON.features.map(function (feature) {
+                  feature.properties.level = level;
+                  feature.properties.includePopup = shape.includePopup;
+                  feature.properties.title = shape.title ? '' : shape.title;
+                  feature.properties.content = shape.content ? '' : shape.content;
+                  feature.properties.style = shape.styles;
+                });
+                shape.shapeGeoJSON.features.each(function (feature) {
+                  allLevelsJSON.features.push(feature);
+                });
+              } catch (e) {
+                new XWiki.widgets.Notification('The shape properties invalid for ' + shape.title + err, 'error');
+              }
+            });
+          });
+          //Creating the indoor layer and processing the collected data to display on map
+          var indoorLayer = new L.Indoor(allLevelsJSON, {
+            style: function (feature) {
+              return feature.properties.style;
+            },
+            onEachFeature: function (feature, layer) {
+              if (feature.properties.includePopup === 1) {
+                if (feature.properties.content.length &gt; 500) {
+                  popupData = '&lt;h2&gt;' + feature.properties.title + '&lt;/h2&gt;&lt;hr/&gt;' + '&lt;div style="height: 150px; overflow: auto;"&gt;' + feature.properties.content + '&lt;/div&gt;';
+                } else {
+                  popupData = '&lt;h2&gt;' + feature.properties.title + '&lt;/h2&gt;&lt;hr/&gt;' + '&lt;div&gt;' + feature.properties.content + '&lt;/div&gt;';
+                }
+              }
+            }
+          });
+          indoorLayer.setLevel("0");
+          indoorLayer.addTo(map);
+          var levelControl = new L.Control.Level({
+              level: "0",
+              levels: indoorLayer.getLevels()
+          });
+          levelControl.addEventListener("levelchange", indoorLayer.setLevel, indoorLayer);
+          levelControl.addTo(map);*/
         } else {
           new XWiki.widgets.Notification('Error while adding items to the map. Make sure the query is correct.', 'error');
         }
@@ -1460,6 +1511,34 @@ require(['jquery', 'leaflet', 'leaflet-commons', 'bootstrap'], function ($, leaf
 }
 .leaflet-popup-content &gt; hr{
   margin: 7px 0;
+}
+/*
+ * Shapes
+*/
+#shape-properties{
+  position: absolute;
+  left: 10px;
+  top: 10px;
+  width: 33%;
+  min-width: 33%;
+  height: auto;
+  max-height: 95%;
+  overflow-y: auto;
+  background: @xwiki-page-content-bg;
+  border-radius: 7px;
+  box-shadow: 0px 0px 5px @box-shadow;
+  padding: 8px;
+  transform: translateX(-100%) scale(0.7);
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.2s;
+  z-index: 992;
+}
+#shape-properties.open{
+  transform: translateX(0) scale(1);
+  opacity: 1;
+  visibility: visible;
+  transition: all 0.4s;
 }
 /*
  * Override css

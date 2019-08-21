@@ -69,7 +69,16 @@ intmap.pointEditor.hint=Select a location on the map and create a point
 intmap.pointEditor.updateLocation=Update Location
 
 ## ShapeEditor
-intmap.shapeEditor.hint=Use the tools given at the bottom left of the map to create shapes. Double click on a shape to delete it.</content>
+intmap.shapeEditor.hint=Use the tools given at the bottom left of the map to create shapes. Double click on a shape to delete it.
+intmap.shapeEditor.shapePropTitle=Title
+intmap.shapeEditor.shapePropTitleHint=Title for the popup
+intmap.shapeEditor.shapePropDescription=Description
+intmap.shapeEditor.shapePropDescriptionHint=Description for the popup
+intmap.shapeEditor.shapePropStyle=Style
+intmap.shapeEditor.shapePropStyleHint=Shape style as JSON
+intmap.shapeEditor.shapePropUpdate=Update properties
+intmap.shapeEditor.shapePropDelete=Delete
+intmap.shapeEditor.shapePropClose=Close</content>
   <object>
     <name>Maps.Code.Translations</name>
     <number>0</number>

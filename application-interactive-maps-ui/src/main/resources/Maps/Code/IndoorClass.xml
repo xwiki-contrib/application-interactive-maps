@@ -20,9 +20,9 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
 -->
 
-<xwikidoc version="1.3" reference="Maps.Code.ShapeClass" locale="">
+<xwikidoc version="1.3" reference="Maps.Code.IndoorClass" locale="">
   <web>Maps.Code</web>
-  <name>ShapeClass</name>
+  <name>IndoorClass</name>
   <language/>
   <defaultLanguage/>
   <translation>0</translation>
@@ -31,7 +31,7 @@
   <author>xwiki:XWiki.Admin</author>
   <contentAuthor>xwiki:XWiki.Admin</contentAuthor>
   <version>1.1</version>
-  <title>ShapeClass</title>
+  <title>IndoorClass</title>
   <comment/>
   <minorEdit>false</minorEdit>
   <syntaxId>xwiki/2.1</syntaxId>
@@ -44,7 +44,7 @@
 #set ($defaultParent = 'Maps.WebHome')
 {{/velocity}}</content>
   <class>
-    <name>Maps.Code.ShapeClass</name>
+    <name>Maps.Code.IndoorClass</name>
     <customClass/>
     <customMapping/>
     <defaultViewSheet/>
@@ -52,92 +52,29 @@
     <defaultWeb/>
     <nameField/>
     <validationScript/>
-    <includePopup>
+    <levels>
+      <contenttype/>
       <customDisplay/>
-      <defaultValue/>
       <disabled>0</disabled>
-      <displayFormType>checkbox</displayFormType>
-      <displayType/>
-      <hint/>
-      <name>includePopup</name>
+      <editor>Text</editor>
+      <hint>Levels as integers and shapes to be associated with each level</hint>
+      <name>levels</name>
       <number>2</number>
-      <prettyName>Add Popup to the Shape</prettyName>
-      <unmodifiable>0</unmodifiable>
-      <validationMessage/>
-      <validationRegExp/>
-      <classType>com.xpn.xwiki.objects.classes.BooleanClass</classType>
-    </includePopup>
-    <index>
-      <customDisplay/>
-      <disabled>0</disabled>
-      <hint/>
-      <name>index</name>
-      <number>1</number>
-      <numberType>integer</numberType>
-      <prettyName>Shape Index</prettyName>
-      <size>30</size>
-      <unmodifiable>0</unmodifiable>
-      <validationMessage/>
-      <validationRegExp/>
-      <classType>com.xpn.xwiki.objects.classes.NumberClass</classType>
-    </index>
-    <popupContent>
-      <contenttype/>
-      <customDisplay>{{include reference='AppWithinMinutes.Content'/}}</customDisplay>
-      <disabled>0</disabled>
-      <editor>Wysiwyg</editor>
-      <hint>Content that will appear in the shape's popup</hint>
-      <name>popupContent</name>
-      <number>3</number>
-      <picker>0</picker>
-      <prettyName>Popup Content</prettyName>
+      <picker>1</picker>
+      <prettyName>Levels and Shapes</prettyName>
       <rows>5</rows>
       <size>40</size>
       <unmodifiable>0</unmodifiable>
       <validationMessage/>
       <validationRegExp/>
       <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
-    </popupContent>
-    <shapeGeoJSON>
-      <contenttype/>
-      <customDisplay/>
-      <disabled>0</disabled>
-      <editor>Text</editor>
-      <hint>Specify the properties of shape as GeoJSON</hint>
-      <name>shapeGeoJSON</name>
-      <number>4</number>
-      <picker>0</picker>
-      <prettyName>Shape GeoJSON</prettyName>
-      <rows>5</rows>
-      <size>40</size>
-      <unmodifiable>0</unmodifiable>
-      <validationMessage/>
-      <validationRegExp/>
-      <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
-    </shapeGeoJSON>
-    <styles>
-      <contenttype/>
-      <customDisplay/>
-      <disabled>0</disabled>
-      <editor>Text</editor>
-      <hint>Options for styling shapes</hint>
-      <name>styles</name>
-      <number>5</number>
-      <picker>0</picker>
-      <prettyName>Styles</prettyName>
-      <rows>5</rows>
-      <size>40</size>
-      <unmodifiable>0</unmodifiable>
-      <validationMessage/>
-      <validationRegExp/>
-      <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
-    </styles>
+    </levels>
   </class>
   <object>
-    <name>Maps.Code.ShapeClass</name>
+    <name>Maps.Code.IndoorClass</name>
     <number>0</number>
     <className>XWiki.ClassSheetBinding</className>
-    <guid>8e77380d-1d0f-4e49-b944-e61a6d1890a0</guid>
+    <guid>94213bcc-5a29-4f58-8fe1-1633d6f550a4</guid>
     <class>
       <name>XWiki.ClassSheetBinding</name>
       <customClass/>
@@ -174,14 +111,14 @@
       </sheet>
     </class>
     <property>
-      <sheet>ShapeSheet</sheet>
+      <sheet>IndoorSheet</sheet>
     </property>
   </object>
   <object>
-    <name>Maps.Code.ShapeClass</name>
+    <name>Maps.Code.IndoorClass</name>
     <number>0</number>
     <className>XWiki.DocumentSheetBinding</className>
-    <guid>d82226f2-a6bf-47c5-a165-66c9269c32a5</guid>
+    <guid>54b071cc-a3e0-49d8-84a6-c68570453b0f</guid>
     <class>
       <name>XWiki.DocumentSheetBinding</name>
       <customClass/>

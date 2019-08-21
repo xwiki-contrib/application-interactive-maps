@@ -85,7 +85,7 @@
         <customDisplay>{{include reference='AppWithinMinutes.Content'/}}</customDisplay>
         <disabled>0</disabled>
         <editor>Wysiwyg</editor>
-        <hint>Content that will appear in the point's popup</hint>
+        <hint>Content that will appear in the shape's popup</hint>
         <name>popupContent</name>
         <number>3</number>
         <picker>0</picker>
