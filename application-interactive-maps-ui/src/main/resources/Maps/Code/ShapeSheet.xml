@@ -49,7 +49,9 @@
   #set($class = $doc.getObject('Maps.Code.ShapeClass').xWikiClass)
   #set($shapeObj = $doc.getObject('Maps.Code.ShapeClass'))
   #set ($shapeGeoJSON = $shapeObj.getValue('shapeGeoJSON'))
-  #set ($shapeStyle = $shapeObj.getValue('styles'))
+  #set ($shapeGeoJSON = $shapeGeoJSON.replaceAll("'", "&amp;apos;"))
+  #set ($shapeStyle = $shapeObj.getValue('style'))
+  #set ($shapeStyle = $shapeStyle.replaceAll("'", "&amp;apos;"))
   {{html wiki="true" clean="false"}}
   (% class="row" %)(((
     (% class="col-sm-12" %)(((
@@ -59,7 +61,7 @@
       #end
       (% class="map-wrapper" %)(((
          #if ($xcontext.action == 'edit')
-           &lt;div class="map-preview shape-editor-map-preview" id="map-${util.generateRandomString(5)}" style="width: 100%; height: 450px;"&gt;&lt;/div&gt;
+           &lt;div class="map-preview shape-editor-preview" id="map-${util.generateRandomString(5)}" style="width: 100%; height: 450px;"&gt;&lt;/div&gt;
          #else
            &lt;div class="map-preview map-shape-view" id="map-${util.generateRandomString(5)}" style="width: 100%; height: 450px;"&gt;&lt;/div&gt;
          #end
@@ -68,28 +70,6 @@
         )))
         (% id="map-search-close" %)(((
         &lt;i class="fa fa-arrow-left"&gt;&lt;/i&gt;
-        )))
-        (% id="shape-properties" class="xform" %)(((
-          &lt;dl&gt;
-            &lt;dt&gt;
-              &lt;label for="shape-p-title"&gt;$services.localization.render('intmap.shapeEditor.shapePropTitle')&lt;/label&gt;
-              &lt;span class="xHint"&gt;$services.localization.render('intmap.shapeEditor.shapePropTitleHint')&lt;/span&gt;
-            &lt;/dt&gt;
-            &lt;dd&gt;&lt;input type="text" id="shape-p-title" /&gt;&lt;/dd&gt;
-            &lt;dt&gt;
-              &lt;label for="shape-p-desc"&gt;$services.localization.render('intmap.shapeEditor.shapePropDescription')&lt;/label&gt;
-              &lt;span class="xHint"&gt;$services.localization.render('intmap.shapeEditor.shapePropDescriptionHint')&lt;/span&gt;
-            &lt;/dt&gt;
-            &lt;dd&gt;&lt;textarea id="shape-p-desc"&gt;&lt;/textarea&gt;&lt;/dd&gt;
-            &lt;dt&gt;
-              &lt;label for="shape-p-style"&gt;$services.localization.render('intmap.shapeEditor.shapePropStyle')&lt;/label&gt;
-              &lt;span class="xHint"&gt;$services.localization.render('intmap.shapeEditor.shapePropStyleHint')&lt;/span&gt;
-            &lt;/dt&gt;
-            &lt;dd&gt;&lt;textarea id="shape-p-style"&gt;&lt;/textarea&gt;&lt;/dd&gt;
-            &lt;button id="shape-p-update" class="btn btn-primary" type="button"&gt;$services.localization.render('intmap.shapeEditor.shapePropUpdate')&lt;/button&gt;
-            &lt;button id="shape-p-delete" class="btn btn-danger" type="button"&gt;$services.localization.render('intmap.shapeEditor.shapePropDelete')&lt;/button&gt;
-            &lt;button id="shape-p-close" class="btn btn-secondary" type="button"&gt;$services.localization.render('intmap.shapeEditor.shapePropClose')&lt;/button&gt;
-          &lt;/dl&gt;
         )))
       )))
       ----
@@ -196,13 +176,7 @@
       <cache>long</cache>
     </property>
     <property>
-      <code>requirejs.config({
-  paths: {
-    'leaflet-edit': ['$services.webjars.url("github-com-Leaflet-Leaflet-Editable", "1.1.0/Leaflet.Editable.js")'],
-    'leaflet-drag': ['$services.webjars.url("leaflet.path.drag", "src/Path.Drag.js")']
-  }
-});
-// Make sure to include jsx Maps.Code.LeafletUtils before including this jsx
+      <code>//Make sure to include jsx Maps.Code.LeafletUtils before including this jsx
 require(['jquery', 'leaflet', 'leaflet-commons', 'leaflet-edit', 'leaflet-drag', 'bootstrap'], function ($, leaflet, leafletCommons) {
   'use strict';
   function init()
@@ -213,7 +187,6 @@ require(['jquery', 'leaflet', 'leaflet-commons', 'leaflet-edit', 'leaflet-drag',
       layer.feature = layer.feature || {};
       layer.feature.type = layer.feature.type || 'Feature';
       layer.feature.properties = layer.feature.properties || {};
-      layer.feature.properties.radius = layer.getRadius();
       return layer;
     }
     function updateShapesJSON (shapeGeoJSON, allShapesJSON, allShapes)
@@ -227,6 +200,7 @@ require(['jquery', 'leaflet', 'leaflet-commons', 'leaflet-edit', 'leaflet-drag',
       if (layer instanceof L.Circle) {
         layer.feature.geometry = layer.feature.geometry || {};
         layer.feature.geometry.type = 'Circle';
+        layer.feature.properties.radius = layer.getRadius();
       }
       allShapes.addLayer(layer);
       updateShapesJSON(shapeGeoJSON, allShapesJSON, allShapes);
@@ -256,7 +230,7 @@ require(['jquery', 'leaflet', 'leaflet-commons', 'leaflet-edit', 'leaflet-drag',
     }
 
     //Render the map
-    $$('.shape-editor-map-preview').each(function (element) {
+    $$('.shape-editor-preview').each(function (element) {
       //Setting up the map
       var mapId = $(element).attr('id').replace('map-', '');
       var options = {

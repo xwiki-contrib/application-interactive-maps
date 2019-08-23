@@ -98,6 +98,11 @@
   #set ($lngProp = 'property.' + $classData.get('className') + '.' + $classData.get('longitude'))
   #set ($includePopupField = 'property.' + $classData.get('className') + '.includePopup_boolean')
   #set ($optionsField = 'property.' + $classData.get('className') + '.options__')
+  ## Get full key for latitude and longitude
+  #set ($latProp = "#getFullKey(${response} ${latProp})")
+  #set ($latProp = $latProp.trim())
+  #set ($lngProp = "#getFullKey(${response} ${lngProp})")
+  #set ($lngProp = $lngProp.trim())
   ## Handling unknown suffixes END
   #if ("$!response.get(${latProp})" != '' &amp;&amp; "$!response.get(${lngProp})" != '' )
     #set ($responseData = {})
@@ -201,8 +206,10 @@
       #set ($responseData = {})
       #set ($discard = $responseData.put('type', 'shape'))
       #set ($discard = $responseData.put('index', $response.get('property.Maps.Code.ShapeClass.index_int')[0]))
-      #set ($discard = $responseData.put('shapeGeoJSON', $response.get('property.Maps.Code.ShapeClass.shapeGeoJSON_en')[0]))
-      #set ($discard = $responseData.put('styles', $response.get('property.Maps.Code.ShapeClass.styles_en')[0]))
+      #set ($shapeGeoJSONKey = "#getFullKey(${response} 'property.Maps.Code.ShapeClass.shapeGeoJSON')")
+      #set ($discard = $responseData.put('shapeGeoJSON', $response.get($shapeGeoJSONKey.trim())[0]))
+      #set ($shapeStyleKey = "#getFullKey(${response} 'property.Maps.Code.ShapeClass.style')")
+      #set ($discard = $responseData.put('style', $response.get($shapeStyleKey.trim())[0]))
       ## Set information for the popup
       #set ($includePopup = $response.get('property.Maps.Code.ShapeClass.includePopup_boolean')[0])
       #set ($title = $response.get('title_'))
@@ -215,8 +222,11 @@
     #if ($response.get('class').contains('Maps.Code.IndoorClass'))
       #set ($responseData = {})
       #set ($discard = $responseData.put('type', 'indoor'))
+      #set ($discard = $responseData.put('title', $response.get('title_')))
+      #set ($discard = $responseData.put('doclocation', $response.get('fullname')))
       ## Get raw indoor structure data
-      #set ($rawIndoorData = $response.get('property.Maps.Code.IndoorClass.levels_en')[0])
+      #set ($indoorLevelsKey = "#getFullKey(${response} 'property.Maps.Code.IndoorClass.levels')")
+      #set ($rawIndoorData = $response.get($indoorLevelsKey.trim())[0])
       #set ($allLevels = $rawIndoorData.split('\n'))
       #set ($levelsData = {})
       ## Process each level data of indoor
@@ -232,7 +242,7 @@
           #set ($discard = $levelShapeMap.put('content', $popupContent))
           #set ($discard = $levelShapeMap.put('includePopup', $shapeDoc.getValue('includePopup')))
           #set ($discard = $levelShapeMap.put('shapeGeoJSON', $shapeDoc.getValue('shapeGeoJSON')))
-          #set ($discard = $levelShapeMap.put('styles', $shapeDoc.getValue('styles')))
+          #set ($discard = $levelShapeMap.put('style', $shapeDoc.getValue('style')))
           #set ($discard = $levelShapesArr.add($levelShapeMap))
         #end
         #set ($discard = $levelsData.put($singleLevelData[0].trim(), $levelShapesArr))
@@ -337,7 +347,7 @@
       #displaySearchDebugInfo()
     #end
     #set ($mapData = "#handleSolrResponse(${searchResponse})")
-    #set ($mapData = $mapData.replaceAll("'", '\\"'))
+    #set ($mapData = $mapData.replaceAll("'", '&amp;apos;'))
     (% class="search-results-container row" %)(((
       (% class="map-results col-xs-12" %)
       (((
@@ -453,7 +463,8 @@
             &lt;i class="fa fa-map-marker"&gt;&lt;/i&gt;
           )))
         #elseif ($item.get('type') == 'shape')
-          #set ($shapeGeoJSON = $jsontool.fromString($item.shapeGeoJSON))
+          #set ($shapeGeoJSON = $jsontool.fromString($item.get('shapeGeoJSON')))
+          #set ($allPoints = [])
           #if ("$!shapeGeoJSON.geometry" != '' || $shapeGeoJSON.features.size() &gt; 0)
             #if ("$!shapeGeoJSON.features[0].geometry.coordinates[0][0][0]" != '')
               #set ($allPoints = $shapeGeoJSON.features[0].geometry.coordinates[0])
@@ -464,16 +475,20 @@
             #elseif ("$!shapeGeoJSON.geometry.coordinates[0][0][0]" != '')
               #set ($allPoints = $shapeGeoJSON.geometry.coordinates[0])
             #else
-              #set ($allPoints = $shapeGeoJSON.geometry.coordinates)
+              #set ($allPoints = [$shapeGeoJSON.geometry.coordinates])
             #end
           #end
           #foreach ($coordinate in $allPoints)
             #set ($discard = $collectionstool.reverse($coordinate))
           #end
-          #set ($allPoints = $jsontool.serialize($allPoints))
-          (% class="goto-loc goto-loc-points" data-location='{"points": ${allPoints} }' title="$services.localization.render('intmap.search.gotoLoc')" %)(((
-            &lt;i class="fa fa-map-marker"&gt;&lt;/i&gt;
-          )))
+          #if ($allPoints.size() &gt; 0)
+            #set ($allPoints = $jsontool.serialize($allPoints))
+            (% class="goto-loc goto-loc-points" data-location='{"points": ${allPoints} }' title="$services.localization.render('intmap.search.gotoLoc')" %)(((
+              &lt;i class="fa fa-map-marker"&gt;&lt;/i&gt;
+            )))
+          #end
+        #elseif ($item.get('type') == 'indoor')
+          ## No go to location icon
         #end
       )))
       #end

@@ -52,6 +52,23 @@
     <defaultWeb/>
     <nameField/>
     <validationScript/>
+    <content>
+      <contenttype/>
+      <customDisplay>{{include reference='AppWithinMinutes.Content'/}}</customDisplay>
+      <disabled>0</disabled>
+      <editor>Wysiwyg</editor>
+      <hint>Content that will appear in the shape's popup</hint>
+      <name>content</name>
+      <number>3</number>
+      <picker>0</picker>
+      <prettyName>Content</prettyName>
+      <rows>5</rows>
+      <size>40</size>
+      <unmodifiable>0</unmodifiable>
+      <validationMessage/>
+      <validationRegExp/>
+      <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
+    </content>
     <includePopup>
       <customDisplay/>
       <defaultValue/>
@@ -81,23 +98,6 @@
       <validationRegExp/>
       <classType>com.xpn.xwiki.objects.classes.NumberClass</classType>
     </index>
-    <popupContent>
-      <contenttype/>
-      <customDisplay>{{include reference='AppWithinMinutes.Content'/}}</customDisplay>
-      <disabled>0</disabled>
-      <editor>Wysiwyg</editor>
-      <hint>Content that will appear in the shape's popup</hint>
-      <name>popupContent</name>
-      <number>3</number>
-      <picker>0</picker>
-      <prettyName>Popup Content</prettyName>
-      <rows>5</rows>
-      <size>40</size>
-      <unmodifiable>0</unmodifiable>
-      <validationMessage/>
-      <validationRegExp/>
-      <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
-    </popupContent>
     <shapeGeoJSON>
       <contenttype/>
       <customDisplay/>
@@ -115,23 +115,23 @@
       <validationRegExp/>
       <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
     </shapeGeoJSON>
-    <styles>
+    <style>
       <contenttype/>
       <customDisplay/>
       <disabled>0</disabled>
       <editor>Text</editor>
       <hint>Options for styling shapes</hint>
-      <name>styles</name>
+      <name>style</name>
       <number>5</number>
       <picker>0</picker>
-      <prettyName>Styles</prettyName>
+      <prettyName>Style</prettyName>
       <rows>5</rows>
       <size>40</size>
       <unmodifiable>0</unmodifiable>
       <validationMessage/>
       <validationRegExp/>
       <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
-    </styles>
+    </style>
   </class>
   <object>
     <name>Maps.Code.ShapeClass</name>

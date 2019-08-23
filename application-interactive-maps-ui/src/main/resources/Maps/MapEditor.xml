@@ -1,0 +1,396 @@
+<?xml version="1.1" encoding="UTF-8"?>
+
+<!--
+ * See the NOTICE file distributed with this work for additional
+ * information regarding copyright ownership.
+ *
+ * This is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation; either version 2.1 of
+ * the License, or (at your option) any later version.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this software; if not, write to the Free
+ * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+-->
+
+<xwikidoc version="1.3" reference="Maps.MapEditor" locale="">
+  <web>Maps</web>
+  <name>MapEditor</name>
+  <language/>
+  <defaultLanguage/>
+  <translation>0</translation>
+  <creator>xwiki:XWiki.Admin</creator>
+  <parent>WebHome</parent>
+  <author>xwiki:XWiki.Admin</author>
+  <contentAuthor>xwiki:XWiki.Admin</contentAuthor>
+  <version>1.1</version>
+  <title>Map Editor</title>
+  <comment/>
+  <minorEdit>false</minorEdit>
+  <syntaxId>xwiki/2.1</syntaxId>
+  <hidden>false</hidden>
+  <content>{{include reference="Maps.Code.CommonMacros" /}}
+
+{{velocity}}
+#if ("$!request.action" == "createItems")
+  #set ($itemsSpace = $request.mapItemsSpace)
+  #set ($allMapItems = $request.mapItemsGeoJSON)
+  #set ($allMapItems = $allMapItems.replaceAll("'", "&amp;apos;"))
+  #set ($allMapItems = $jsontool.fromString($allMapItems))
+  ## Start processing each map item separately
+  #set ($pointCount = 0)
+  #set ($shapeCount = 0)
+  #if ($allMapItems.features.size() &gt; 0)
+    == Pages created ==
+  #end
+  #foreach ($mapItem in $allMapItems.features)
+    ## Checking shape because circle's type is also "Point"
+    #set ($isShape = true)
+    #set ($title = "$!mapItem.properties.title")
+    #if ("$!mapItem.geometry.type" == 'Point')
+      #if ("$!mapItem.properties.radius" == '')
+        #set ($isShape = false)
+        ## Its a point
+        #if ($title == '')
+          #set ($title = 'Point-' + $pointCount)
+          #set ($pointCount = $pointCount + 1)
+        #end
+        #set ($pointDoc = $xwiki.getDocument("${itemsSpace}.${title}"))
+        #set ($discard = $pointDoc.setTitle($title))
+        #set ($discard = $pointDoc.setContent($mapItem.properties.content))
+        #set ($pointObj = $pointDoc.newObject('Maps.Code.PointClass'))
+        #set ($discard = $pointObj.set('latitude', $mapItem.geometry.coordinates[1]))
+        #set ($discard = $pointObj.set('longitude', $mapItem.geometry.coordinates[0]))
+        #set ($includePopup = $mapItem.properties.addPopup)
+        #if ($includePopup)
+          #set ($discard = $pointObj.set('includePopup', 1))
+        #else
+          #set ($discard = $pointObj.set('includePopup', 0))
+        #end
+        #set ($discard = $pointObj.set('options', $jsontool.serialize($mapItem.properties.style)))
+        #set ($discard = $pointDoc.save())
+        * [[$pointDoc.fullName]]
+      #end
+    #end
+    ## Check if its a shape
+    #if ($isShape)
+      #if ($title == '')
+        #set ($title = 'Shape-' + $shapeCount)
+        #set ($shapeCount = $shapeCount + 1)
+      #end
+      #set ($shapeDoc = $xwiki.getDocument("${itemsSpace}.${title}"))
+      #set ($discard = $shapeDoc.setTitle($title))
+      #set ($discard = $shapeDoc.setContent($mapItem.properties.content))
+      #set ($shapeObj = $shapeDoc.newObject('Maps.Code.ShapeClass'))
+      #set ($includePopup = $mapItem.properties.addPopup)
+      $includePopup
+      #if ($includePopup)
+        #set ($discard = $shapeObj.set('includePopup', 1))
+      #else
+        #set ($discard = $shapeObj.set('includePopup', 0))
+      #end
+      #set ($shapeGeoJSON = {"type": "FeatureCollection", "features": [$mapItem]})
+      #set ($discard = $shapeObj.set('shapeGeoJSON', $jsontool.serialize($shapeGeoJSON)))
+      #set ($discard = $shapeObj.set('style', $jsontool.serialize($mapItem.properties.style)))
+      #set ($discard = $shapeDoc.save())
+      * [[$shapeDoc.fullName]]
+    #end
+  #end
+  #if ($allMapItems.features.size() &gt; 0)
+   ----
+  #end
+#end
+#set ($discard = $xwiki.ssx.use('Maps.Code.LeafletUtils'))
+#set ($discard = $xwiki.jsx.use('Maps.Code.LeafletUtils'))
+#set ($discard = $xwiki.jsx.use('Maps.MapEditor'))
+{{html wiki="true" clean="false"}}
+(% class="row" %)(((
+  (% class="col-sm-12" %)(((
+    ## Preview of the map
+    &lt;p class="xform"&gt;&lt;span class="xHint"&gt;$services.localization.render('intmap.mapEditor.hint')&lt;/span&gt;&lt;/p&gt;
+    (% class="map-wrapper" %)(((
+      &lt;div class="map-preview map-editor-preview" id="map-${util.generateRandomString(5)}" style="width: 100%; height: 450px;"&gt;&lt;/div&gt;
+      (% class="map-search-filter" %)(((
+        #displayLocationSearch()
+      )))
+      (% id="map-search-close" %)(((
+      &lt;i class="fa fa-arrow-left"&gt;&lt;/i&gt;
+      )))
+      (% id="map-item-properties" class="xform" %)(((
+        &lt;dl&gt;
+          &lt;dt&gt;
+            &lt;label for="item-p-title"&gt;$services.localization.render('intmap.mapEditor.itemPropTitle')&lt;/label&gt;
+            &lt;span class="xHint"&gt;$services.localization.render('intmap.mapEditor.itemPropTitleHint')&lt;/span&gt;
+          &lt;/dt&gt;
+          &lt;dd&gt;&lt;input type="text" id="item-p-title" /&gt;&lt;/dd&gt;
+          &lt;dt&gt;
+            &lt;label for="item-p-content"&gt;$services.localization.render('intmap.mapEditor.itemPropContent')&lt;/label&gt;
+            &lt;span class="xHint"&gt;$services.localization.render('intmap.mapEditor.itemPropContentHint')&lt;/span&gt;
+          &lt;/dt&gt;
+          &lt;dd&gt;&lt;textarea id="item-p-content"&gt;&lt;/textarea&gt;&lt;/dd&gt;
+          &lt;dt&gt;
+            &lt;input type="checkbox" id="item-p-addPopup" /&gt;
+            &lt;label for="item-p-addPopup"&gt;Add Popup&lt;/label&gt;
+          &lt;/dt&gt;
+          &lt;dt&gt;
+            &lt;label for="item-p-style"&gt;$services.localization.render('intmap.mapEditor.itemPropStyle')&lt;/label&gt;
+            &lt;span class="xHint"&gt;$services.localization.render('intmap.mapEditor.itemPropStyleHint')&lt;/span&gt;
+          &lt;/dt&gt;
+          &lt;dd&gt;&lt;textarea id="item-p-style"&gt;&lt;/textarea&gt;&lt;/dd&gt;
+          &lt;button id="item-p-update" class="btn btn-primary" type="button"&gt;$services.localization.render('intmap.mapEditor.itemPropUpdate')&lt;/button&gt;
+          &lt;button id="item-p-delete" class="btn btn-danger" type="button"&gt;$services.localization.render('intmap.mapEditor.itemPropDelete')&lt;/button&gt;
+          &lt;button id="item-p-close" class="btn btn-secondary" type="button"&gt;$services.localization.render('intmap.mapEditor.itemPropClose')&lt;/button&gt;
+        &lt;/dl&gt;
+      )))
+    )))
+    ----
+  )))
+  (% class="col-sm-12" %)(((
+    &lt;form class="xform" action="" method="POST"&gt;
+      &lt;input type="hidden" id="mapItemsGeoJSON" name="mapItemsGeoJSON" /&gt;
+      &lt;dl&gt;
+        &lt;dt&gt;
+          &lt;label for="mapItemsSpace"&gt;$services.localization.render('intmap.mapEditor.mapItemsSpace')&lt;/label&gt;
+          &lt;span class="xHint"&gt;$services.localization.render('intmap.mapEditor.mapItemsSpaceHint')&lt;/span&gt;
+        &lt;/dt&gt;
+        &lt;dd&gt;
+          &lt;input type="text" id="mapItemsSpace" name="mapItemsSpace" /&gt;
+        &lt;/dd&gt;
+      &lt;/dl&gt;
+      &lt;button class="btn btn-primary" name="action" value="createItems"&gt;$services.localization.render('intmap.mapEditor.createItems')&lt;/button&gt;
+    &lt;/form&gt;
+  )))
+)))
+{{/html}}
+{{/velocity}}</content>
+  <object>
+    <name>Maps.MapEditor</name>
+    <number>0</number>
+    <className>XWiki.JavaScriptExtension</className>
+    <guid>32a65677-db9d-4f1d-b2b1-6ecb9e7ea74c</guid>
+    <class>
+      <name>XWiki.JavaScriptExtension</name>
+      <customClass/>
+      <customMapping/>
+      <defaultViewSheet/>
+      <defaultEditSheet/>
+      <defaultWeb/>
+      <nameField/>
+      <validationScript/>
+      <cache>
+        <cache>0</cache>
+        <defaultValue>long</defaultValue>
+        <disabled>0</disabled>
+        <displayType>select</displayType>
+        <multiSelect>0</multiSelect>
+        <name>cache</name>
+        <number>5</number>
+        <prettyName>Caching policy</prettyName>
+        <relationalStorage>0</relationalStorage>
+        <separator> </separator>
+        <separators>|, </separators>
+        <size>1</size>
+        <unmodifiable>0</unmodifiable>
+        <values>long|short|default|forbid</values>
+        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
+      </cache>
+      <code>
+        <contenttype>PureText</contenttype>
+        <disabled>0</disabled>
+        <editor>PureText</editor>
+        <name>code</name>
+        <number>2</number>
+        <prettyName>Code</prettyName>
+        <rows>20</rows>
+        <size>50</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
+      </code>
+      <name>
+        <disabled>0</disabled>
+        <name>name</name>
+        <number>1</number>
+        <prettyName>Name</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </name>
+      <parse>
+        <disabled>0</disabled>
+        <displayFormType>select</displayFormType>
+        <displayType>yesno</displayType>
+        <name>parse</name>
+        <number>4</number>
+        <prettyName>Parse content</prettyName>
+        <unmodifiable>0</unmodifiable>
+        <classType>com.xpn.xwiki.objects.classes.BooleanClass</classType>
+      </parse>
+      <use>
+        <cache>0</cache>
+        <disabled>0</disabled>
+        <displayType>select</displayType>
+        <multiSelect>0</multiSelect>
+        <name>use</name>
+        <number>3</number>
+        <prettyName>Use this extension</prettyName>
+        <relationalStorage>0</relationalStorage>
+        <separator> </separator>
+        <separators>|, </separators>
+        <size>1</size>
+        <unmodifiable>0</unmodifiable>
+        <values>currentPage|onDemand|always</values>
+        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
+      </use>
+    </class>
+    <property>
+      <cache>long</cache>
+    </property>
+    <property>
+      <code>// Make sure to include jsx Maps.Code.LeafletUtils before including this jsx
+require(['jquery', 'leaflet', 'leaflet-commons', 'leaflet-edit', 'leaflet-drag', 'bootstrap'], function ($, leaflet, leafletCommons) {
+  'use strict';
+  function init()
+  {
+    var selectedItem;
+    //Functions for map items
+    function createLayerProperties(layer)
+    {
+      layer.feature = layer.feature || {};
+      layer.feature.type = layer.feature.type || 'Feature';
+      layer.feature.properties = layer.feature.properties || {};
+      layer.feature.properties.title = layer.feature.properties.title || '';
+      layer.feature.properties.content = layer.feature.properties.content || '';
+      layer.feature.properties.addPopup = layer.feature.properties.addPopup || false;
+      layer.feature.properties.style = layer.feature.properties.style || {};
+      return layer;
+    }
+    function updateMapItemsJSON (mapItemsGeoJSON, allItemsJSON, allMapItems)
+    {
+      allItemsJSON = allMapItems.toGeoJSON();
+      mapItemsGeoJSON.val(JSON.stringify(allItemsJSON));
+    }
+    function processShapeLayer (layer, mapItemsGeoJSON, allItemsJSON, allMapItems)
+    {
+      layer = createLayerProperties(layer);
+      if (layer instanceof L.Circle) {
+        layer.feature.geometry = layer.feature.geometry || {};
+        layer.feature.geometry.type = 'Circle';
+        layer.feature.properties.radius = layer.getRadius();
+      }
+      allMapItems.addLayer(layer);
+      updateMapItemsJSON(mapItemsGeoJSON, allItemsJSON, allMapItems);
+      layer.on('click', function (e1) {
+        $('#map-item-properties').addClass('open');
+        selectedItem = layer;
+        $('#item-p-title').val(layer.feature.properties.title || '');
+        $('#item-p-content').val(layer.feature.properties.content || '');
+        $('#item-p-style').val(JSON.stringify(layer.feature.properties.style) || '{}');
+        $('#item-p-addPopup').prop('checked', layer.feature.properties.addPopup || false);
+      });
+      layer.on('move', function (e1) {
+        updateMapItemsJSON(mapItemsGeoJSON, allItemsJSON, allMapItems);
+      });
+    }
+
+    var map;
+
+    //Render the map
+    $$('.map-editor-preview').each(function (element) {
+      //Setting up the map
+      var mapId = $(element).attr('id').replace('map-', '');
+      var options = {
+        'id': mapId,
+        'addFullscreen': 1,
+        'includeCurrentLocation': 1,
+        'editable': true
+      };
+      map = leafletCommons.createEmptyMap(options);
+      map.on('click', function (e) {
+        if ($(".leaflet-popup-pane").html() == '') {
+          $('.map-search-filter').removeClass('open');
+        }
+      });
+      leafletCommons.addMapEditControls(map);
+
+      //Map editor place search
+      leafletCommons.setupLocationSearchMP('.map-search', map);
+
+      var mapItemsGeoJSON = $('#mapItemsGeoJSON');
+      var allMapItems = L.featureGroup();
+      var allItemsJSON;
+
+      if (mapItemsGeoJSON.val() === '') {
+        mapItemsGeoJSON.val('{"type":"FeatureCollection","features":[]}');
+      }
+
+      //Update shapes input when shape is drawn or changed
+      map.on('editable:drawing:commit editable:vertex:dragend', function (e) {
+        var drawnLayer = e.layer;
+        processShapeLayer(drawnLayer, mapItemsGeoJSON, allItemsJSON, allMapItems);
+      });
+
+      //Map item properties actions
+      $('#item-p-close').on('click', function () {
+        $('#map-item-properties').toggleClass('open');
+      });
+      $('#item-p-update').on('click', function () {
+        if (selectedItem !== undefined) {
+          allMapItems.removeLayer(selectedItem);
+          selectedItem.feature.properties.title = $('#item-p-title').val();
+          selectedItem.feature.properties.content = $('#item-p-content').val();
+          selectedItem.feature.properties.addPopup = $('#item-p-addPopup').prop('checked');
+          try {
+            var newStyle = JSON.parse($('#item-p-style').val());
+            selectedItem.feature.properties.style = newStyle;
+            if (selectedItem instanceof L.Marker) {
+              selectedItem.options = newStyle;
+              selectedItem.enableEdit();
+            } else {
+              selectedItem.setStyle(newStyle);
+            }
+          } catch (e) {
+            new XWiki.widgets.Notification('Shape style is invalid. ' + e, 'error');
+          }
+          allMapItems.addLayer(selectedItem);
+          updateMapItemsJSON(mapItemsGeoJSON, allItemsJSON, allMapItems);
+          $('#map-item-properties&gt;dl').append('&lt;span class="text-success"&gt;&lt;i class="fa fa-check"&gt;&lt;/i&gt;&lt;/span&gt;');
+          setTimeout(function () {
+            $('#map-item-properties').find('span.text-success').remove();
+          }, 2000);
+        }
+      });
+      $('#item-p-delete').on('click', function () {
+        if (selectedItem !== undefined) {
+          selectedItem.remove();
+          allMapItems.removeLayer(selectedItem);
+          updateMapItemsJSON(mapItemsGeoJSON, allItemsJSON, allMapItems);
+          $('#map-item-properties').toggleClass('open');
+        }
+      });
+    });
+
+  }
+
+  //Run the init() function when dom is loaded or updated
+  (XWiki &amp;&amp; XWiki.domIsLoaded &amp;&amp; init()) || document.observe("xwiki:dom:loaded", init);
+
+});</code>
+    </property>
+    <property>
+      <name>map-editor</name>
+    </property>
+    <property>
+      <parse>1</parse>
+    </property>
+    <property>
+      <use>onDemand</use>
+    </property>
+  </object>
+</xwikidoc>

@@ -70,15 +70,21 @@ intmap.pointEditor.updateLocation=Update Location
 
 ## ShapeEditor
 intmap.shapeEditor.hint=Use the tools given at the bottom left of the map to create shapes. Double click on a shape to delete it.
-intmap.shapeEditor.shapePropTitle=Title
-intmap.shapeEditor.shapePropTitleHint=Title for the popup
-intmap.shapeEditor.shapePropDescription=Description
-intmap.shapeEditor.shapePropDescriptionHint=Description for the popup
-intmap.shapeEditor.shapePropStyle=Style
-intmap.shapeEditor.shapePropStyleHint=Shape style as JSON
-intmap.shapeEditor.shapePropUpdate=Update properties
-intmap.shapeEditor.shapePropDelete=Delete
-intmap.shapeEditor.shapePropClose=Close</content>
+
+## MapEditor
+intmap.mapEditor.hint=Use the tools given at the bottom left of the map to create map items. Click on a map item to define its properties.
+intmap.mapEditor.mapItemsSpace=Map Items Space
+intmap.mapEditor.mapItemsSpaceHint=Space where map item objects will be created
+intmap.mapEditor.createItems=Create Items
+intmap.mapEditor.itemPropTitle=Title
+intmap.mapEditor.itemPropTitleHint=Title for the popup
+intmap.mapEditor.itemPropContent=Content
+intmap.mapEditor.itemPropContentHint=Content for the popup
+intmap.mapEditor.itemPropStyle=Style
+intmap.mapEditor.itemPropStyleHint=Style / options as JSON
+intmap.mapEditor.itemPropUpdate=Update
+intmap.mapEditor.itemPropDelete=Delete
+intmap.mapEditor.itemPropClose=Close</content>
   <object>
     <name>Maps.Code.Translations</name>
     <number>0</number>

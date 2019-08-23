@@ -260,6 +260,14 @@ define('leaflet-commons', ['jquery'], function ($) {
         map.invalidateSize(true);
         rootScope.updateURLWithMapState();
       });
+      //Close fullscreen if escape key is pressed
+      $(document).on('keyup', function (e) {
+        if (e.keyCode == 27) {
+          if ($('.map-wrapper').hasClass('fullscreen')) {
+            $('.leaflet-control-fullscreen').click();
+          }
+        }
+      });
     },
 
     //Universal function for adding controls
@@ -296,7 +304,6 @@ define('leaflet-commons', ['jquery'], function ($) {
     //Adding shape edit controls
     addShapeEditControls: function (map)
     {
-      var rootScope = this;
       //For editing circle
       this.addCustomControl(map, 'fa-circle', 'New circle', 'bottomleft',  function (e) {
         map.editTools.startCircle();
@@ -313,6 +320,11 @@ define('leaflet-commons', ['jquery'], function ($) {
       this.addCustomControl(map, 'fa-chevron-down', 'New polyline', 'bottomleft',  function (e) {
         map.editTools.startPolyline();
       });
+    },
+
+    //Add map edit controls (has point)
+    addMapEditControls: function (map) {
+      this.addShapeEditControls(map);
       //For editing marker
       this.addCustomControl(map, 'fa-map-marker', 'New marker', 'bottomleft', function (e) {
         map.editTools.startMarker();
@@ -622,6 +634,11 @@ define('leaflet-commons', ['jquery'], function ($) {
       $(parentClass + ' button[type=search]').click(function (e) {
         performSearch(e);
       });
+      //Close location search when close button is clicked
+      $('#map-search-close').on('click', function () {
+        $('.map-search-filter').removeClass('open');
+        rootScope.updateURLWithMapState();
+      });
     }
 
   }
@@ -641,7 +658,7 @@ define('leaflet-commons', ['jquery'], function ($) {
     <name>Maps.Code.LeafletUtils</name>
     <number>1</number>
     <className>XWiki.JavaScriptExtension</className>
-    <guid>be85f2cd-352e-43c2-a8f9-c7479e91a4ae</guid>
+    <guid>a80030f0-97dc-4d1e-92c8-0c8d90ee49cf</guid>
     <class>
       <name>XWiki.JavaScriptExtension</name>
       <customClass/>
@@ -723,276 +740,14 @@ define('leaflet-commons', ['jquery'], function ($) {
       <code>requirejs.config({
   paths: {
     'leaflet': ['$services.webjars.url("leaflet", "leaflet.js")'],
-    'leaflet-indoor': ['$xwiki.getAttachmentURL("Maps.Code.LeafletUtils", "leaflet-indoor.js")']
+    'leaflet-indoor': ['$xwiki.getAttachmentURL("Maps.Code.LeafletUtils", "leaflet-indoor.js")'],
+    'leaflet-edit': ['$services.webjars.url("github-com-Leaflet-Leaflet-Editable", "1.1.0/Leaflet.Editable.js")'],
+    'leaflet-drag': ['$services.webjars.url("leaflet.path.drag", "src/Path.Drag.js")']
   }
-});
-require(['jquery', 'leaflet', 'leaflet-commons', 'leaflet-indoor', 'bootstrap'], function ($, leaflet, leafletCommons) {
-  'use strict';
-  function init()
-  {
-
-    var map;
-
-    //Render the map
-    $$('.map-container').each(function (element) {
-      var options = JSON.parse(element.dataset.options);
-      options.addFullscreen = 1;
-      map = leafletCommons.createEmptyMap(options);
-      var mapData = JSON.parse(element.dataset.mapdata);
-      if (mapData.length === 0) {
-        leafletCommons.getLocationCoords(options.defaultLocation, function (location) {
-          map.setView(location);
-        });
-      }
-      var allLayers = L.featureGroup();
-      var dataLength = mapData.length - 1;
-      var i = 0;
-      map.on('click', function () {
-        if ($(".leaflet-popup-pane").html() == '') {
-          $('.map-search-filter').removeClass('open');
-          leafletCommons.updateURLWithMapState();
-        }
-      });
-      mapData.each(function (data) {
-        if (data.location != null &amp;&amp; data.type == 'point') {
-          //Set options for the point
-          var pointOptions;
-          try {
-            if (data.options !== '' &amp;&amp; data.options !== null) {
-              pointOptions = JSON.parse(data.options);
-            } else {
-              pointOptions = {};
-            }
-          } catch (e) {
-            pointOptions = {};
-          }
-          leafletCommons.getLocationCoords(data.location, function (location) {
-            leafletCommons.addMarker(data.markerIcon, location, pointOptions, function (marker) {
-              leafletCommons.processPopupAndAdd(data, marker, allLayers);
-            });
-            if (dataLength == i) {
-              allLayers.addTo(map);
-              map.fitBounds(allLayers.getBounds());
-            }
-            i++;
-          });
-        } else if (data.type == 'path') {
-          var points = JSON.parse(data.points);
-          var noOfPoints = points.length - 1;
-          var j = 0;
-          var allPoints = [];
-          points.forEach(function (point) {
-            var pointOptions;
-            try {
-              if (point.options !== '' &amp;&amp; point.options !== null) {
-                pointOptions = JSON.parse(point.options);
-              } else {
-                pointOptions = {};
-              }
-            } catch (e) {
-              pointOptions = {};
-            }
-            allPoints.push(point.location);
-            leafletCommons.getLocationCoords(point.location, function (pointLocation) {
-              leafletCommons.addMarker(point.markerIcon, pointLocation, pointOptions, function (pointMarker) {
-                //Putting point data in a single object
-                point.location = pointLocation;
-                point.marker = pointMarker;
-                leafletCommons.processPopupAndAdd(point, point.marker, allLayers);
-                if (noOfPoints == j) {
-                  var pathData = {
-                    points: allPoints,
-                    includePopup: data.includePopup
-                  };
-                  leafletCommons.generatePath(pathData, function (path) {
-                    path.addTo(map);
-                  });
-                  if (dataLength == i) {
-                    allLayers.addTo(map);
-                    map.fitBounds(allLayers.getBounds());
-                  }
-                  i++;
-                }
-                j++;
-              });
-            });
-          });
-        } else if (data.type === 'shape') {
-          var shapeGeoJSON;
-          var shapeStyle;
-          var shape;
-          try {
-            if (data.styles !== '' &amp;&amp; data.styles !== null) {
-              shapeStyle = JSON.parse(data.styles);
-            } else {
-              shapeStyle = {};
-            }
-            shapeGeoJSON = JSON.parse(data.shapeGeoJSON);
-            shape = L.geoJSON(shapeGeoJSON, {
-              style: shapeStyle,
-              pointToLayer: function (feature, latlng) {
-                if (feature.properties !== undefined &amp;&amp; Object.keys(feature.properties).length !== 0) {
-                  if (feature.properties.radius !== undefined) {
-                    return L.circle(latlng, {radius: feature.properties.radius});
-                  }
-                } else {
-                  return L.marker(latlng);
-                }
-              }
-            });
-          } catch (err) {
-            new XWiki.widgets.Notification('The shape properties are invalid. ' + err, 'error');
-          }
-          if (shape) {
-            leafletCommons.processPopupAndAdd(data, shape, allLayers);
-          }
-          if (dataLength == i) {
-            allLayers.addTo(map);
-            map.fitBounds(allLayers.getBounds());
-          }
-          i++;
-        } else if (data.type === 'indoor') {
-          var allLevelsJSON = {type: 'FeatureCollection', features: []};
-          //Processing each level separately
-          Object.keys(data.allIndoorData).forEach(function (level) {
-            var allLevelShapes = data.allIndoorData[level];
-            //Placing required data of each level into shape's geojson
-            allLevelShapes.map(function (shape) {
-              try {
-                shape.shapeGeoJSON = JSON.parse(shape.shapeGeoJSON);
-                shape.shapeGeoJSON.features.map(function (feature) {
-                  feature.properties.level = level;
-                  feature.properties.includePopup = shape.includePopup;
-                  feature.properties.title = shape.title ? shape.title : '';
-                  feature.properties.content = shape.content ? shape.content : '';
-                  feature.properties.style = shape.styles;
-                });
-                shape.shapeGeoJSON.features.each(function (feature) {
-                  allLevelsJSON.features.push(feature);
-                });
-              } catch (e) {
-                new XWiki.widgets.Notification('The shape properties invalid for ' + shape.title + err, 'error');
-              }
-            });
-          });
-          //Creating the indoor layer and processing the collected data to display on map
-          var indoorLayer = new L.Indoor(allLevelsJSON, {
-            style: function (feature) {
-              return JSON.parse(feature.properties.style);
-            },
-            pointToLayer: function (feature, latlng) {
-              if (feature.properties !== undefined &amp;&amp; Object.keys(feature.properties).length !== 0) {
-                if (feature.properties.radius !== undefined) {
-                  return L.circle(latlng, {radius: feature.properties.radius});
-                }
-              } else {
-                return L.marker(latlng);
-              }
-            },
-            onEachFeature: function (feature, layer) {
-              var popupData;
-              if (feature.properties.includePopup === 1) {
-                if (feature.properties.content.length &gt; 500) {
-                  popupData = '&lt;h2&gt;' + feature.properties.title + '&lt;/h2&gt;&lt;hr/&gt;' + '&lt;div style="height: 150px; overflow: auto;"&gt;' + feature.properties.content + '&lt;/div&gt;';
-                } else {
-                  popupData = '&lt;h2&gt;' + feature.properties.title + '&lt;/h2&gt;&lt;hr/&gt;' + '&lt;div&gt;' + feature.properties.content + '&lt;/div&gt;';
-                }
-                layer.bindPopup(popupData);
-              }
-            }
-          });
-          indoorLayer.setLevel("0");
-          allLayers.addLayer(indoorLayer);
-          var levelControl = new L.Control.Level({
-            level: "0",
-            levels: indoorLayer.getLevels(),
-            indoorLayer: indoorLayer
-          });
-          levelControl.addTo(map);
-          if (dataLength == i) {
-            allLayers.addTo(map);
-            map.fitBounds(allLayers.getBounds());
-          }
-          i++;
-        } else {
-          new XWiki.widgets.Notification('Error while adding items to the map. Make sure the query is correct.', 'error');
-        }
-      });
-    });
-
-    //Handle map item and location search
-    $('.map-search-form').submit(function (e) {
-      e.preventDefault();
-      var formVal = $(this).find('input[type=search]').val();
-      var searchType = $(this).find('input[name=search-type]:checked').val();
-      var viewURL = leafletCommons.updateURLWithMapState();
-      if (searchType == 'location') {
-        leafletCommons.getLocationCoords(formVal, function(location){
-          if (location &amp;&amp; map) {
-            map.setView(L.latLng(location), 14);
-          }
-        });
-      } else {
-        searchType = searchType !== undefined ? searchType : 'item';
-        viewURL = leafletCommons.replaceParameter(viewURL, 'text', formVal);
-        viewURL = leafletCommons.replaceParameter(viewURL, 'search_type', searchType);
-        $(document).trigger('xwiki:search:update', viewURL);
-      }
-    });
-
-    //Toggle refine your search and result items sections
-    $('.map-results-section').on('click', function () {
-      $(this).toggleClass('open');
-      $(this).next().toggleClass('open');
-      leafletCommons.updateURLWithMapState();
-    });
-
-    //Open/close dropdown for selecting search type location/item
-    $('#search-type-btn').on('click', function () {
-      $('.search-types').toggleClass('open');
-    });
-
-    //Go to location of the result item
-    $('.search-item-results .goto-loc-point').on('click', function () {
-      var loc = JSON.parse(this.dataset.location);
-      if (loc) {
-        leafletCommons.getLocationCoords(loc, function(location){
-          if (location &amp;&amp; map) {
-            map.setView(L.latLng(location), 14);
-          }
-        });
-      }
-    });
-
-    //Go to location of the path result item
-    $('.search-item-results .goto-loc-points').on('click', function () {
-      var loc = JSON.parse(this.dataset.location);
-      map.fitBounds(loc.points);
-    });
-
-    $(document).on('keyup', function (e) {
-      if (e.keyCode == 27) {
-        if ($('.map-wrapper').hasClass('fullscreen')) {
-          $('.leaflet-control-fullscreen').click();
-        }
-      }
-    });
-
-    $('#map-search-close').on('click', function () {
-      $('.map-search-filter').removeClass('open');
-      leafletCommons.updateURLWithMapState();
-    });
-
-  }
-
-  //Run the init() function when dom is loaded or updated
-  (XWiki &amp;&amp; XWiki.domIsLoaded &amp;&amp; init()) || document.observe("xwiki:dom:loaded", init);
-  (XWiki &amp;&amp; XWiki.domIsUpdated &amp;&amp; init()) || document.observe("xwiki:dom:updated", init);
-
 });</code>
     </property>
     <property>
-      <name>leaflet-main</name>
+      <name>leaflet-libraries</name>
     </property>
     <property>
       <parse>1</parse>
@@ -1540,7 +1295,7 @@ require(['jquery', 'leaflet', 'leaflet-commons', 'leaflet-indoor', 'bootstrap'],
 /*
  * Shapes
 */
-#shape-properties{
+#map-item-properties{
   position: absolute;
   left: 10px;
   top: 10px;
@@ -1559,7 +1314,7 @@ require(['jquery', 'leaflet', 'leaflet-commons', 'leaflet-indoor', 'bootstrap'],
   transition: all 0.2s;
   z-index: 992;
 }
-#shape-properties.open{
+#map-item-properties.open{
   transform: translateX(0) scale(1);
   opacity: 1;
   visibility: visible;
