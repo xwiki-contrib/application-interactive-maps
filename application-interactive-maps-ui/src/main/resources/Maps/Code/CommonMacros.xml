@@ -258,6 +258,8 @@
               #set ($discard = $location.add($itemDoc.getValue('longitude')))
               #set ($discard = $levelItemMap.put('location', $location))
               #set ($discard = $levelItemMap.put('options', $itemDoc.getValue('options')))
+              ## Check for custom marker icon
+              #checkMarkerIcon($itemDoc.getFullName() $levelItemMap)
               #set ($discard = $levelItemsArr.add($levelItemMap))
             #end
           #end

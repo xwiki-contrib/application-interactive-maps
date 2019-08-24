@@ -321,13 +321,19 @@ require(['jquery', 'leaflet', 'leaflet-commons', 'leaflet-indoor', 'bootstrap'],
             allLevelItems.map(function (item) {
               try {
                 if (item.type === 'point') {
-                  var point = L.marker(item.location, JSON.parse(item.options));
+                  if (item.options !== '' &amp;&amp; item.options !== null) {
+                    item.options = JSON.parse(item.options);
+                  } else {
+                    item.options = {};
+                  }
+                  var point = L.marker(item.location, item.options);
                   item.geoJSON = point.toGeoJSON();
                   item.geoJSON.properties.level = level;
                   item.geoJSON.properties.includePopup = item.includePopup;
                   item.geoJSON.properties.title = item.title ? item.title : '';
                   item.geoJSON.properties.content = item.content ? item.content : '';
                   item.geoJSON.properties.options = item.options;
+                  item.geoJSON.properties.markerIcon = item.markerIcon;
                   allLevelsJSON.features.push(item.geoJSON);
                 } else if (item.type === 'shape') {
                   item.shapeGeoJSON = JSON.parse(item.shapeGeoJSON);
@@ -361,7 +367,7 @@ require(['jquery', 'leaflet', 'leaflet-commons', 'leaflet-indoor', 'bootstrap'],
                 return L.circle(latlng, {radius: feature.properties.radius});
               } else {
                 if (feature.properties.options !== undefined) {
-                  return L.marker(latlng, JSON.parse(feature.properties.options));
+                  return L.marker(latlng, feature.properties.options);
                 } else {
                   return L.marker(latlng);
                 }
