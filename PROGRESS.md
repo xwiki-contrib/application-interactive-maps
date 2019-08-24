@@ -183,7 +183,7 @@
 - [x] Click anywhere on the map preview to select a location
 - [x] Create a point using Point Editor
 ## Day 59 (26 July 2019)
-- [x] Change PointClass to include an array of points rather than just source and destination
+- [x] Change PathClass to include an array of points rather than just source and destination
 - [x] Update code to support a path between a number of points
 ## Day 60-61 (27-28 July 2019)
 - [ ] Weekend
@@ -200,44 +200,44 @@
 - [x] Implement polygon, rectangle, circle and circle marker shape types
 ## Day 65 (1 August 2019)
 - [x] Full screen for map previews
-- [x] Setup shape editor
+- [x] Set up shape editor
 ## Day 66 (2 August 2019)
 - [x] Change structure of PointClass to include popup option
 - [x] Use GeoJSON for shapes
 - [x] Change ShapeClass to support GeoJSON
 - [x] Update map data importer for new PointClass structure
-- [x] Setup GeoJSON shapes to include as map items
+- [x] Set up GeoJSON shapes to be included as map items
 ## Day 67 (3 August 2019)
 - [x] Common function for setting up map search in map previews
 - [x] Edit points directly on the page with a map preview based PointSheet
 - [x] Point Editor as PointSheet for editing and creating points
 - [x] Code for PointSheet
-- [x] Create PointTemplate and PointProvider
+- [x] Create PointTemplate and PointTemplateProvider
 ## Day 68 (4 August 2019)
 - [ ] Break
 ## Day 69 (5 August 2019)
 - [x] Shape Editor as ShapeSheet
 - [x] Edit shapes directly with a preview
 - [x] Map controls as tools for creating shapes using Leaflet.Editable
-- [x] Creating shapes and saving as GeoJSON
-- [x] Move to GeoJSON shape in map results
+- [x] Support for creating shapes and saving them as GeoJSON
+- [x] Go to GeoJSON shape in map results
 - [x] Code optimization
 ## Day 70 (6 August 2019)
 - [ ] Break
 ## Day 71 (7 August 2019)
-- [x] Editing old shapes with ShapeSheet
+- [x] Support for editing shapes with ShapeSheet
 - [x] Code optimization
 ## Day 72 (8 August 2019)
 - [ ] Break
 ## Day 73 (9 August 2019)
-- [x] Support for custom specified for Points
-- [x] Latitude and longitude of Points from custom classes
+- [x] Option to specify custom classes for Points
+- [x] Latitude and longitude of points from custom classes
 - [x] Save shape's GeoJSON after vertex changed (not just after commiting a shape)
 ## Day 74 (10 August 2019)
 - [x] Process custom point class to create a map item
-- [x] Take latitude and longitude of custom class using property names specified
+- [x] Take latitude and longitude of custom classes using property names specified
 ## Day 75 (11 August 2019)
-- [x] Create ShapeProvider for interactively creating shapes
+- [x] Create ShapeTemplateProvider
 - [x] Fix velocity error occuring when trying to load shape object with no data
 - [x] Set empty GeoJSON for ShapeSheet if there is no shape data
 ## Day 76 (12 August 2019)
