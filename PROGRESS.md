@@ -267,6 +267,41 @@
 - [x] Add style property to ShapeClass for applying styles to shapes using JSON
 ## Day 81 (17 August 2019)
 - [ ] Break
+## Day 82 (18 August 2019)
+- [x] Editable options for points
+- [x] Update tests to support options for points
+- [x] Update style property of shapes
+## Day 83 (19 August 2019)
+- [x] Add circle support in GeoJSON so that circle shapes can be processed
+- [x] Set up webjars for Leaflet.Editable and Path.Drag.js
+- [x] Fix error in parsing LeafletUtils jsx
+## Day 84 (20 August 2019)
+- [x] PointEditor: Place the marker at the searched location
+- [x] Fix errors and warnings in console
+## Day 85 (21 August 2019)
+- [x] Add indoor structures support
+- [x] Code for IndoorSheet
+- [x] Handle indoor structure as a map item
+## Day 86 (22 August 2019)
+- [x] Add leaflet-indoor.js as an attachment to LeafletUtils
+- [x] Fork and edit leaflet-indoor to support leaflet 1.5.1
+- [x] Add necessary options to leaflet-indoor.js so that it works with the application
+- [x] Change LeafletUtils code so it works well with the updated leaflet-indoor
+- [x] Deploy forked leaflet-indoor on webjars.org
+## Day 87 (23 August 2019)
+- [x] Move map rendering specific code from LeafletUtils to MapSheet
+- [x] Create a new jsx for leaflet libraries so they can be parsed in isolation
+- [x] Handle inconsistencies in the name of properties gotten from solr response (get full key name from a short key name to handle suffixes)
+- [x] Fix error occuring because of apostrophe in map data
+- [x] Fix errors in go to location of some map items
+- [x] Full code for map editor
+- [x] Easy creation of Points and Shapes using the map editor
+## Day 88 (24 August 2019)
+- [x] Create template and template provider for indoor structures
+- [x] Add support for point in indoor structure items
+- [x] Move MapDataImporter as a terminal page
+- [x] Hide all code pages
+- [x] Remove leaflet-indoor.js from LeafletUtils' attachments and add dependency for leaflet-indoor webjar
 ---
 # Marks the progress of the Interactive Maps Application (Old)
 ## Day 1 (18 May 2019)
