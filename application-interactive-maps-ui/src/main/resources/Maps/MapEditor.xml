@@ -90,7 +90,6 @@
       #set ($discard = $shapeDoc.setContent($mapItem.properties.content))
       #set ($shapeObj = $shapeDoc.newObject('Maps.Code.ShapeClass'))
       #set ($includePopup = $mapItem.properties.addPopup)
-      $includePopup
       #if ($includePopup)
         #set ($discard = $shapeObj.set('includePopup', 1))
       #else

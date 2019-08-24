@@ -67,6 +67,11 @@
       <artifactId>path.drag.js</artifactId>
       <version>0.0.6</version>
     </dependency>
+    <dependency>
+        <groupId>org.webjars.bowergithub.9inpachi</groupId>
+        <artifactId>leaflet-indoor</artifactId>
+        <version>1.0.0</version>
+    </dependency>
   </dependencies>
   <build>
     <!-- Needed to add support for the XAR packaging -->

@@ -228,27 +228,29 @@
       #set ($indoorLevelsKey = "#getFullKey(${response} 'property.Maps.Code.IndoorClass.levels')")
       #set ($rawIndoorData = $response.get($indoorLevelsKey.trim())[0])
       #set ($allLevels = $rawIndoorData.split('\n'))
-      #set ($levelsData = {})
-      ## Process each level data of indoor
-      #foreach ($level in $allLevels)
-        #set ($levelShapesArr = [])
-        #set ($singleLevelData = $level.trim().split(':'))
-        #set ($levelShapes = $singleLevelData[1].split(','))
-        #foreach ($levelShape in $levelShapes)
-          #set ($levelShapeMap = {})
-          #set ($shapeDoc = $xwiki.getDocument($levelShape.trim()))
-          #set ($discard = $levelShapeMap.put('title', $shapeDoc.getTitle()))
-          #set ($popupContent = "#getHtml(${shapeDoc.getContent()})")
-          #set ($discard = $levelShapeMap.put('content', $popupContent))
-          #set ($discard = $levelShapeMap.put('includePopup', $shapeDoc.getValue('includePopup')))
-          #set ($discard = $levelShapeMap.put('shapeGeoJSON', $shapeDoc.getValue('shapeGeoJSON')))
-          #set ($discard = $levelShapeMap.put('style', $shapeDoc.getValue('style')))
-          #set ($discard = $levelShapesArr.add($levelShapeMap))
+      #if ("$!rawIndoorData" != '')
+        #set ($levelsData = {})
+        ## Process each level data of indoor
+        #foreach ($level in $allLevels)
+          #set ($levelShapesArr = [])
+          #set ($singleLevelData = $level.trim().split(':'))
+          #set ($levelShapes = $singleLevelData[1].split(','))
+          #foreach ($levelShape in $levelShapes)
+            #set ($levelShapeMap = {})
+            #set ($shapeDoc = $xwiki.getDocument($levelShape.trim()))
+            #set ($discard = $levelShapeMap.put('title', $shapeDoc.getTitle()))
+            #set ($popupContent = "#getHtml(${shapeDoc.getContent()})")
+            #set ($discard = $levelShapeMap.put('content', $popupContent))
+            #set ($discard = $levelShapeMap.put('includePopup', $shapeDoc.getValue('includePopup')))
+            #set ($discard = $levelShapeMap.put('shapeGeoJSON', $shapeDoc.getValue('shapeGeoJSON')))
+            #set ($discard = $levelShapeMap.put('style', $shapeDoc.getValue('style')))
+            #set ($discard = $levelShapesArr.add($levelShapeMap))
+          #end
+          #set ($discard = $levelsData.put($singleLevelData[0].trim(), $levelShapesArr))
         #end
-        #set ($discard = $levelsData.put($singleLevelData[0].trim(), $levelShapesArr))
+        #set ($discard = $responseData.put('allIndoorData', $levelsData))
+        #set ($discard = $mapDataArr.add($responseData))
       #end
-      #set ($discard = $responseData.put('allIndoorData', $levelsData))
-      #set ($discard = $mapDataArr.add($responseData))
     #end
     ## Indoor END
   #end

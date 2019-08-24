@@ -20,34 +20,57 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
 -->
 
-<xwikidoc version="1.3" reference="Maps.Code.PathSheet" locale="">
+<xwikidoc version="1.3" reference="Maps.Code.IndoorTemplate" locale="">
   <web>Maps.Code</web>
-  <name>PathSheet</name>
+  <name>IndoorTemplate</name>
   <language/>
   <defaultLanguage/>
   <translation>0</translation>
   <creator>xwiki:XWiki.Admin</creator>
-  <parent>Maps.Code.PathClass</parent>
+  <parent>Maps.Code.IndoorClass</parent>
   <author>xwiki:XWiki.Admin</author>
   <contentAuthor>xwiki:XWiki.Admin</contentAuthor>
   <version>1.1</version>
-  <title>#if($doc.documentReference.name == 'PathSheet')PathSheet#{else}$services.display.title($doc, {'displayerHint': 'default', 'outputSyntaxId': 'plain/1.0'})#end</title>
+  <title>IndoorTemplate</title>
   <comment/>
   <minorEdit>false</minorEdit>
   <syntaxId>xwiki/2.1</syntaxId>
   <hidden>true</hidden>
-  <content>{{include reference="Maps.Code.CommonMacros" /}}
-
-{{velocity}}
-{{html wiki="true" clean="false"}}
-  #set($class = $doc.getObject('Maps.Code.PathClass').xWikiClass)
-  (% class="xform" %)(((
-    &lt;dl&gt;
-      #foreach($prop in $class.properties)
-        #displayClassProperty($prop)
-      #end
-    &lt;/dl&gt;
-  )))
-{{/html}}
-{{/velocity}}</content>
+  <content/>
+  <object>
+    <name>Maps.Code.IndoorTemplate</name>
+    <number>0</number>
+    <className>Maps.Code.IndoorClass</className>
+    <guid>3b10d162-6df0-4f42-a89c-1116b687d914</guid>
+    <class>
+      <name>Maps.Code.IndoorClass</name>
+      <customClass/>
+      <customMapping/>
+      <defaultViewSheet/>
+      <defaultEditSheet/>
+      <defaultWeb/>
+      <nameField/>
+      <validationScript/>
+      <levels>
+        <contenttype/>
+        <customDisplay/>
+        <disabled>0</disabled>
+        <editor>Text</editor>
+        <hint>Levels as integers and shapes to be associated with each level</hint>
+        <name>levels</name>
+        <number>2</number>
+        <picker>1</picker>
+        <prettyName>Levels and Shapes</prettyName>
+        <rows>5</rows>
+        <size>40</size>
+        <unmodifiable>0</unmodifiable>
+        <validationMessage/>
+        <validationRegExp/>
+        <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
+      </levels>
+    </class>
+    <property>
+      <levels/>
+    </property>
+  </object>
 </xwikidoc>

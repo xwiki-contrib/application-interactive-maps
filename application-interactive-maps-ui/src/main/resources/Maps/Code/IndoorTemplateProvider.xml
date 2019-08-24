@@ -20,9 +20,9 @@
  * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
 -->
 
-<xwikidoc version="1.3" reference="Maps.Code.PathTemplateProvider" locale="">
+<xwikidoc version="1.3" reference="Maps.Code.IndoorTemplateProvider" locale="">
   <web>Maps.Code</web>
-  <name>PathTemplateProvider</name>
+  <name>IndoorTemplateProvider</name>
   <language/>
   <defaultLanguage/>
   <translation>0</translation>
@@ -31,17 +31,17 @@
   <author>xwiki:XWiki.Admin</author>
   <contentAuthor>xwiki:XWiki.Admin</contentAuthor>
   <version>1.1</version>
-  <title>PathTemplateProvider</title>
+  <title>IndoorTemplateProvider</title>
   <comment/>
   <minorEdit>false</minorEdit>
   <syntaxId>xwiki/2.0</syntaxId>
   <hidden>true</hidden>
   <content/>
   <object>
-    <name>Maps.Code.PathTemplateProvider</name>
+    <name>Maps.Code.IndoorTemplateProvider</name>
     <number>0</number>
     <className>XWiki.TemplateProviderClass</className>
-    <guid>89959359-c130-4617-ab6c-39d1e187741e</guid>
+    <guid>1a569b23-8b82-477a-99c0-4e2845047561</guid>
     <class>
       <name>XWiki.TemplateProviderClass</name>
       <customClass/>
@@ -247,19 +247,19 @@
       <creationRestrictionsAreSuggestions>0</creationRestrictionsAreSuggestions>
     </property>
     <property>
-      <description>Geographical route through points</description>
+      <description>Geometrically specify a multilevel structure</description>
     </property>
     <property>
-      <icon>check</icon>
+      <icon>align-justify</icon>
     </property>
     <property>
-      <name>Map Path</name>
+      <name>Map Indoor Structure</name>
     </property>
     <property>
       <spaces/>
     </property>
     <property>
-      <template>Maps.Code.PathTemplate</template>
+      <template>Maps.Code.IndoorTemplate</template>
     </property>
     <property>
       <terminal>1</terminal>
