@@ -68,9 +68,9 @@
       <version>0.0.6</version>
     </dependency>
     <dependency>
-        <groupId>org.webjars.bowergithub.9inpachi</groupId>
-        <artifactId>leaflet-indoor</artifactId>
-        <version>1.0.0</version>
+      <groupId>org.webjars.bowergithub.9inpachi</groupId>
+      <artifactId>leaflet-indoor</artifactId>
+      <version>1.0.0</version>
     </dependency>
   </dependencies>
   <build>

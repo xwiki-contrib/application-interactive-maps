@@ -294,10 +294,8 @@ require(['jquery', 'leaflet', 'leaflet-commons', 'leaflet-indoor', 'bootstrap'],
             shape = L.geoJSON(shapeGeoJSON, {
               style: shapeStyle,
               pointToLayer: function (feature, latlng) {
-                if (feature.properties !== undefined &amp;&amp; Object.keys(feature.properties).length !== 0) {
-                  if (feature.properties.radius !== undefined) {
-                    return L.circle(latlng, {radius: feature.properties.radius});
-                  }
+                if (feature.properties !== undefined &amp;&amp; Object.keys(feature.properties).length !== 0 &amp;&amp; feature.properties.radius !== undefined) {
+                  return L.circle(latlng, {radius: feature.properties.radius});
                 } else {
                   return L.marker(latlng);
                 }
@@ -318,38 +316,55 @@ require(['jquery', 'leaflet', 'leaflet-commons', 'leaflet-indoor', 'bootstrap'],
           var allLevelsJSON = {type: 'FeatureCollection', features: []};
           //Processing each level separately
           Object.keys(data.allIndoorData).forEach(function (level) {
-            var allLevelShapes = data.allIndoorData[level];
+            var allLevelItems = data.allIndoorData[level];
             //Placing required data of each level into shape's geojson
-            allLevelShapes.map(function (shape) {
+            allLevelItems.map(function (item) {
               try {
-                shape.shapeGeoJSON = JSON.parse(shape.shapeGeoJSON);
-                shape.shapeGeoJSON.features.map(function (feature) {
-                  feature.properties.level = level;
-                  feature.properties.includePopup = shape.includePopup;
-                  feature.properties.title = shape.title ? shape.title : '';
-                  feature.properties.content = shape.content ? shape.content : '';
-                  feature.properties.style = shape.style;
-                });
-                shape.shapeGeoJSON.features.each(function (feature) {
-                  allLevelsJSON.features.push(feature);
-                });
+                if (item.type === 'point') {
+                  var point = L.marker(item.location, JSON.parse(item.options));
+                  item.geoJSON = point.toGeoJSON();
+                  item.geoJSON.properties.level = level;
+                  item.geoJSON.properties.includePopup = item.includePopup;
+                  item.geoJSON.properties.title = item.title ? item.title : '';
+                  item.geoJSON.properties.content = item.content ? item.content : '';
+                  item.geoJSON.properties.options = item.options;
+                  allLevelsJSON.features.push(item.geoJSON);
+                } else if (item.type === 'shape') {
+                  item.shapeGeoJSON = JSON.parse(item.shapeGeoJSON);
+                  item.shapeGeoJSON.features.map(function (feature) {
+                    feature.properties.level = level;
+                    feature.properties.includePopup = item.includePopup;
+                    feature.properties.title = item.title ? item.title : '';
+                    feature.properties.content = item.content ? item.content : '';
+                    feature.properties.style = item.style;
+                  });
+                  item.shapeGeoJSON.features.each(function (feature) {
+                    allLevelsJSON.features.push(feature);
+                  });
+                }
               } catch (e) {
-                new XWiki.widgets.Notification('The shape properties invalid for ' + shape.title + err, 'error');
+                new XWiki.widgets.Notification('Error processing indoor structure item: ' + item.title, 'error');
               }
             });
           });
           //Creating the indoor layer and processing the collected data to display on map
           var indoorLayer = new L.Indoor(allLevelsJSON, {
             style: function (feature) {
-              return JSON.parse(feature.properties.style);
+              if (feature.properties.style) {
+                return JSON.parse(feature.properties.style);
+              } else {
+                return {};
+              }
             },
             pointToLayer: function (feature, latlng) {
-              if (feature.properties !== undefined &amp;&amp; Object.keys(feature.properties).length !== 0) {
-                if (feature.properties.radius !== undefined) {
-                  return L.circle(latlng, {radius: feature.properties.radius});
-                }
+              if (feature.properties !== undefined &amp;&amp; Object.keys(feature.properties).length !== 0 &amp;&amp; feature.properties.radius !== undefined) {
+                return L.circle(latlng, {radius: feature.properties.radius});
               } else {
-                return L.marker(latlng);
+                if (feature.properties.options !== undefined) {
+                  return L.marker(latlng, JSON.parse(feature.properties.options));
+                } else {
+                  return L.marker(latlng);
+                }
               }
             },
             onEachFeature: function (feature, layer) {
