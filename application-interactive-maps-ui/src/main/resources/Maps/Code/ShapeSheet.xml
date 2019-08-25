@@ -76,13 +76,27 @@
     )))
     (% class="col-sm-12" %)(((
       {{html wiki='false'}}
-        &lt;input type="hidden" id="shapeGeoJSON" name="Maps.Code.ShapeClass_0_shapeGeoJSON" value='$shapeGeoJSON' /&gt;
+        &lt;input type="hidden" id="shapeGeoJSON" value='$shapeGeoJSON' /&gt;
         &lt;input type="hidden" id="shapeStyle" value='$shapeStyle' /&gt;
       {{/html}}
       (% class="xform" %)(((
         &lt;dl&gt;
           #foreach($prop in $class.properties)
-            #if ($prop.name != 'shapeGeoJSON')
+            #if ($prop.name == 'shapeGeoJSON')
+              &lt;dt&gt;
+                &lt;label&gt;$prop.prettyName&lt;/label&gt;
+                &lt;span class="xHint"&gt;$prop.hint&lt;/span&gt;
+              &lt;/dt&gt;
+              &lt;dd&gt;
+                #if ($xcontext.action == 'edit')
+                  $doc.display($prop.name)
+                #else
+                  {{html wiki="false"}}
+                    &lt;textarea rows="4" readonly&gt;$doc.getValue($prop.name)&lt;/textarea&gt;
+                  {{/html}}
+                #end
+              &lt;/dd&gt;
+            #else
               #displayClassProperty($prop)
             #end
           #end
@@ -250,7 +264,7 @@ require(['jquery', 'leaflet', 'leaflet-commons', 'leaflet-edit', 'leaflet-drag',
       //Shape editor place search
       leafletCommons.setupLocationSearchMP('.map-search', map);
 
-      var shapeGeoJSON = $('#shapeGeoJSON');
+      var shapeGeoJSON = $('#Maps\\.Code\\.ShapeClass_0_shapeGeoJSON');
       var allShapes = L.featureGroup();
       var allShapesJSON;
 
@@ -274,9 +288,11 @@ require(['jquery', 'leaflet', 'leaflet-commons', 'leaflet-edit', 'leaflet-drag',
               processShapeLayer(layer, shapeGeoJSON, allShapesJSON, allShapes);
             }
           });
-          map.fitBounds(currentShapes.getBounds());
+          if (currentShapes &amp;&amp; currentShapes._layers &amp;&amp; Object.keys(currentShapes._layers).length &gt; 0) {
+            map.fitBounds(currentShapes.getBounds());
+          }
         } catch (e) {
-          new XWiki.widgets.Notification('Error processing GeoJSON.', 'error');
+          new XWiki.widgets.Notification('Error processing GeoJSON: ' + e, 'error');
         }
       } else {
         shapeGeoJSON.val('{"type":"FeatureCollection","features":[]}');
@@ -297,31 +313,35 @@ require(['jquery', 'leaflet', 'leaflet-commons', 'leaflet-edit', 'leaflet-drag',
         'includeCurrentLocation': 1
       };
       var viewMap = leafletCommons.createEmptyMap(options);
-      try {
-        var shapeGeoJSON = $('#shapeGeoJSON');
-        var currentGeoJSON = JSON.parse(shapeGeoJSON.val());
-        var currentShapes = L.geoJSON(currentGeoJSON, {
-          style: shapeStyle,
-          pointToLayer: function (feature, latlng) {
-            if (feature.properties !== undefined &amp;&amp; Object.keys(feature.properties).length !== 0) {
-              if (feature.properties.radius !== undefined) {
-                return L.circle(latlng, {radius: feature.properties.radius});
+      var shapeGeoJSON = $('#shapeGeoJSON');
+      if (shapeGeoJSON.val() !== '') {
+        try {
+          var currentGeoJSON = JSON.parse(shapeGeoJSON.val());
+          var currentShapes = L.geoJSON(currentGeoJSON, {
+            style: shapeStyle,
+            pointToLayer: function (feature, latlng) {
+              if (feature.properties !== undefined &amp;&amp; Object.keys(feature.properties).length !== 0) {
+                if (feature.properties.radius !== undefined) {
+                  return L.circle(latlng, {radius: feature.properties.radius});
+                }
+              } else {
+                return L.marker(latlng);
               }
-            } else {
-              return L.marker(latlng);
+            },
+            onEachFeature: function (feature, layer) {
+              var title = feature.properties.title || '';
+              var desc = feature.properties.description || '';
+              if (title !== '' &amp;&amp; desc !== '') {
+                layer.bindPopup('&lt;h2&gt;' + title + '&lt;/h2&gt;' + '&lt;p&gt;' + desc + '&lt;/p&gt;')
+              }
             }
-          },
-          onEachFeature: function (feature, layer) {
-            var title = feature.properties.title || '';
-            var desc = feature.properties.description || '';
-            if (title !== '' &amp;&amp; desc !== '') {
-              layer.bindPopup('&lt;h2&gt;' + title + '&lt;/h2&gt;' + '&lt;p&gt;' + desc + '&lt;/p&gt;')
-            }
+          }).addTo(viewMap);
+          if (currentShapes &amp;&amp; currentShapes._layers &amp;&amp; Object.keys(currentShapes._layers).length &gt; 0) {
+            viewMap.fitBounds(currentShapes.getBounds());
           }
-        }).addTo(viewMap);
-        viewMap.fitBounds(currentShapes.getBounds());
-      } catch (e) {
-        new XWiki.widgets.Notification('Error processing GeoJSON.', 'error');
+        } catch (e) {
+          new XWiki.widgets.Notification('Error processing GeoJSON: ' + e, 'error');
+        }
       }
       leafletCommons.setupLocationSearchMP('.map-search', viewMap);
     });

@@ -133,7 +133,8 @@
 
 ## Process all path points
 #macro (getPathPointsJSON)
-  #set ($pointPages = $response.get("property.Maps.Code.PathClass.pointsPages_string"))
+  #set ($pointPagesKey = "#getFullKey(${response} 'property.Maps.Code.PathClass.pointPages')")
+  #set ($pointPages = $response.get($pointPagesKey.trim()))
   #set ($pointPagesArr = [])
   #foreach ($pointPage in $pointPages)
     #set ($pointPageDoc = $xwiki.getDocument(${pointPage}))

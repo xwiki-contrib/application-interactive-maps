@@ -58,7 +58,7 @@
       <disabled>0</disabled>
       <displayFormType>checkbox</displayFormType>
       <displayType/>
-      <hint>Include popup that display route information</hint>
+      <hint>Include popup that will display the route information</hint>
       <name>includePopup</name>
       <number>2</number>
       <prettyName>Add Popup to Path</prettyName>
@@ -67,7 +67,7 @@
       <validationRegExp/>
       <classType>com.xpn.xwiki.objects.classes.BooleanClass</classType>
     </includePopup>
-    <pointsPages>
+    <pointPages>
       <cache>0</cache>
       <classname/>
       <customDisplay/>
@@ -75,13 +75,14 @@
       <disabled>0</disabled>
       <displayType>input</displayType>
       <freeText>discouraged</freeText>
-      <hint>Points using which a path will be generated</hint>
+      <hint>Points through which a path will be generated</hint>
       <idField/>
+      <largeStorage>0</largeStorage>
       <multiSelect>1</multiSelect>
-      <name>pointsPages</name>
+      <name>pointPages</name>
       <number>1</number>
       <picker>1</picker>
-      <prettyName>Points Pages</prettyName>
+      <prettyName>Point Pages</prettyName>
       <relationalStorage>0</relationalStorage>
       <separator> |</separator>
       <separators>|,</separators>
@@ -93,7 +94,7 @@
       <validationRegExp/>
       <valueField/>
       <classType>com.xpn.xwiki.objects.classes.PageClass</classType>
-    </pointsPages>
+    </pointPages>
   </class>
   <object>
     <name>Maps.Code.PathClass</name>
