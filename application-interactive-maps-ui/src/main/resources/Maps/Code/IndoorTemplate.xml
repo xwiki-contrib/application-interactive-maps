@@ -56,11 +56,11 @@
         <customDisplay/>
         <disabled>0</disabled>
         <editor>Text</editor>
-        <hint>Levels as integers and shapes to be associated with each level</hint>
+        <hint>Levels as integers with shapes and points to be associated with each level</hint>
         <name>levels</name>
         <number>2</number>
         <picker>1</picker>
-        <prettyName>Levels and Shapes</prettyName>
+        <prettyName>Levels and Map Items</prettyName>
         <rows>5</rows>
         <size>40</size>
         <unmodifiable>0</unmodifiable>

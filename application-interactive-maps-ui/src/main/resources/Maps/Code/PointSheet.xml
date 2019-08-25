@@ -51,6 +51,10 @@
   #set($pointObj = $doc.getObject('Maps.Code.PointClass'))
   #set ($lat = $pointObj.getValue('latitude'))
   #set ($lng = $pointObj.getValue('longitude'))
+  ## Check for marker icon
+  #set ($markerIcon = {})
+  #checkMarkerIcon($doc.getFullName() $markerIcon)
+  #set ($markerIcon = "$!markerIcon.get('markerIcon')")
   {{html wiki="true" clean="false"}}
   (% class="row" %)(((
     (% class="col-sm-6" %)(((
@@ -62,7 +66,7 @@
       #if ($xcontext.action == 'edit')
         (% class="map-preview point-editor-map-preview" id="map-${util.generateRandomString(5)}" style="width: 100%; height: 300px;" %)((()))
       #else
-        (% class="map-preview map-point-view" data-location="${lat},${lng}" id="map-${util.generateRandomString(5)}" style="width: 100%; height: 300px;" %)((()))
+        (% class="map-preview map-point-view" data-location="${lat},${lng}" data-icon="${markerIcon}" id="map-${util.generateRandomString(5)}" style="width: 100%; height: 300px;" %)((()))
       #end
       (% class="map-search-filter" %)(((
         #displayLocationSearch()
@@ -262,10 +266,13 @@ require(['jquery', 'leaflet', 'leaflet-commons', 'bootstrap'], function ($, leaf
         'includeCurrentLocation': 1
       };
       var viewMap = leafletCommons.createEmptyMap(options);
+      var markerIcon = element.dataset.icon;
       var loc = element.dataset.location.split(',');
       leafletCommons.getLocationCoords(loc, function (location) {
-        L.marker(location, pointOptions).addTo(viewMap);
-        viewMap.setView(location);
+        leafletCommons.addMarker(markerIcon, location, pointOptions, function (marker) {
+          marker.addTo(viewMap);
+          viewMap.setView(location);
+        });
       });
       leafletCommons.setupLocationSearchMP('.map-search', viewMap);
     });

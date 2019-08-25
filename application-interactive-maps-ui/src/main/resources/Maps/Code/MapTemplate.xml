@@ -312,7 +312,7 @@
       <includeSearch>1</includeSearch>
     </property>
     <property>
-      <locationClasses>Maps.Code.PointClass:latitude_double,longitude_double</locationClasses>
+      <locationClasses>Maps.Code.PointClass: latitude, longitude</locationClasses>
     </property>
     <property>
       <mapSize>100%,500px</mapSize>

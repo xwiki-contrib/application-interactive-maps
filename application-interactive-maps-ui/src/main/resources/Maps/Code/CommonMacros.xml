@@ -97,12 +97,14 @@
   #set ($latProp = 'property.' + $classData.get('className') + '.' + $classData.get('latitude'))
   #set ($lngProp = 'property.' + $classData.get('className') + '.' + $classData.get('longitude'))
   #set ($includePopupField = 'property.' + $classData.get('className') + '.includePopup_boolean')
-  #set ($optionsField = 'property.' + $classData.get('className') + '.options__')
+  #set ($optionsField = 'property.' + $classData.get('className') + '.options')
   ## Get full key for latitude and longitude
   #set ($latProp = "#getFullKey(${response} ${latProp})")
   #set ($latProp = $latProp.trim())
   #set ($lngProp = "#getFullKey(${response} ${lngProp})")
   #set ($lngProp = $lngProp.trim())
+  #set ($optionsField = "#getFullKey(${response} ${optionsField})")
+  #set ($optionsField = $optionsField.trim())
   ## Handling unknown suffixes END
   #if ("$!response.get(${latProp})" != '' &amp;&amp; "$!response.get(${lngProp})" != '' )
     #set ($responseData = {})
@@ -148,7 +150,9 @@
     #checkMarkerIcon($pointPageDoc.getDocumentReference().getLocalDocumentReference() $pointData)
     #set ($disard = $pointPagesArr.add(${pointData}))
   #end
-  $jsontool.serialize($pointPagesArr)
+  #if ($pointPagesArr.size() &gt; 0)
+    $jsontool.serialize($pointPagesArr)
+  #end
 #end
 
 ## Set values for popup
@@ -197,9 +201,12 @@
       #setDataFromDoc($responseData $includePopup $title $popupContent $response.get('fullname'))
       ## Get data of each point
       ## Process and convert points data to JSON
-      #set ($discard = $responseData.put('points', "#getPathPointsJSON"))
-      ## Add the path data to the main map data array
-      #set ($discard = $mapDataArr.add($responseData))
+      #set ($pointPagesJSON = "#getPathPointsJSON")
+      #if ("$!pointPagesJSON" != '')
+        #set ($discard = $responseData.put('points', "#getPathPointsJSON"))
+        ## Add the path data to the main map data array
+        #set ($discard = $mapDataArr.add($responseData))
+      #end
     #end
     ## Path END
     ## Check for shape and process it
@@ -362,7 +369,7 @@
     #end
     ## Execute the query to get map results
     #getMapResults()
-    ##{{code language="java"}}$searchResponse.results{{/code}}
+    ##{{code language="none"}}$searchResponse.results{{/code}}
     #if ($debug)
       #displaySearchDebugInfo()
     #end
@@ -593,6 +600,7 @@
 
 ## Get key value from hashmap whose key starts with the given string
 #macro (getFullKey $valuesMap $shortKey)
+  #set ($fullKey = '')
   #foreach ($key in $valuesMap.keySet())
     #if ($key.startsWith($shortKey))
       #set ($fullKey = $key)

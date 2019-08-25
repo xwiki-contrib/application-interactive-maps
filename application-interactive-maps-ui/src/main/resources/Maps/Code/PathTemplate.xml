@@ -76,7 +76,6 @@
         <freeText>discouraged</freeText>
         <hint>Points through which a path will be generated</hint>
         <idField/>
-        <largeStorage>0</largeStorage>
         <multiSelect>1</multiSelect>
         <name>pointPages</name>
         <number>1</number>
