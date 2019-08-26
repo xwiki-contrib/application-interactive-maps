@@ -53,7 +53,7 @@
     </dependency>
     <!-- Leaflet dependencies -->
     <dependency>
-      <groupId>org.webjars</groupId>
+      <groupId>org.webjars.npm</groupId>
       <artifactId>leaflet</artifactId>
       <version>1.5.1</version>
     </dependency>
