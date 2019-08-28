@@ -234,7 +234,7 @@ require(['jquery', 'leaflet', 'leaflet-commons', 'leaflet-edit', 'leaflet-drag',
     var shapeStyle;
     if ($('#shapeStyle').val() !== '') {
       try {
-        shapeStyle = JSON.parse($('#shapeStyle').val());
+        shapeStyle = leafletCommons.cartoCssToJSON($('#shapeStyle').val());
       } catch (e) {
         new XWiki.widgets.Notification('Shape style is not valid.', 'error');
         shapeStyle = {};

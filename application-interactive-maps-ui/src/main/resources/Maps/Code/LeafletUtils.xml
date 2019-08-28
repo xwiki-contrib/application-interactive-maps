@@ -176,7 +176,10 @@ define('leaflet-commons', ['jquery'], function ($) {
     addMarker: function (iconUrl, location, options, callback)
     {
       var marker;
-      if (iconUrl) {
+      if (iconUrl || options.iconUrl) {
+        if (!iconUrl) {
+          iconUrl = options.iconUrl;
+        }
         //Get image size for fixing marker offset
         var markerImg = new Image();
         markerImg.src = iconUrl;
@@ -629,6 +632,49 @@ define('leaflet-commons', ['jquery'], function ($) {
         $('.map-search-filter').removeClass('open');
         rootScope.updateURLWithMapState();
       });
+    },
+
+    //Convert CartoCSS to JSON so it can be easily used in leaflet
+    cartoCssToJSON: function (cartoCss)
+    {
+      try {
+        if (cartoCss) {
+          cartoCss = cartoCss.trim();
+          cartoCss = cartoCss.replace(/\\n/g, '');
+          cartoCss = cartoCss.replace(/\n/g, '');
+          var allProps = cartoCss.split(';').map(function (prop) {
+            return prop.trim();
+          }).filter(function (prop) {
+            return prop !== '';
+          });
+          var outputJSON = {};
+          allProps.each(function (prop) {
+            var prop = prop.split(/\:(.+)/).map(function (value) {
+              value = value.trim();
+              if (value[0] === '"' &amp;&amp; value[value.length - 1] === '"') {
+                value = value.substr(1, (value.length - 2));
+              }
+              if (value[0] === "'" &amp;&amp; value[value.length - 1] === "'") {
+                value = value.substr(1, (value.length - 2));
+              }
+              return value;
+            });
+            var propName = prop[0].split('-');
+            for (var i = 1; i &lt; propName.length; i++) {
+              propName[i] = propName[i].charAt(0).toUpperCase() + propName[i].slice(1);
+            }
+            propName = propName.join('');
+            outputJSON[propName] = prop[1];
+          });
+          cartoCss = outputJSON;
+          return cartoCss;
+        } else {
+          return {};
+        }
+      } catch (e) {
+        new XWiki.widgets.Notification('Error processing CartoCSS: ' + e, 'error');
+        return {};
+      }
     }
 
   }

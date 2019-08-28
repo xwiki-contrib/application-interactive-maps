@@ -267,7 +267,7 @@ require(['jquery', 'leaflet', 'leaflet-commons', 'leaflet-edit', 'leaflet-drag',
       layer.feature.properties.title = layer.feature.properties.title || '';
       layer.feature.properties.content = layer.feature.properties.content || '';
       layer.feature.properties.addPopup = layer.feature.properties.addPopup || false;
-      layer.feature.properties.style = layer.feature.properties.style || {};
+      layer.feature.properties.style = layer.feature.properties.style || '';
       return layer;
     }
     function updateMapItemsJSON (mapItemsGeoJSON, allItemsJSON, allMapItems)
@@ -290,7 +290,7 @@ require(['jquery', 'leaflet', 'leaflet-commons', 'leaflet-edit', 'leaflet-drag',
         selectedItem = layer;
         $('#item-p-title').val(layer.feature.properties.title || '');
         $('#item-p-content').val(layer.feature.properties.content || '');
-        $('#item-p-style').val(JSON.stringify(layer.feature.properties.style) || '{}');
+        $('#item-p-style').val(layer.feature.properties.style || '');
         $('#item-p-addPopup').prop('checked', layer.feature.properties.addPopup || false);
       });
       layer.on('move', function (e1) {
@@ -346,13 +346,13 @@ require(['jquery', 'leaflet', 'leaflet-commons', 'leaflet-edit', 'leaflet-drag',
           selectedItem.feature.properties.content = $('#item-p-content').val();
           selectedItem.feature.properties.addPopup = $('#item-p-addPopup').prop('checked');
           try {
-            var newStyle = JSON.parse($('#item-p-style').val());
+            var newStyle = $('#item-p-style').val();
             selectedItem.feature.properties.style = newStyle;
             if (selectedItem instanceof L.Marker) {
               selectedItem.options = newStyle;
               selectedItem.enableEdit();
             } else {
-              selectedItem.setStyle(newStyle);
+              selectedItem.setStyle(leafletCommons.cartoCssToJSON(newStyle));
             }
           } catch (e) {
             new XWiki.widgets.Notification('Shape style is invalid. ' + e, 'error');

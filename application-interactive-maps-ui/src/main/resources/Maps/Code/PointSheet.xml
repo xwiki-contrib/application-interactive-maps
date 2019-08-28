@@ -195,7 +195,7 @@ require(['jquery', 'leaflet', 'leaflet-commons', 'bootstrap'], function ($, leaf
     var pointOptions;
     if ($('#pointOptions').val() !== '') {
       try {
-        pointOptions = JSON.parse($('#pointOptions').val());
+        pointOptions = leafletCommons.cartoCssToJSON($('#pointOptions').val());
       } catch (e) {
         new XWiki.widgets.Notification('Point options are not valid.', 'error');
         pointOptions = {};

@@ -217,12 +217,12 @@ require(['jquery', 'leaflet', 'leaflet-commons', 'leaflet-indoor', 'bootstrap'],
         }
       });
       mapData.each(function (data) {
-        if (data.location != null &amp;&amp; data.type == 'point') {
+        if (data.location &amp;&amp; data.type == 'point') {
           //Set options for the point
           var pointOptions;
           try {
-            if (data.options !== '' &amp;&amp; data.options !== null) {
-              pointOptions = JSON.parse(data.options);
+            if (data.options) {
+              pointOptions = leafletCommons.cartoCssToJSON(data.options);
             } else {
               pointOptions = {};
             }
@@ -247,8 +247,8 @@ require(['jquery', 'leaflet', 'leaflet-commons', 'leaflet-indoor', 'bootstrap'],
           points.forEach(function (point) {
             var pointOptions;
             try {
-              if (point.options !== '' &amp;&amp; point.options !== null) {
-                pointOptions = JSON.parse(point.options);
+              if (point.options) {
+                pointOptions = leafletCommons.cartoCssToJSON(data.options);
               } else {
                 pointOptions = {};
               }
@@ -285,8 +285,8 @@ require(['jquery', 'leaflet', 'leaflet-commons', 'leaflet-indoor', 'bootstrap'],
           var shapeStyle;
           var shape;
           try {
-            if (data.style !== '' &amp;&amp; data.style !== null) {
-              shapeStyle = JSON.parse(data.style);
+            if (data.style) {
+              shapeStyle = leafletCommons.cartoCssToJSON(data.style);
             } else {
               shapeStyle = {};
             }
@@ -321,8 +321,8 @@ require(['jquery', 'leaflet', 'leaflet-commons', 'leaflet-indoor', 'bootstrap'],
             allLevelItems.map(function (item) {
               try {
                 if (item.type === 'point') {
-                  if (item.options !== '' &amp;&amp; item.options !== null) {
-                    item.options = JSON.parse(item.options);
+                  if (item.options) {
+                    item.options = leafletCommons.cartoCssToJSON(item.options);
                   } else {
                     item.options = {};
                   }
@@ -342,7 +342,7 @@ require(['jquery', 'leaflet', 'leaflet-commons', 'leaflet-indoor', 'bootstrap'],
                     feature.properties.includePopup = item.includePopup;
                     feature.properties.title = item.title ? item.title : '';
                     feature.properties.content = item.content ? item.content : '';
-                    feature.properties.style = item.style;
+                    feature.properties.style = leafletCommons.cartoCssToJSON(item.style);
                   });
                   item.shapeGeoJSON.features.each(function (feature) {
                     allLevelsJSON.features.push(feature);
@@ -357,16 +357,16 @@ require(['jquery', 'leaflet', 'leaflet-commons', 'leaflet-indoor', 'bootstrap'],
           var indoorLayer = new L.Indoor(allLevelsJSON, {
             style: function (feature) {
               if (feature.properties.style) {
-                return JSON.parse(feature.properties.style);
+                return leafletCommons.cartoCssToJSON(feature.properties.style);
               } else {
                 return {};
               }
             },
             pointToLayer: function (feature, latlng) {
-              if (feature.properties !== undefined &amp;&amp; Object.keys(feature.properties).length !== 0 &amp;&amp; feature.properties.radius !== undefined) {
+              if (feature.properties &amp;&amp; Object.keys(feature.properties).length !== 0 &amp;&amp; feature.properties.radius) {
                 return L.circle(latlng, {radius: feature.properties.radius});
               } else {
-                if (feature.properties.options !== undefined) {
+                if (feature.properties.options) {
                   return L.marker(latlng, feature.properties.options);
                 } else {
                   return L.marker(latlng);
