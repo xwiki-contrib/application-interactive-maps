@@ -3,7 +3,7 @@
 Create interactive maps easily, share locations and associate structured data with areas
 
 * Project Lead: [Fawad Ali](https://www.xwiki.org/xwiki/bin/view/XWiki/GinPachi)
-* [Documentation & Download](<url on e.x.o, e.g. http://extensions.xwiki.org/xwiki/bin/view/Extension/Flash+messages+application>): N/A
+* [Documentation & Download](https://extensions.xwiki.org/xwiki/bin/view/Extension/InteractiveMapsApplication/)
 * [Issue Tracker](https://jira.xwiki.org/projects/INTMAP) 
 * Communication: [Mailing List](http://dev.xwiki.org/xwiki/bin/view/Community/MailingLists), [IRC](http://dev.xwiki.org/xwiki/bin/view/Community/IRC)
 * [Development Practices](http://dev.xwiki.org)
@@ -12,6 +12,3 @@ Create interactive maps easily, share locations and associate structured data wi
 * Translations: N/A 
 * Sonar Dashboard: N/A 
 * Continuous Integration Status: [![Build Status](http://ci.xwiki.org/job/XWiki%20Contrib/job/application-interactive-maps/job/master/badge/icon)](http://ci.xwiki.org/job/XWiki%20Contrib/job/application-interactive-maps/job/master/)
-
-## This application is under development
-The progress is documented in [PROGRESS.md](https://github.com/xwiki-contrib/application-map/blob/master/PROGRESS.md)
