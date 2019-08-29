@@ -232,12 +232,12 @@ require(['jquery', 'leaflet', 'leaflet-commons', 'leaflet-indoor', 'bootstrap'],
           leafletCommons.getLocationCoords(data.location, function (location) {
             leafletCommons.addMarker(data.markerIcon, location, pointOptions, function (marker) {
               leafletCommons.processPopupAndAdd(data, marker, allLayers);
+              if (dataLength == i) {
+                allLayers.addTo(map);
+                map.fitBounds(allLayers.getBounds());
+              }
+              i++;
             });
-            if (dataLength == i) {
-              allLayers.addTo(map);
-              map.fitBounds(allLayers.getBounds());
-            }
-            i++;
           });
         } else if (data.type == 'path') {
           var points = JSON.parse(data.points);
@@ -248,7 +248,7 @@ require(['jquery', 'leaflet', 'leaflet-commons', 'leaflet-indoor', 'bootstrap'],
             var pointOptions;
             try {
               if (point.options) {
-                pointOptions = leafletCommons.cartoCssToJSON(data.options);
+                pointOptions = leafletCommons.cartoCssToJSON(point.options);
               } else {
                 pointOptions = {};
               }
@@ -357,7 +357,7 @@ require(['jquery', 'leaflet', 'leaflet-commons', 'leaflet-indoor', 'bootstrap'],
           var indoorLayer = new L.Indoor(allLevelsJSON, {
             style: function (feature) {
               if (feature.properties.style) {
-                return leafletCommons.cartoCssToJSON(feature.properties.style);
+                return feature.properties.style;
               } else {
                 return {};
               }

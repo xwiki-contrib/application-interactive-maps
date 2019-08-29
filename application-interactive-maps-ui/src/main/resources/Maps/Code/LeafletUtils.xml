@@ -166,7 +166,7 @@ define('leaflet-commons', ['jquery'], function ($) {
       //Add a tiles layer to the map (the background)
       L.tileLayer(tiles, {
         attribution: attribution,
-        maxZoom: 17,
+        maxZoom: 22,
         id: 'mapbox.streets'
       }).addTo(map);
       return map;
@@ -638,7 +638,7 @@ define('leaflet-commons', ['jquery'], function ($) {
     cartoCssToJSON: function (cartoCss)
     {
       try {
-        if (cartoCss) {
+        if (cartoCss &amp;&amp; typeof cartoCss === 'string') {
           cartoCss = cartoCss.trim();
           cartoCss = cartoCss.replace(/\\n/g, '');
           cartoCss = cartoCss.replace(/\n/g, '');

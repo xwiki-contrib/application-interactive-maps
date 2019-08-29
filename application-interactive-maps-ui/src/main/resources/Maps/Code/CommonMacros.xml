@@ -493,20 +493,29 @@
           #set ($shapeGeoJSON = $jsontool.fromString($item.get('shapeGeoJSON')))
           #set ($allPoints = [])
           #if ("$!shapeGeoJSON.geometry" != '' || $shapeGeoJSON.features.size() &gt; 0)
-            #if ("$!shapeGeoJSON.features[0].geometry.coordinates[0][0][0]" != '')
-              #set ($allPoints = $shapeGeoJSON.features[0].geometry.coordinates[0])
-            #elseif ("$!shapeGeoJSON.features[0].geometry.coordinates[0][0]" != '')
-              #set ($allPoints = $shapeGeoJSON.features[0].geometry.coordinates)
-            #elseif ("$!shapeGeoJSON.features[0].geometry.coordinates[0]" != '')
+            #if ("$!shapeGeoJSON.features[0].geometry.coordinates[0][0]" == '' &amp;&amp; "$!shapeGeoJSON.features[0].geometry.coordinates" != '') ## Check for circle (has only one point)
               #set ($allPoints = [$shapeGeoJSON.features[0].geometry.coordinates])
-            #elseif ("$!shapeGeoJSON.geometry.coordinates[0][0][0]" != '')
-              #set ($allPoints = $shapeGeoJSON.geometry.coordinates[0])
+            #elseif ("$!shapeGeoJSON.features[0].geometry.coordinates" != '')
+              #set ($allPoints = $shapeGeoJSON.features[0].geometry.coordinates)
+            #elseif ("$!shapeGeoJSON.geometry.coordinates[0][0]" == '' &amp;&amp; "$!shapeGeoJSON.geometry.coordinates" != '') ## Check for circle (has only one point)
+              #set ($allPoints = [$shapeGeoJSON.geometry.coordinates])
+            #elseif ("$!shapeGeoJSON.geometry.coordinates" != '')
+              #set ($allPoints = $shapeGeoJSON.geometry.coordinates)
             #else
               #set ($allPoints = [$shapeGeoJSON.geometry.coordinates])
             #end
           #end
           #foreach ($coordinate in $allPoints)
             #set ($discard = $collectionstool.reverse($coordinate))
+            #foreach ($coordinate1 in $coordinate)
+              #set ($discard = $collectionstool.reverse($coordinate1))
+              #foreach ($coordinate2 in $coordinate1)
+                #set ($discard = $collectionstool.reverse($coordinate2))
+                #foreach ($coordinate3 in $coordinate2)
+                  #set ($discard = $collectionstool.reverse($coordinate3))
+                #end
+              #end
+            #end
           #end
           #if ($allPoints.size() &gt; 0)
             #set ($allPoints = $jsontool.serialize($allPoints))

@@ -1,0 +1,151 @@
+<?xml version="1.1" encoding="UTF-8"?>
+
+<!--
+ * See the NOTICE file distributed with this work for additional
+ * information regarding copyright ownership.
+ *
+ * This is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation; either version 2.1 of
+ * the License, or (at your option) any later version.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this software; if not, write to the Free
+ * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+-->
+
+<xwikidoc version="1.3" reference="Maps.Demo.Indoor.Floor 2" locale="">
+  <web>Maps.Demo.Indoor</web>
+  <name>Floor 2</name>
+  <language/>
+  <defaultLanguage/>
+  <translation>0</translation>
+  <creator>xwiki:XWiki.Admin</creator>
+  <parent>Maps.Demo.Indoor.Floor 1</parent>
+  <author>xwiki:XWiki.Admin</author>
+  <contentAuthor>xwiki:XWiki.Admin</contentAuthor>
+  <version>1.1</version>
+  <title>Floor 2</title>
+  <comment/>
+  <minorEdit>false</minorEdit>
+  <syntaxId>xwiki/2.1</syntaxId>
+  <hidden>false</hidden>
+  <content/>
+  <object>
+    <name>Maps.Demo.Indoor.Floor 2</name>
+    <number>0</number>
+    <className>Maps.Code.ShapeClass</className>
+    <guid>05afc911-0571-489c-935e-0562657a35b2</guid>
+    <class>
+      <name>Maps.Code.ShapeClass</name>
+      <customClass/>
+      <customMapping/>
+      <defaultViewSheet/>
+      <defaultEditSheet/>
+      <defaultWeb/>
+      <nameField/>
+      <validationScript/>
+      <content>
+        <contenttype/>
+        <customDisplay>{{include reference='AppWithinMinutes.Content'/}}</customDisplay>
+        <disabled>0</disabled>
+        <editor>Wysiwyg</editor>
+        <hint>Content that will appear in the shape's popup</hint>
+        <name>content</name>
+        <number>3</number>
+        <picker>0</picker>
+        <prettyName>Content</prettyName>
+        <rows>5</rows>
+        <size>40</size>
+        <unmodifiable>0</unmodifiable>
+        <validationMessage/>
+        <validationRegExp/>
+        <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
+      </content>
+      <includePopup>
+        <customDisplay/>
+        <defaultValue/>
+        <disabled>0</disabled>
+        <displayFormType>checkbox</displayFormType>
+        <displayType/>
+        <hint/>
+        <name>includePopup</name>
+        <number>2</number>
+        <prettyName>Add Popup to the Shape</prettyName>
+        <unmodifiable>0</unmodifiable>
+        <validationMessage/>
+        <validationRegExp/>
+        <classType>com.xpn.xwiki.objects.classes.BooleanClass</classType>
+      </includePopup>
+      <index>
+        <customDisplay/>
+        <disabled>0</disabled>
+        <hint/>
+        <name>index</name>
+        <number>1</number>
+        <numberType>integer</numberType>
+        <prettyName>Shape Index</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <validationMessage/>
+        <validationRegExp/>
+        <classType>com.xpn.xwiki.objects.classes.NumberClass</classType>
+      </index>
+      <shapeGeoJSON>
+        <contenttype/>
+        <customDisplay/>
+        <disabled>0</disabled>
+        <editor>Text</editor>
+        <hint>Specify the properties of shape as GeoJSON</hint>
+        <name>shapeGeoJSON</name>
+        <number>5</number>
+        <picker>0</picker>
+        <prettyName>Shape GeoJSON</prettyName>
+        <rows>5</rows>
+        <size>40</size>
+        <unmodifiable>0</unmodifiable>
+        <validationMessage/>
+        <validationRegExp/>
+        <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
+      </shapeGeoJSON>
+      <style>
+        <contenttype/>
+        <customDisplay/>
+        <disabled>0</disabled>
+        <editor>Text</editor>
+        <hint>Options for styling shapes</hint>
+        <name>style</name>
+        <number>4</number>
+        <picker>0</picker>
+        <prettyName>Style</prettyName>
+        <rows>5</rows>
+        <size>40</size>
+        <unmodifiable>0</unmodifiable>
+        <validationMessage/>
+        <validationRegExp/>
+        <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
+      </style>
+    </class>
+    <property>
+      <content/>
+    </property>
+    <property>
+      <includePopup>1</includePopup>
+    </property>
+    <property>
+      <index>4</index>
+    </property>
+    <property>
+      <shapeGeoJSON>{"type":"FeatureCollection","features":[{"type":"Feature","id":"way/94551402","properties":{"type":"way","id":"94551402","tags":{"buildingpart":"verticalpassage","buildingpart:verticalpassage":"stairway","buildingpart:verticalpassage:floorrange":"-1 to 2","height":"3","indoor":"yes"},"relations":[{"role":"buildingpart","rel":"1370726","reltags":{"height":"4","level":"2","level:usage":"academic","name":"Dachgeschoss","type":"level"}}],"meta":{}},"geometry":{"type":"Polygon","coordinates":[[[8.676709,49.418638],[8.676709,49.418607],[8.67677,49.418607],[8.67677,49.418638],[8.676709,49.418638]]]}},{"type":"Feature","id":"way/94551406","properties":{"type":"way","id":"94551406","tags":{"buildingpart":"room","height":"3","name":"016"},"relations":[{"role":"buildingpart","rel":"1370728","reltags":{"height":"4","level":"0","name":"Erdgeschoss","type":"level"}}],"meta":{}},"geometry":{"type":"Polygon","coordinates":[[[8.676767,49.418571],[8.67671,49.418571],[8.67671,49.418549],[8.676767,49.418549],[8.676767,49.418571]]]}},{"type":"Feature","id":"way/94551407","properties":{"type":"way","id":"94551407","tags":{"buildingpart":"room","height":"3","indoor":"yes","name":"114"},"relations":[{"role":"buildingpart","rel":"1370725","reltags":{"height":"4","level":"1","level:usage":"academic","name":"1. Obergeschoss","type":"level"}}],"meta":{}},"geometry":{"type":"Polygon","coordinates":[[[8.677039,49.418601],[8.677039,49.418559],[8.677086,49.418559],[8.677086,49.418601],[8.677039,49.418601]]]}},{"type":"Feature","id":"way/94551410","properties":{"type":"way","id":"94551410","tags":{"buildingpart":"room","height":"2.2"},"relations":[{"role":"buildingpart","rel":"1370727","reltags":{"height":"3","level":"-1","level:usage":"academic","name":"Untergeschoss","type":"level"}}],"meta":{}},"geometry":{"type":"Polygon","coordinates":[[[8.676794,49.418627],[8.676851,49.418627],[8.676851,49.418673],[8.676794,49.418673],[8.676794,49.418627]]]}},{"type":"Feature","id":"way/94551411","properties":{"type":"way","id":"94551411","tags":{"buildingpart":"room","height":"3","indoor":"yes","name":"106"},"relations":[{"role":"buildingpart","rel":"1370725","reltags":{"height":"4","level":"1","level:usage":"academic","name":"1. Obergeschoss","type":"level"}}],"meta":{}},"geometry":{"type":"Polygon","coordinates":[[[8.67685,49.418699],[8.676795,49.418699],[8.676795,49.418673],[8.67685,49.418673],[8.67685,49.418699]]]}},{"type":"Feature","id":"way/94551414","properties":{"type":"way","id":"94551414","tags":{"buildingpart":"room","height":"2.2"},"relations":[{"role":"buildingpart","rel":"1370727","reltags":{"height":"3","level":"-1","level:usage":"academic","name":"Untergeschoss","type":"level"}}],"meta":{}},"geometry":{"type":"Polygon","coordinates":[[[8.676943,49.418543],[8.676943,49.418499],[8.67699,49.418499],[8.67699,49.418543],[8.676943,49.418543]]]}},{"type":"Feature","id":"way/94551418","properties":{"type":"way","id":"94551418","tags":{"buildingpart":"room","height":"3","indoor":"yes","name":"109"},"relations":[{"role":"buildingpart","rel":"1370725","reltags":{"height":"4","level":"1","level:usage":"academic","name":"1. Obergeschoss","type":"level"}}],"meta":{}},"geometry":{"type":"Polygon","coordinates":[[[8.67685,49.418608],[8.676795,49.418608],[8.676795,49.418585],[8.67685,49.418585],[8.67685,49.418608]]]}},{"type":"Feature","id":"way/94551419","properties":{"type":"way","id":"94551419","tags":{"buildingpart":"room","height":"2.2"},"relations":[{"role":"buildingpart","rel":"1370727","reltags":{"height":"3","level":"-1","level:usage":"academic","name":"Untergeschoss","type":"level"}}],"meta":{}},"geometry":{"type":"Polygon","coordinates":[[[8.676895,49.418602],[8.676895,49.418559],[8.676939,49.418559],[8.676939,49.418602],[8.676895,49.418602]]]}},{"type":"Feature","id":"way/94551428","properties":{"type":"way","id":"94551428","tags":{"buildingpart":"corridor","height":"3","indoor":"yes"},"relations":[{"role":"buildingpart","rel":"1370725","reltags":{"height":"4","level":"1","level:usage":"academic","name":"1. Obergeschoss","type":"level"}}],"meta":{}},"geometry":{"type":"Polygon","coordinates":[[[8.67677,49.418721],[8.67677,49.41869],[8.676769,49.418596],[8.676769,49.418556],[8.676769,49.418541],[8.676769,49.41852],[8.676792,49.41852],[8.676792,49.418534],[8.676792,49.418544],[8.676905,49.418544],[8.676955,49.418544],[8.676993,49.418544],[8.677005,49.418544],[8.677053,49.418544],[8.677103,49.418544],[8.677152,49.418544],[8.677184,49.418544],[8.677184,49.418557],[8.677151,49.418557],[8.677102,49.418557],[8.677052,49.418557],[8.67704,49.418557],[8.677004,49.418557],[8.676954,49.418557],[8.676908,49.418557],[8.676792,49.418556],[8.676792,49.418567],[8.676792,49.418601],[8.676792,49.418616],[8.676792,49.418656],[8.676792,49.418692],[8.676792,49.418721],[8.676792,49.418734],[8.676792,49.418739],[8.67678,49.418739],[8.67677,49.418739],[8.67677,49.418729],[8.67677,49.418721]]]}},{"type":"Feature","id":"way/94551439","properties":{"type":"way","id":"94551439","tags":{"buildingpart":"room","height":"2.2"},"relations":[{"role":"buildingpart","rel":"1370727","reltags":{"height":"3","level":"-1","level:usage":"academic","name":"Untergeschoss","type":"level"}}],"meta":{}},"geometry":{"type":"Polygon","coordinates":[[[8.67704,49.418542],[8.67704,49.4185],[8.677087,49.4185],[8.677087,49.418542],[8.67704,49.418542]]]}},{"type":"Feature","id":"way/94551440","properties":{"type":"way","id":"94551440","tags":{"buildingpart":"room","height":"3","indoor":"yes","name":"201"},"relations":[{"role":"buildingpart","rel":"1370726","reltags":{"height":"4","level":"2","level:usage":"academic","name":"Dachgeschoss","type":"level"}}],"meta":{}},"geometry":{"type":"Polygon","coordinates":[[[8.676771,49.41872],[8.676709,49.41872],[8.676709,49.418658],[8.676771,49.418658],[8.676771,49.41872]]]}},{"type":"Feature","id":"way/94551446","properties":{"type":"way","id":"94551446","tags":{"buildingpart":"room","height":"3","name":"002"},"relations":[{"role":"buildingpart","rel":"1370728","reltags":{"height":"4","level":"0","name":"Erdgeschoss","type":"level"}}],"meta":{}},"geometry":{"type":"Polygon","coordinates":[[[8.676767,49.418781],[8.67671,49.418781],[8.67671,49.41866],[8.676767,49.41866],[8.676767,49.418768],[8.676767,49.418781]]]}},{"type":"Feature","id":"way/94551449","properties":{"type":"way","id":"94551449","tags":{"amenity":"university","buildingpart":"room","height":"3","indoor":"yes","name":"204","wheelchair":"no"},"relations":[{"role":"buildingpart","rel":"1370726","reltags":{"height":"4","level":"2","level:usage":"academic","name":"Dachgeschoss","type":"level"}}],"meta":{}},"geometry":{"type":"Polygon","coordinates":[[[8.676851,49.418822],[8.676792,49.418822],[8.676792,49.418749],[8.676851,49.418749],[8.676851,49.418822]]]}},{"type":"Feature","id":"way/94551453","properties":{"type":"way","id":"94551453","tags":{"buildingpart":"room","height":"3","name":"015"},"relations":[{"role":"buildingpart","rel":"1370728","reltags":{"height":"4","level":"0","name":"Erdgeschoss","type":"level"}}],"meta":{}},"geometry":{"type":"Polygon","coordinates":[[[8.67671,49.418519],[8.676767,49.418519],[8.676767,49.418546],[8.67671,49.418546],[8.67671,49.418519]]]}},{"type":"Feature","id":"way/94551454","properties":{"type":"way","id":"94551454","tags":{"buildingpart":"verticalpassage","buildingpart:verticalpassage":"stairway","buildingpart:verticalpassage:floorrange":"-1 to 1","height":"3"},"relations":[{"role":"buildingpart","rel":"1370728","reltags":{"height":"4","level":"0","name":"Erdgeschoss","type":"level"}}],"meta":{}},"geometry":{"type":"Polygon","coordinates":[[[8.676895,49.418543],[8.676895,49.4185],[8.676941,49.4185],[8.676941,49.418543],[8.676895,49.418543]]]}},{"type":"Feature","id":"way/94551455","properties":{"type":"way","id":"94551455","tags":{"buildingpart":"room","height":"2.2"},"relations":[{"role":"buildingpart","rel":"1370727","reltags":{"height":"3","level":"-1","level:usage":"academic","name":"Untergeschoss","type":"level"}}],"meta":{}},"geometry":{"type":"Polygon","coordinates":[[[8.676794,49.41858],[8.676851,49.41858],[8.676851,49.418626],[8.676794,49.418626],[8.676794,49.41858]]]}},{"type":"Feature","id":"way/94551456","properties":{"type":"way","id":"94551456","tags":{"buildingpart":"room","height":"3","indoor":"yes","name":"105"},"relations":[{"role":"buildingpart","rel":"1370725","reltags":{"height":"4","level":"1","level:usage":"academic","name":"1. Obergeschoss","type":"level"}}],"meta":{}},"geometry":{"type":"Polygon","coordinates":[[[8.67685,49.418739],[8.676795,49.418739],[8.676795,49.4187],[8.67685,49.4187],[8.67685,49.418739]]]}},{"type":"Feature","id":"way/94551457","properties":{"type":"way","id":"94551457","tags":{"buildingpart":"corridor","height":"2.2"},"relations":[{"role":"buildingpart","rel":"1370727","reltags":{"height":"3","level":"-1","level:usage":"academic","name":"Untergeschoss","type":"level"}}],"meta":{}},"geometry":{"type":"Polygon","coordinates":[[[8.676769,49.418764],[8.676769,49.418755],[8.676769,49.418725],[8.676769,49.418665],[8.676769,49.418599],[8.676769,49.418566],[8.676769,49.41854],[8.676769,49.418526],[8.676769,49.418519],[8.676793,49.418519],[8.676793,49.418526],[8.676793,49.418549],[8.676793,49.418573],[8.676793,49.418621],[8.676793,49.418667],[8.676793,49.418716],[8.676793,49.418736],[8.676793,49.418756],[8.676793,49.418764],[8.676781,49.418764],[8.676769,49.418764]]]}},{"type":"Feature","id":"way/94551458","properties":{"type":"way","id":"94551458","tags":{"buildingpart":"room","height":"3","indoor":"yes","name":"111"},"relations":[{"role":"buildingpart","rel":"1370725","reltags":{"height":"4","level":"1","level:usage":"academic","name":"1. Obergeschoss","type":"level"}}],"meta":{}},"geometry":{"type":"Polygon","coordinates":[[[8.676895,49.418602],[8.676895,49.418559],[8.676939,49.418559],[8.676939,49.418602],[8.676895,49.418602]]]}},{"type":"Feature","id":"way/94551459","properties":{"type":"way","id":"94551459","tags":{"buildingpart":"room","height":"2.2"},"relations":[{"role":"buildingpart","rel":"1370727","reltags":{"height":"3","level":"-1","level:usage":"academic","name":"Untergeschoss","type":"level"}}],"meta":{}},"geometry":{"type":"Polygon","coordinates":[[[8.676942,49.418602],[8.676942,49.418559],[8.676989,49.418559],[8.676989,49.418602],[8.676942,49.418602]]]}},{"type":"Feature","id":"way/94551460","properties":{"type":"way","id":"94551460","tags":{"buildingpart":"room","height":"3","indoor":"yes","name":"121"},"relations":[{"role":"buildingpart","rel":"1370725","reltags":{"height":"4","level":"1","level:usage":"academic","name":"1. Obergeschoss","type":"level"}}],"meta":{}},"geometry":{"type":"Polygon","coordinates":[[[8.676943,49.418543],[8.676943,49.418499],[8.67699,49.418499],[8.67699,49.418543],[8.676943,49.418543]]]}},{"type":"Feature","id":"way/94551461","properties":{"type":"way","id":"94551461","tags":{"buildingpart":"room","height":"2.2"},"relations":[{"role":"buildingpart","rel":"1370727","reltags":{"height":"3","level":"-1","level:usage":"academic","name":"Untergeschoss","type":"level"}}],"meta":{}},"geometry":{"type":"Polygon","coordinates":[[[8.67709,49.418542],[8.67709,49.4185],[8.677138,49.4185],[8.677138,49.418542],[8.67709,49.418542]]]}},{"type":"Feature","id":"way/94551462","properties":{"type":"way","id":"94551462","tags":{"buildingpart":"room","height":"3","indoor":"yes","name":"208"},"relations":[{"role":"buildingpart","rel":"1370726","reltags":{"height":"4","level":"2","level:usage":"academic","name":"Dachgeschoss","type":"level"}}],"meta":{}},"geometry":{"type":"Polygon","coordinates":[[[8.676851,49.418641],[8.676792,49.418641],[8.676792,49.418606],[8.676851,49.418606],[8.676851,49.418641]]]}},{"type":"Feature","id":"way/94551463","properties":{"type":"way","id":"94551463","tags":{"buildingpart":"room","height":"3","name":"008"},"relations":[{"role":"buildingpart","rel":"1370728","reltags":{"height":"4","level":"0","name":"Erdgeschoss","type":"level"}}],"meta":{}},"geometry":{"type":"Polygon","coordinates":[[[8.67685,49.418584],[8.676795,49.418584],[8.676795,49.41856],[8.67685,49.41856],[8.67685,49.418584]]]}},{"type":"Feature","id":"way/94551464","properties":{"type":"way","id":"94551464","tags":{"buildingpart":"room","height":"3","indoor":"yes","name":"206"},"relations":[{"role":"buildingpart","rel":"1370726","reltags":{"height":"4","level":"2","level:usage":"academic","name":"Dachgeschoss","type":"level"}}],"meta":{}},"geometry":{"type":"Polygon","coordinates":[[[8.676851,49.418748],[8.676792,49.418748],[8.676792,49.418695],[8.676851,49.418695],[8.676851,49.418748]]]}},{"type":"Feature","id":"way/94551465","properties":{"type":"way","id":"94551465","tags":{"buildingpart":"room","height":"3","name":"014"},"relations":[{"role":"buildingpart","rel":"1370728","reltags":{"height":"4","level":"0","name":"Erdgeschoss","type":"level"}}],"meta":{}},"geometry":{"type":"Polygon","coordinates":[[[8.67685,49.418542],[8.676795,49.418542],[8.676795,49.41852],[8.67685,49.41852],[8.67685,49.418542]]]}},{"type":"Feature","id":"way/94551466","properties":{"type":"way","id":"94551466","tags":{"buildingpart":"corridor","height":"3"},"relations":[{"role":"buildingpart","rel":"1370728","reltags":{"height":"4","level":"0","name":"Erdgeschoss","type":"level"}}],"meta":{}},"geometry":{"type":"Polygon","coordinates":[[[8.67677,49.418721],[8.67677,49.418714],[8.676769,49.418597],[8.676769,49.418565],[8.676769,49.418539],[8.676769,49.41852],[8.676792,49.41852],[8.676792,49.418532],[8.676792,49.418544],[8.676905,49.418544],[8.67693,49.418544],[8.676966,49.418544],[8.676993,49.418544],[8.676993,49.4185],[8.67704,49.4185],[8.67704,49.418508],[8.67704,49.418557],[8.677017,49.418557],[8.676965,49.418557],[8.676915,49.418557],[8.676792,49.418556],[8.676792,49.418567],[8.676792,49.418602],[8.676792,49.418641],[8.676792,49.418659],[8.676792,49.418714],[8.676792,49.418721],[8.67678,49.418721],[8.67677,49.418721]]]}},{"type":"Feature","id":"way/94551467","properties":{"type":"way","id":"94551467","tags":{"buildingpart":"room","height":"2.2"},"relations":[{"role":"buildingpart","rel":"1370727","reltags":{"height":"3","level":"-1","level:usage":"academic","name":"Untergeschoss","type":"level"}}],"meta":{}},"geometry":{"type":"Polygon","coordinates":[[[8.67671,49.418548],[8.676768,49.418548],[8.676768,49.418571],[8.67671,49.418571],[8.67671,49.418548]]]}},{"type":"Feature","id":"way/94551468","properties":{"type":"way","id":"94551468","tags":{"buildingpart":"hall","height":"3.8","indoor":"yes"},"relations":[{"role":"buildingpart","rel":"1370725","reltags":{"height":"4","level":"1","level:usage":"academic","name":"1. Obergeschoss","type":"level"}}],"meta":{}},"geometry":{"type":"Polygon","coordinates":[[[8.676617,49.418938],[8.676617,49.418823],[8.676871,49.418823],[8.676871,49.418938],[8.676617,49.418938]]]}},{"type":"Feature","id":"way/94551469","properties":{"type":"way","id":"94551469","tags":{"buildingpart":"verticalpassage","buildingpart:verticalpassage":"stairway","buildingpart:verticalpassage:floorrange":"-1 to 1","height":"2.2"},"relations":[{"role":"buildingpart","rel":"1370727","reltags":{"height":"3","level":"-1","level:usage":"academic","name":"Untergeschoss","type":"level"}}],"meta":{}},"geometry":{"type":"Polygon","coordinates":[[[8.676895,49.418543],[8.676895,49.4185],[8.676941,49.4185],[8.676941,49.418543],[8.676895,49.418543]]]}},{"type":"Feature","id":"way/94551470","properties":{"type":"way","id":"94551470","tags":{"buildingpart":"corridor","height":"3","indoor":"yes"},"relations":[{"role":"buildingpart","rel":"1370725","reltags":{"height":"4","level":"1","level:usage":"academic","name":"1. Obergeschoss","type":"level"}}],"meta":{}},"geometry":{"type":"Polygon","coordinates":[[[8.67671,49.418658],[8.67671,49.418639],[8.676721,49.418639],[8.676753,49.418639],[8.676766,49.418639],[8.676766,49.418651],[8.676766,49.418658],[8.67671,49.418658]]]}},{"type":"Feature","id":"way/94551471","properties":{"type":"way","id":"94551471","tags":{"buildingpart":"room","height":"2.2"},"relations":[{"role":"buildingpart","rel":"1370727","reltags":{"height":"3","level":"-1","level:usage":"academic","name":"Untergeschoss","type":"level"}}],"meta":{}},"geometry":{"type":"Polygon","coordinates":[[[8.676992,49.418602],[8.676992,49.418559],[8.677036,49.418559],[8.677036,49.418602],[8.676992,49.418602]]]}},{"type":"Feature","id":"way/94551472","properties":{"type":"way","id":"94551472","tags":{"buildingpart":"room","height":"3","indoor":"yes","name":"112"},"relations":[{"role":"buildingpart","rel":"1370725","reltags":{"height":"4","level":"1","level:usage":"academic","name":"1. Obergeschoss","type":"level"}}],"meta":{}},"geometry":{"type":"Polygon","coordinates":[[[8.676942,49.418602],[8.676942,49.418559],[8.676989,49.418559],[8.676989,49.418602],[8.676942,49.418602]]]}},{"type":"Feature","id":"way/94551473","properties":{"type":"way","id":"94551473","tags":{"buildingpart":"room","height":"3","indoor":"yes","name":"209"},"relations":[{"role":"buildingpart","rel":"1370726","reltags":{"height":"4","level":"2","level:usage":"academic","name":"Dachgeschoss","type":"level"}}],"meta":{}},"geometry":{"type":"Polygon","coordinates":[[[8.676851,49.418605],[8.676792,49.418605],[8.676792,49.418588],[8.676851,49.418588],[8.676851,49.418605]]]}},{"type":"Feature","id":"way/94551474","properties":{"type":"way","id":"94551474","tags":{"buildingpart":"room","height":"3","name":"007"},"relations":[{"role":"buildingpart","rel":"1370728","reltags":{"height":"4","level":"0","name":"Erdgeschoss","type":"level"}}],"meta":{}},"geometry":{"type":"Polygon","coordinates":[[[8.67685,49.418608],[8.676795,49.418608],[8.676795,49.418585],[8.67685,49.418585],[8.67685,49.418608]]]}},{"type":"Feature","id":"way/94551475","properties":{"type":"way","id":"94551475","tags":{"buildingpart":"room","height":"3","indoor":"yes","name":"207"},"relations":[{"role":"buildingpart","rel":"1370726","reltags":{"height":"4","level":"2","level:usage":"academic","name":"Dachgeschoss","type":"level"}}],"meta":{}},"geometry":{"type":"Polygon","coordinates":[[[8.676851,49.418694],[8.676792,49.418694],[8.676792,49.418641],[8.676851,49.418641],[8.676851,49.418694]]]}},{"type":"Feature","id":"way/94551476","properties":{"type":"way","id":"94551476","tags":{"buildingpart":"room","height":"3","name":"011"},"relations":[{"role":"buildingpart","rel":"1370728","reltags":{"height":"4","level":"0","name":"Erdgeschoss","type":"level"}}],"meta":{}},"geometry":{"type":"Polygon","coordinates":[[[8.676993,49.418602],[8.676993,49.41856],[8.67704,49.41856],[8.67704,49.418602],[8.676993,49.418602]]]}},{"type":"Feature","id":"way/94551477","properties":{"type":"way","id":"94551477","tags":{"buildingpart":"room","height":"3","name":"013"},"relations":[{"role":"buildingpart","rel":"1370728","reltags":{"height":"4","level":"0","name":"Erdgeschoss","type":"level"}}],"meta":{}},"geometry":{"type":"Polygon","coordinates":[[[8.676943,49.418543],[8.676943,49.418499],[8.67699,49.418499],[8.67699,49.418543],[8.676943,49.418543]]]}},{"type":"Feature","id":"way/94551478","properties":{"type":"way","id":"94551478","tags":{"buildingpart":"room","height":"2.2"},"relations":[{"role":"buildingpart","rel":"1370727","reltags":{"height":"3","level":"-1","level:usage":"academic","name":"Untergeschoss","type":"level"}}],"meta":{}},"geometry":{"type":"Polygon","coordinates":[[[8.67671,49.418534],[8.67671,49.418533],[8.676768,49.418533],[8.676768,49.418534],[8.676768,49.418547],[8.67671,49.418547],[8.67671,49.418534]]]}},{"type":"Feature","id":"way/94551479","properties":{"type":"way","id":"94551479","tags":{"buildingpart":"room","height":"3","indoor":"yes","name":"115"},"relations":[{"role":"buildingpart","rel":"1370725","reltags":{"height":"4","level":"1","level:usage":"academic","name":"1. Obergeschoss","type":"level"}}],"meta":{}},"geometry":{"type":"Polygon","coordinates":[[[8.677089,49.418601],[8.677089,49.418559],[8.677137,49.418559],[8.677137,49.418601],[8.677089,49.418601]]]}},{"type":"Feature","id":"way/94551481","properties":{"type":"way","id":"94551481","tags":{"buildingpart":"verticalpassage","buildingpart:verticalpassage":"stairway","buildingpart:verticalpassage:floorrange":"-1 to 2","height":"2.2"},"relations":[{"role":"buildingpart","rel":"1370727","reltags":{"height":"3","level":"-1","level:usage":"academic","name":"Untergeschoss","type":"level"}}],"meta":{}},"geometry":{"type":"Polygon","coordinates":[[[8.67671,49.418635],[8.67671,49.418605],[8.676768,49.418605],[8.676768,49.418635],[8.67671,49.418635]]]}},{"type":"Feature","id":"way/94551482","properties":{"type":"way","id":"94551482","tags":{"buildingpart":"room","height":"3","indoor":"yes","name":"125"},"relations":[{"role":"buildingpart","rel":"1370725","reltags":{"height":"4","level":"1","level:usage":"academic","name":"1. Obergeschoss","type":"level"}}],"meta":{}},"geometry":{"type":"Polygon","coordinates":[[[8.67671,49.418574],[8.676766,49.418574],[8.676766,49.418603],[8.67671,49.418603],[8.67671,49.418574]]]}},{"type":"Feature","id":"way/94551483","properties":{"type":"way","id":"94551483","tags":{"amenity":"university","buildingpart":"room","height":"2.2","wheelchair":"no"},"relations":[{"role":"buildingpart","rel":"1370727","reltags":{"height":"3","level":"-1","level:usage":"academic","name":"Untergeschoss","type":"level"}}],"meta":{}},"geometry":{"type":"Polygon","coordinates":[[[8.67671,49.41874],[8.676767,49.41874],[8.676767,49.418822],[8.676709,49.418822],[8.67671,49.41874]]]}},{"type":"Feature","id":"way/94551485","properties":{"type":"way","id":"94551485","tags":{"buildingpart":"room","height":"3","indoor":"yes","name":"214"},"relations":[{"role":"buildingpart","rel":"1370726","reltags":{"height":"4","level":"2","level:usage":"academic","name":"Dachgeschoss","type":"level"}}],"meta":{}},"geometry":{"type":"Polygon","coordinates":[[[8.67677,49.418606],[8.676709,49.418606],[8.676709,49.418554],[8.67677,49.418554],[8.67677,49.418606]]]}},{"type":"Feature","id":"way/94551487","properties":{"type":"way","id":"94551487","tags":{"buildingpart":"room","height":"3","indoor":"yes","name":"210"},"relations":[{"role":"buildingpart","rel":"1370726","reltags":{"height":"4","level":"2","level:usage":"academic","name":"Dachgeschoss","type":"level"}}],"meta":{}},"geometry":{"type":"Polygon","coordinates":[[[8.676851,49.418587],[8.676792,49.418587],[8.676792,49.41857],[8.676851,49.41857],[8.676851,49.418587]]]}},{"type":"Feature","id":"way/94551489","properties":{"type":"way","id":"94551489","tags":{"buildingpart":"room","height":"3","name":"006"},"relations":[{"role":"buildingpart","rel":"1370728","reltags":{"height":"4","level":"0","name":"Erdgeschoss","type":"level"}}],"meta":{}},"geometry":{"type":"Polygon","coordinates":[[[8.67685,49.418651],[8.676795,49.418651],[8.676795,49.418609],[8.67685,49.418609],[8.67685,49.418651]]]}},{"type":"Feature","id":"way/94551494","properties":{"type":"way","id":"94551494","tags":{"buildingpart":"room","height":"3","name":"010"},"relations":[{"role":"buildingpart","rel":"1370728","reltags":{"height":"4","level":"0","name":"Erdgeschoss","type":"level"}}],"meta":{}},"geometry":{"type":"Polygon","coordinates":[[[8.676942,49.418602],[8.676942,49.41856],[8.676989,49.41856],[8.676989,49.418602],[8.676942,49.418602]]]}}]}</shapeGeoJSON>
+    </property>
+    <property>
+      <style>color: #e3af56;</style>
+    </property>
+  </object>
+</xwikidoc>

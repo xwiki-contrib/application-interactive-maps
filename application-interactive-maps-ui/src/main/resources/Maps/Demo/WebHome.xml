@@ -1,0 +1,329 @@
+<?xml version="1.1" encoding="UTF-8"?>
+
+<!--
+ * See the NOTICE file distributed with this work for additional
+ * information regarding copyright ownership.
+ *
+ * This is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU Lesser General Public License as
+ * published by the Free Software Foundation; either version 2.1 of
+ * the License, or (at your option) any later version.
+ *
+ * This software is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public
+ * License along with this software; if not, write to the Free
+ * Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA
+ * 02110-1301 USA, or see the FSF site: http://www.fsf.org.
+-->
+
+<xwikidoc version="1.3" reference="Maps.Demo.WebHome" locale="">
+  <web>Maps.Demo</web>
+  <name>WebHome</name>
+  <language/>
+  <defaultLanguage/>
+  <translation>0</translation>
+  <creator>xwiki:XWiki.Admin</creator>
+  <parent>Main.WebHome</parent>
+  <author>xwiki:XWiki.Admin</author>
+  <contentAuthor>xwiki:XWiki.Admin</contentAuthor>
+  <version>1.1</version>
+  <title>Demo</title>
+  <comment/>
+  <minorEdit>false</minorEdit>
+  <syntaxId>xwiki/2.1</syntaxId>
+  <hidden>false</hidden>
+  <content/>
+  <object>
+    <name>Maps.Demo.WebHome</name>
+    <number>0</number>
+    <className>Maps.Code.MapClass</className>
+    <guid>f30d74d5-a0f3-429d-9572-a262b93b75e3</guid>
+    <class>
+      <name>Maps.Code.MapClass</name>
+      <customClass/>
+      <customMapping/>
+      <defaultViewSheet/>
+      <defaultEditSheet/>
+      <defaultWeb/>
+      <nameField/>
+      <validationScript/>
+      <attribution>
+        <customDisplay/>
+        <disabled>0</disabled>
+        <hint>Attribution of the map that appears in the bottom right corner</hint>
+        <name>attribution</name>
+        <number>13</number>
+        <picker>0</picker>
+        <prettyName>Attribution</prettyName>
+        <size/>
+        <unmodifiable>0</unmodifiable>
+        <validationMessage/>
+        <validationRegExp/>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </attribution>
+      <customLocationProperties>
+        <cache>0</cache>
+        <customDisplay/>
+        <defaultValue/>
+        <disabled>0</disabled>
+        <displayType>input</displayType>
+        <freeText>allowed</freeText>
+        <hint>Property of classes to look into for location data. Separated by comma or |.</hint>
+        <multiSelect>1</multiSelect>
+        <name>customLocationProperties</name>
+        <number>14</number>
+        <picker>0</picker>
+        <prettyName>Custom Location Properties</prettyName>
+        <relationalStorage>0</relationalStorage>
+        <separator> </separator>
+        <separators>|,</separators>
+        <size>1</size>
+        <sort/>
+        <unmodifiable>0</unmodifiable>
+        <validationMessage/>
+        <validationRegExp/>
+        <values/>
+        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
+      </customLocationProperties>
+      <defaultLocation>
+        <customDisplay/>
+        <disabled>0</disabled>
+        <hint>Location to which the map will open to</hint>
+        <name>defaultLocation</name>
+        <number>6</number>
+        <picker>0</picker>
+        <prettyName>Default Location</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <validationMessage/>
+        <validationRegExp/>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </defaultLocation>
+      <defaultZoom>
+        <customDisplay/>
+        <disabled>0</disabled>
+        <hint>The zoom which the map will open to</hint>
+        <name>defaultZoom</name>
+        <number>5</number>
+        <numberType>integer</numberType>
+        <prettyName>Default Zoom</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <validationMessage/>
+        <validationRegExp/>
+        <classType>com.xpn.xwiki.objects.classes.NumberClass</classType>
+      </defaultZoom>
+      <facetFields>
+        <cache>0</cache>
+        <customDisplay/>
+        <defaultValue>spacet_field</defaultValue>
+        <disabled>0</disabled>
+        <displayType>input</displayType>
+        <freeText>allowed</freeText>
+        <hint>Specify fields for faceting/filtering the map item results. Separated by comma or |.</hint>
+        <multiSelect>1</multiSelect>
+        <name>facetFields</name>
+        <number>12</number>
+        <picker>1</picker>
+        <prettyName>Facet Fields</prettyName>
+        <relationalStorage>0</relationalStorage>
+        <separator> </separator>
+        <separators>|, </separators>
+        <size>1</size>
+        <sort/>
+        <unmodifiable>0</unmodifiable>
+        <validationMessage/>
+        <validationRegExp/>
+        <values>space_facet=Option to filter by page space|property.XWiki.TagClass.tags_string=Option to filter by tags</values>
+        <classType>com.xpn.xwiki.objects.classes.StaticListClass</classType>
+      </facetFields>
+      <includeCurrentLocation>
+        <customDisplay/>
+        <defaultValue/>
+        <disabled>0</disabled>
+        <displayFormType>checkbox</displayFormType>
+        <displayType/>
+        <hint/>
+        <name>includeCurrentLocation</name>
+        <number>2</number>
+        <prettyName>Include Current Location Button</prettyName>
+        <unmodifiable>0</unmodifiable>
+        <validationMessage/>
+        <validationRegExp/>
+        <classType>com.xpn.xwiki.objects.classes.BooleanClass</classType>
+      </includeCurrentLocation>
+      <includeFacets>
+        <customDisplay/>
+        <defaultValue>1</defaultValue>
+        <disabled>0</disabled>
+        <displayFormType>checkbox</displayFormType>
+        <displayType/>
+        <hint>Show facets that are used to filter map item results</hint>
+        <name>includeFacets</name>
+        <number>11</number>
+        <prettyName>Include Facets</prettyName>
+        <unmodifiable>0</unmodifiable>
+        <validationMessage/>
+        <validationRegExp/>
+        <classType>com.xpn.xwiki.objects.classes.BooleanClass</classType>
+      </includeFacets>
+      <includeMapScale>
+        <customDisplay/>
+        <defaultValue>0</defaultValue>
+        <disabled>0</disabled>
+        <displayFormType>checkbox</displayFormType>
+        <displayType/>
+        <hint>Show scale of distance on the map</hint>
+        <name>includeMapScale</name>
+        <number>4</number>
+        <prettyName>Include Map Scale</prettyName>
+        <unmodifiable>0</unmodifiable>
+        <validationMessage/>
+        <validationRegExp/>
+        <classType>com.xpn.xwiki.objects.classes.BooleanClass</classType>
+      </includeMapScale>
+      <includePopups>
+        <customDisplay/>
+        <defaultValue/>
+        <disabled>0</disabled>
+        <displayFormType>checkbox</displayFormType>
+        <displayType/>
+        <hint>Associate popups to map items</hint>
+        <name>includePopups</name>
+        <number>3</number>
+        <prettyName>Include Popups</prettyName>
+        <unmodifiable>0</unmodifiable>
+        <validationMessage/>
+        <validationRegExp/>
+        <classType>com.xpn.xwiki.objects.classes.BooleanClass</classType>
+      </includePopups>
+      <includeSearch>
+        <customDisplay/>
+        <defaultValue/>
+        <disabled>0</disabled>
+        <displayFormType>checkbox</displayFormType>
+        <displayType/>
+        <hint/>
+        <name>includeSearch</name>
+        <number>1</number>
+        <prettyName>Include Location Search</prettyName>
+        <unmodifiable>0</unmodifiable>
+        <validationMessage/>
+        <validationRegExp/>
+        <classType>com.xpn.xwiki.objects.classes.BooleanClass</classType>
+      </includeSearch>
+      <locationClasses>
+        <contenttype/>
+        <customDisplay/>
+        <disabled>0</disabled>
+        <editor>Text</editor>
+        <hint>Specify classes and their respective properties for getting latitude and longitude</hint>
+        <name>locationClasses</name>
+        <number>8</number>
+        <picker>0</picker>
+        <prettyName>Location Classes</prettyName>
+        <rows>5</rows>
+        <size>40</size>
+        <unmodifiable>0</unmodifiable>
+        <validationMessage/>
+        <validationRegExp/>
+        <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
+      </locationClasses>
+      <mapSize>
+        <customDisplay/>
+        <disabled>0</disabled>
+        <hint>Width and height of the map separated by comma. (width,height)</hint>
+        <name>mapSize</name>
+        <number>10</number>
+        <picker>0</picker>
+        <prettyName>Map Size</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <validationMessage>Please enter valid width and height (% or px)</validationMessage>
+        <validationRegExp>((\d*)(px|%)?), ?((\d*)(px|%)?)</validationRegExp>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </mapSize>
+      <query>
+        <contenttype>PureText</contenttype>
+        <customDisplay/>
+        <disabled>0</disabled>
+        <editor>Text</editor>
+        <hint>Solr query to get data for the map</hint>
+        <name>query</name>
+        <number>7</number>
+        <picker>0</picker>
+        <prettyName>Query</prettyName>
+        <rows>5</rows>
+        <size>40</size>
+        <unmodifiable>0</unmodifiable>
+        <validationMessage/>
+        <validationRegExp/>
+        <classType>com.xpn.xwiki.objects.classes.TextAreaClass</classType>
+      </query>
+      <tiles>
+        <customDisplay/>
+        <disabled>0</disabled>
+        <hint>The background tiles</hint>
+        <name>tiles</name>
+        <number>9</number>
+        <picker>0</picker>
+        <prettyName>Tiles</prettyName>
+        <size>30</size>
+        <unmodifiable>0</unmodifiable>
+        <validationMessage/>
+        <validationRegExp/>
+        <classType>com.xpn.xwiki.objects.classes.StringClass</classType>
+      </tiles>
+    </class>
+    <property>
+      <attribution/>
+    </property>
+    <property>
+      <customLocationProperties/>
+    </property>
+    <property>
+      <defaultLocation>Paris</defaultLocation>
+    </property>
+    <property>
+      <defaultZoom>14</defaultZoom>
+    </property>
+    <property>
+      <facetFields>
+        <value>space_facet</value>
+        <value>property.Maps.Demo.Mountains.MountainClass.countryLabel_string</value>
+        <value>class</value>
+      </facetFields>
+    </property>
+    <property>
+      <includeCurrentLocation>1</includeCurrentLocation>
+    </property>
+    <property>
+      <includeFacets>1</includeFacets>
+    </property>
+    <property>
+      <includeMapScale>0</includeMapScale>
+    </property>
+    <property>
+      <includePopups>1</includePopups>
+    </property>
+    <property>
+      <includeSearch>1</includeSearch>
+    </property>
+    <property>
+      <locationClasses>Maps.Code.PointClass: latitude, longitude</locationClasses>
+    </property>
+    <property>
+      <mapSize>100%,500px</mapSize>
+    </property>
+    <property>
+      <query>spaces:Maps AND spaces:Demo -(spaces:Indoor AND class:Maps.Code.ShapeClass)</query>
+    </property>
+    <property>
+      <tiles>https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png</tiles>
+    </property>
+  </object>
+</xwikidoc>
