@@ -775,10 +775,15 @@ define('leaflet-commons', ['jquery'], function ($) {
     <property>
       <code>requirejs.config({
   paths: {
-    'leaflet': ['$services.webjars.url("leaflet", "1.5.1/dist/leaflet.js")'],
+    'leaflet': ['$services.webjars.url("leaflet", "dist/leaflet.js")'],
     'leaflet-edit': ['$services.webjars.url("github-com-Leaflet-Leaflet-Editable", "1.1.0/Leaflet.Editable.js")'],
     'leaflet-drag': ['$services.webjars.url("leaflet.path.drag", "src/Path.Drag.js")'],
     'leaflet-indoor': ['$services.webjars.url("leaflet-indoor", "leaflet-indoor.js")']
+  },
+  shim: {
+    'leaflet-edit': ['leaflet'],
+    'leaflet-drag': ['leaflet'],
+    'leaflet-indoor': ['leaflet']
   }
 });</code>
     </property>
@@ -891,7 +896,7 @@ define('leaflet-commons', ['jquery'], function ($) {
       <cache>long</cache>
     </property>
     <property>
-      <code>@import "$services.webjars.url('leaflet', '1.5.1/dist/leaflet.css')";
+      <code>@import "$services.webjars.url('leaflet', 'dist/leaflet.css')";
 
 @box-shadow: darken(@xwiki-page-content-bg, 30%);
 /*
