@@ -349,7 +349,7 @@ require(['jquery', 'leaflet', 'leaflet-commons', 'leaflet-edit', 'leaflet-drag',
             var newStyle = $('#item-p-style').val();
             selectedItem.feature.properties.style = newStyle;
             if (selectedItem instanceof L.Marker) {
-              selectedItem.options = newStyle;
+              selectedItem.options = leafletCommons.cartoCssToJSON(newStyle);
               selectedItem.enableEdit();
             } else {
               selectedItem.setStyle(leafletCommons.cartoCssToJSON(newStyle));
