@@ -904,6 +904,7 @@ define('leaflet-commons', ['jquery'], function ($) {
 */
 .map-wrapper{
   position: relative;
+  padding-bottom: 5px;
 }
 .map-container, .map-preview{
   width: 100%;
