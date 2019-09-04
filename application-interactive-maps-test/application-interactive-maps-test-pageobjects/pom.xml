@@ -25,7 +25,7 @@
   <parent>
     <groupId>org.xwiki.contrib</groupId>
     <artifactId>application-interactive-maps-test</artifactId>
-    <version>1.1-SNAPSHOT</version>
+    <version>1.1</version>
   </parent>
   <artifactId>application-interactive-maps-test-pageobjects</artifactId>
   <name>Interactive Maps Application - Tests - Page Objects</name>
