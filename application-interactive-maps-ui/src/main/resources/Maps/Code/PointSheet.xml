@@ -62,7 +62,7 @@
     #if ($xcontext.action == 'edit')
     &lt;p class="xform"&gt;&lt;span class="xHint"&gt;$services.localization.render('intmap.pointEditor.hint')&lt;/span&gt;&lt;/p&gt;
     #end
-    (% class="map-wrapper" %)(((
+    (% class="map-wrapper#if ($request.mfullscreen) fullscreen#end" %)(((
       #if ($xcontext.action == 'edit')
         (% class="map-preview point-editor-map-preview" id="map-${util.generateRandomString(5)}" style="width: 100%; height: 300px;" %)((()))
       #else

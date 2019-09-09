@@ -454,14 +454,7 @@ require(['jquery', 'leaflet', 'leaflet-commons', 'leaflet-indoor', 'bootstrap'],
       map.fitBounds(loc.points);
     });
 
-    $(document).on('keyup', function (e) {
-      if (e.keyCode == 27) {
-        if ($('.map-wrapper').hasClass('fullscreen')) {
-          $('.leaflet-control-fullscreen').click();
-        }
-      }
-    });
-
+    //Close map search and filter section when close button is clicked
     $('#map-search-close').on('click', function () {
       $('.map-search-filter').removeClass('open');
       leafletCommons.updateURLWithMapState();

@@ -253,7 +253,13 @@ define('leaflet-commons', ['jquery'], function ($) {
         map.invalidateSize(true);
         rootScope.updateURLWithMapState();
       });
-      //Close fullscreen if escape key is pressed
+      //Check for fullscreen on load
+      if ($('.map-wrapper').hasClass('fullscreen')) {
+        $('body').css('overflow', 'hidden');
+      } else {
+        $('body').css('overflow', 'auto');
+      }
+      //Close fullscreen when escape key is pressed
       $(document).on('keyup', function (e) {
         if (e.keyCode == 27) {
           if ($('.map-wrapper').hasClass('fullscreen')) {
