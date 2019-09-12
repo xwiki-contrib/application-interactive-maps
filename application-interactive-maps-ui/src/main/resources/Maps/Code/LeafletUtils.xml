@@ -140,12 +140,13 @@ define('leaflet-commons', ['jquery'], function ($) {
     //Create an empty map and return it
     createEmptyMap: function (options)
     {
+      var defaultAttribution = '&amp;copy; &lt;a href="https://www.openstreetmap.org/"&gt;OpenStreetMap&lt;/a&gt;';
       //Create the map
       var mapId = 'map-' + options.id,
           editable = options.editable !== undefined ? options.editable : false,
           zoom = options.defaultZoom !== null ? (options.defaultZoom !== undefined ? options.defaultZoom : 12) : 12,
           tiles = options.tiles !== '' ? (options.tiles !== undefined ? options.tiles : 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png') : 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-          attribution = options.attribution !== undefined ? options.attribution : '',
+          attribution = options.attribution !== undefined ? defaultAttribution + ' | ' + options.attribution : defaultAttribution,
           map = new L.Map(mapId, {zoom: zoom, center: [48, 2], editable: editable});
       options.defaultLocation = options.defaultLocation !== '' ? options.defaultLocation : '48,2';
       map.zoomControl.setPosition('bottomright');
