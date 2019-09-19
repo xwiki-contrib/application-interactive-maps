@@ -598,8 +598,7 @@
 ## Process the property of a class for edit or display
 #macro (displayClassProperty $prop)
   &lt;dt&gt;
-    #set ($propId = "${class.getDocumentReference().getLocalDocumentReference()}_${class.getNumber()}_${prop.name}")
-    &lt;label for="${propId}"&gt;$prop.prettyName&lt;/label&gt;
+    &lt;label for="${class.name}_${class.number}_${prop.name}"&gt;$prop.prettyName&lt;/label&gt;
     #if($prop.hint)&lt;span class="xHint"&gt;$prop.hint&lt;/span&gt;#end
   &lt;/dt&gt;
   &lt;dd&gt;
