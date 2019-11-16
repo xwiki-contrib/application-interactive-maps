@@ -146,7 +146,13 @@
     #set ($discard = $location.add($pointPageDoc.getValue('longitude')))
     #set ($discard = $pointData.put('location', $location))
     #set ($discard = $pointData.put('options', $pointPageDoc.getValue('options')))
-    #setDataFromDoc($pointData $pointPageDoc.get('includePopup') $pointPageDoc.getTitle() $pointPageDoc.getContent())
+    ## Use page's name if no title is set
+    #if ("$!pointPageDoc.title" == '')
+      #set ($pointPageTitle = $pointPageDoc.name)
+    #else
+      #set ($pointPageTitle = $pointPageDoc.title)
+    #end
+    #setDataFromDoc($pointData $pointPageDoc.get('includePopup') $pointPageTitle $pointPageDoc.getContent())
     #checkMarkerIcon($pointPageDoc.getDocumentReference().getLocalDocumentReference() $pointData)
     #set ($disard = $pointPagesArr.add(${pointData}))
   #end
