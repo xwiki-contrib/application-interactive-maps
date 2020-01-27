@@ -220,8 +220,8 @@ require(['jquery', 'leaflet', 'leaflet-commons', 'bootstrap'], function ($, leaf
           $('.map-search-filter').removeClass('open');
         }
       });
-      var $latInput = $('#Maps\\.Code\\.PointClass_0_latitude');
-      var $lngInput = $('#Maps\\.Code\\.PointClass_0_longitude');
+      var $latInput = $('[id^=Maps\\.Code\\.PointClass_][id$=_latitude]');
+      var $lngInput = $('[id^=Maps\\.Code\\.PointClass_][id$=_longitude]');
       var defLocation = [$latInput.val(), $lngInput.val()];
       map.setView(defLocation, 14);
       var oldLocVal = defLocation;
