@@ -497,32 +497,8 @@
           )))
         #elseif ($item.get('type') == 'shape')
           #set ($shapeGeoJSON = $jsontool.fromString($item.get('shapeGeoJSON')))
-          #set ($allPoints = [])
-          #if ("$!shapeGeoJSON.geometry" != '' || $shapeGeoJSON.features.size() &gt; 0)
-            #if ("$!shapeGeoJSON.features[0].geometry.coordinates[0][0]" == '' &amp;&amp; "$!shapeGeoJSON.features[0].geometry.coordinates" != '') ## Check for circle (has only one point)
-              #set ($allPoints = [$shapeGeoJSON.features[0].geometry.coordinates])
-            #elseif ("$!shapeGeoJSON.features[0].geometry.coordinates" != '')
-              #set ($allPoints = $shapeGeoJSON.features[0].geometry.coordinates)
-            #elseif ("$!shapeGeoJSON.geometry.coordinates[0][0]" == '' &amp;&amp; "$!shapeGeoJSON.geometry.coordinates" != '') ## Check for circle (has only one point)
-              #set ($allPoints = [$shapeGeoJSON.geometry.coordinates])
-            #elseif ("$!shapeGeoJSON.geometry.coordinates" != '')
-              #set ($allPoints = $shapeGeoJSON.geometry.coordinates)
-            #else
-              #set ($allPoints = [$shapeGeoJSON.geometry.coordinates])
-            #end
-          #end
-          #foreach ($coordinate in $allPoints)
-            #set ($discard = $collectionstool.reverse($coordinate))
-            #foreach ($coordinate1 in $coordinate)
-              #set ($discard = $collectionstool.reverse($coordinate1))
-              #foreach ($coordinate2 in $coordinate1)
-                #set ($discard = $collectionstool.reverse($coordinate2))
-                #foreach ($coordinate3 in $coordinate2)
-                  #set ($discard = $collectionstool.reverse($coordinate3))
-                #end
-              #end
-            #end
-          #end
+          #set ($allPointsJSON = "#getCoordinatesFromShape(${shapeGeoJSON})")
+          #set ($allPoints = $jsontool.fromString(${allPointsJSON}))
           #if ($allPoints.size() &gt; 0)
             #set ($allPoints = $jsontool.serialize($allPoints))
             (% class="goto-loc goto-loc-points" data-location='{"points": ${allPoints} }' title="$services.localization.render('intmap.search.gotoLoc')" %)(((
@@ -530,7 +506,32 @@
             )))
           #end
         #elseif ($item.get('type') == 'indoor')
-          ## No go to location icon
+          #set ($allPointsParent = [])
+          #set ($allIndoorData = $item.get('allIndoorData'))
+          ## Check each indoor level for map items
+          #foreach ($levelKey in $allIndoorData.keySet())
+            #set ($levelItemsArr = $allIndoorData.get(${levelKey}))
+            ## Get points from each map item in level
+            #foreach ($levelItem in $levelItemsArr)
+              ## If the map item type inside the indoor structure is shape or point
+              #if ($levelItem.get('type') == 'shape')
+                #set ($shapeGeoJSON = $levelItem.get('shapeGeoJSON'))
+                #set ($shapeGeoJSON = $jsontool.fromString(${shapeGeoJSON}))
+                #set ($allShapePointsJSON = "#getCoordinatesFromShape(${shapeGeoJSON})")
+                #set ($allShapePoints = $jsontool.fromString(${allShapePointsJSON}))
+                #set ($discard = $allPointsParent.add(${allShapePoints}))
+              #elseif ($levelItem.get('type') == 'point')
+                #set ($location = $levelItem.get('location'))
+                #set ($discard = $allPointsParent.add(${location}))
+              #end
+            #end
+          #end
+          #if ($allPointsParent.size() &gt; 0)
+            #set ($allPointsParent = $jsontool.serialize($allPointsParent))
+            (% class="goto-loc goto-loc-points" data-location='{"points": ${allPointsParent} }' title="$services.localization.render('intmap.search.gotoLoc')" %)(((
+              &lt;i class="fa fa-map-marker"&gt;&lt;/i&gt;
+            )))
+          #end
         #end
       )))
       #end
@@ -539,7 +540,7 @@
 #end
 
 ## Simple search form for only location search
-#macro(displayLocationSearch)
+#macro (displayLocationSearch)
   {{html clean="false"}}
   &lt;div class="map-search-form"&gt;
     &lt;div class="map-search"&gt;
@@ -622,6 +623,37 @@
     #end
   #end
   $fullKey
+#end
+
+## Get an array of coordinates from GeoJSON shapes
+#macro (getCoordinatesFromShape $shapeGeoJSON)
+  #set ($allPoints = [])
+  #if ("$!shapeGeoJSON.geometry" != '' || $shapeGeoJSON.features.size() &gt; 0)
+    #if ("$!shapeGeoJSON.features[0].geometry.coordinates[0][0]" == '' &amp;&amp; "$!shapeGeoJSON.features[0].geometry.coordinates" != '') ## Check for circle (has only one point)
+      #set ($allPoints = [$shapeGeoJSON.features[0].geometry.coordinates])
+    #elseif ("$!shapeGeoJSON.features[0].geometry.coordinates" != '')
+      #set ($allPoints = $shapeGeoJSON.features[0].geometry.coordinates)
+    #elseif ("$!shapeGeoJSON.geometry.coordinates[0][0]" == '' &amp;&amp; "$!shapeGeoJSON.geometry.coordinates" != '') ## Check for circle (has only one point)
+      #set ($allPoints = [$shapeGeoJSON.geometry.coordinates])
+    #elseif ("$!shapeGeoJSON.geometry.coordinates" != '')
+      #set ($allPoints = $shapeGeoJSON.geometry.coordinates)
+    #else
+      #set ($allPoints = [$shapeGeoJSON.geometry.coordinates])
+    #end
+  #end
+  #foreach ($coordinate in $allPoints)
+    #set ($discard = $collectionstool.reverse($coordinate))
+    #foreach ($coordinate1 in $coordinate)
+      #set ($discard = $collectionstool.reverse($coordinate1))
+      #foreach ($coordinate2 in $coordinate1)
+        #set ($discard = $collectionstool.reverse($coordinate2))
+        #foreach ($coordinate3 in $coordinate2)
+          #set ($discard = $collectionstool.reverse($coordinate3))
+        #end
+      #end
+    #end
+  #end
+  $jsontool.serialize($allPoints)
 #end
 {{/velocity}}</content>
 </xwikidoc>
