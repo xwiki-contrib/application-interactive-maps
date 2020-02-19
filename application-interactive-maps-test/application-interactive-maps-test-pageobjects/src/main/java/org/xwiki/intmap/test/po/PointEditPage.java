@@ -65,9 +65,7 @@ public class PointEditPage extends EditPage
 
     private void handleCheckBox(WebElement element, boolean value)
     {
-        if (value && !element.isSelected()) {
-            element.click();
-        } else if (!value && element.isSelected()) {
+        if ((value && !element.isSelected()) || (!value && element.isSelected())) {
             element.click();
         }
     }
