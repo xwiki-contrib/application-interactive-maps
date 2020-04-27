@@ -61,7 +61,7 @@ public class InteractiveMapsTest extends AbstractTest
     private final String WIKI_NAME = "xwiki";
 
     @Test
-    public void testNewMap() throws Exception
+    public void createNewMap() throws Exception
     {
         // Check for the homepage
         ApplicationsPanel applicationsPanel = ApplicationsPanel.gotoPage();
@@ -119,12 +119,12 @@ public class InteractiveMapsTest extends AbstractTest
         // Check if the map exists
         WebElement leafletMap = getDriver().findElementByClassName("leaflet-map-pane");
         Assert.assertNotNull(leafletMap);
-
-        // Check if the point is inside the map
-        //  WebDriverWait waitForMarker = new WebDriverWait(getDriver(), 20);
-        //  waitForMarker
-        //          .until(ExpectedConditions.visibilityOf(getDriver().findElement(By.className("leaflet-marker-icon"))));
-        //  WebElement leafletMarker = getDriver().findElementByClassName("leaflet-marker-icon");
-        //  Assert.assertNotNull(leafletMarker);
     }
+
+    /**
+    * TODO
+    * Cannot test if point exists on the map because Solr
+    * takes too long to initialize for a new test instance of XWiki
+    */
+
 }
