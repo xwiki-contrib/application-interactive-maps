@@ -27,7 +27,6 @@
     <artifactId>parent-platform</artifactId>
     <version>10.11</version>
   </parent>
-  <groupId>org.xwiki.contrib</groupId>
   <artifactId>application-interactive-maps</artifactId>
   <version>1.3-SNAPSHOT</version>
   <name>Interactive Maps Application - Parent POM</name>
@@ -53,10 +52,6 @@
     <module>application-interactive-maps-demo</module>
     <module>application-interactive-maps-ui</module>
   </modules>
-  <issueManagement>
-    <system>jira</system>
-    <url>http://jira.xwiki.org/jira/browse/INTMAP</url>
-  </issueManagement>
   <properties>
     <xwiki.issueManagement.jira.id>INTMAP</xwiki.issueManagement.jira.id>
     <xwiki.release.jira.skip>false</xwiki.release.jira.skip>
