@@ -191,7 +191,7 @@
       <code>//Make sure to include Maps.Code.LeafletUtils before using this
 require(['jquery', 'leaflet', 'leaflet-commons', 'leaflet-indoor', 'bootstrap'], function ($, leaflet, leafletCommons) {
   'use strict';
-  function init()
+  var init = function ()
   {
 
     var map;
@@ -459,12 +459,8 @@ require(['jquery', 'leaflet', 'leaflet-commons', 'leaflet-indoor', 'bootstrap'],
       $('.map-search-filter').removeClass('open');
       leafletCommons.updateURLWithMapState();
     });
-
+    $(init).on('xwiki:dom:updated', init);
   }
-
-  //Run the init() function when dom is loaded or updated
-  (XWiki &amp;&amp; XWiki.domIsLoaded &amp;&amp; init()) || document.observe("xwiki:dom:loaded", init);
-  (XWiki &amp;&amp; XWiki.domIsUpdated &amp;&amp; init()) || document.observe("xwiki:dom:updated", init);
 
 });</code>
     </property>
