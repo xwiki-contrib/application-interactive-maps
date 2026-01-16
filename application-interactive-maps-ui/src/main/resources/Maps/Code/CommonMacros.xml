@@ -546,8 +546,8 @@
   &lt;div class="map-search-form"&gt;
     &lt;div class="map-search"&gt;
       &lt;div class="map-search-input-wrapper"&gt;
-        &lt;input type="search" name="text" class="form-control withTip useTitleAsTip map-search-input"
-          title="$services.localization.render('intmap.search.placeholder')" value=""/&gt;
+        &lt;input type="search" name="text" class="form-control map-search-input"
+          title="$services.localization.render('intmap.search.placeholder')" placeholder=""/&gt;
         &lt;button type="search" class="btn btn-primary map-search-btn"&gt;
           &lt;span class="fa fa-search"&gt;&lt;/span&gt;
         &lt;/button&gt;
