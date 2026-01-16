@@ -443,8 +443,8 @@
         #if("$!mapObj.get('includeSearch')" == 'Yes')
         &lt;div class="fa fa-ellipsis-v" id="search-type-btn"&gt;&lt;/div&gt;
         #end
-        &lt;input type="search" name="text" class="form-control withTip useTitleAsTip map-search-input"
-          title="$services.localization.render('intmap.search.placeholder')" value="$escapetool.xml($text)"/&gt;
+        &lt;input type="search" name="text" class="form-control map-search-input"
+          title="$services.localization.render('intmap.search.placeholder')" placeholder="$escapetool.xml($text)"/&gt;
         &lt;button type="submit" class="btn btn-primary map-search-btn"&gt;
           &lt;span class="fa fa-search"&gt;&lt;/span&gt;
         &lt;/button&gt;
